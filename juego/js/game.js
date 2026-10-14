@@ -112,6 +112,7 @@ G.Game = (() => {
     runReal = performance.now(); tampered = false;
 
     pl = new G.Player(mon, perks, !!save.partnerShiny && G.DB.ownsShiny(mon.dex));
+    if (G.Collection) G.Collection.apply(pl, save);     // (mod) afinidad regional
     banked = { t1: 0, t10: 0 };
     caught = [];
     // Atajos: movimientos con hueco fijo (save.pbind[dex] = [id del 1, id del 2, ...]),
@@ -302,6 +303,7 @@ G.Game = (() => {
     const record = time > save.stats.bestTime;
 
     save.coins += coins;
+    if (G.Collection) G.Collection.runEnd(pl, coins);    // (mod) brillo shiny: monedas y tickets de más
     bankTickets(false);
     save.stats.runs++;
     save.stats.totalKills += pl.kills;

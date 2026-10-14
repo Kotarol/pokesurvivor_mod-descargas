@@ -21,6 +21,15 @@ G.I18n.add({
   'No se pudo actualizar. Se volverá a intentar al abrir el juego.': 'Could not update. It will try again when you open the game.',
   'Hay una versión nueva del programa: se instalará al cerrarlo.': 'There is a new version of the app: it will be installed when you close it.',
 
+  // ---------------- (mod) afinidad regional y brillo shiny ----------------
+  'Afinidad con {x}:': 'Affinity with {x}:', '+{x} % de daño y vida': '+{x}% damage and HP',
+  'Tienes {x} de {x} (y {x} shiny, que cuentan doble). Cada 10 % de la región da +1 %, hasta +10 %.':
+    'You have {x} of {x} (and {x} shiny, which count double). Every 10% of the region gives +1%, up to +10%.',
+  'Brillo shiny:': 'Shiny glow:', '+15 % de monedas y algunos tickets cuentan doble.': '+15% coins and some tickets count double.',
+  'Brillo shiny: +{x} monedas · +{x} tickets': 'Shiny glow: +{x} coins · +{x} tickets',
+  'Brillo shiny: +{x} monedas · +{x} ticket': 'Shiny glow: +{x} coins · +{x} ticket',
+  'Brillo shiny: +{x} monedas': 'Shiny glow: +{x} coins', 'Brillo shiny: {x}': 'Shiny glow: {x}',
+
   // ---------------- tipos y regiones ----------------
   'Acero': 'Steel', 'Agua': 'Water', 'Bicho': 'Bug', 'Dragón': 'Dragon', 'Eléctrico': 'Electric', 'Fantasma': 'Ghost',
   'Fuego': 'Fire', 'Hada': 'Fairy', 'Hielo': 'Ice', 'Lucha': 'Fighting', 'Planta': 'Grass', 'Psíquico': 'Psychic',
