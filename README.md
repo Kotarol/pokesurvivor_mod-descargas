@@ -7,7 +7,7 @@ como programa de Windows.
 
 ## Descargar e instalar
 
-1. Descarga **[PokeSurvivor-Setup.exe](https://github.com/Kenstro/pokesurvivor_mod-descargas/releases/latest/download/PokeSurvivor-Setup.exe)**.
+1. Descarga **[PokeSurvivor-Setup.exe](https://github.com/Kotarol/pokesurvivor_mod-descargas/releases/latest/download/PokeSurvivor-Setup.exe)**.
 2. Ábrelo. Se instala solo (no pide permisos de administrador) y crea un
    acceso directo **PokéSurvivor** en el escritorio y en el menú Inicio.
 
