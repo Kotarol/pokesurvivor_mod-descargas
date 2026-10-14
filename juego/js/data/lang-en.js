@@ -14,7 +14,7 @@ G.I18n.add({
   '¿Juntar la partida de {x} con la tuya? No pierdes nada de lo que tienes.': "Merge {x}'s save with yours? You lose nothing you already have.",
   'Partida importada: recargando…': 'Save imported: reloading…',
   // ---------------- (mod) programa de escritorio ----------------
-  'Buscar actualizaciones': 'Check for updates', 'Buscando…': 'Checking…', 'Versión del {x}': 'Version of {x}',
+  'Buscar actualizaciones': 'Check for updates', 'Buscando…': 'Checking…', 'Versión del {x}': 'Version of {x}', 'Programa {x}': 'App {x}', 'juego del {x}': 'game of {x}',
   'Descargando… {x}': 'Downloading… {x}', 'Ya tienes la última versión.': 'You already have the latest version.',
   'No se pudo buscar: ¿hay conexión a internet?': 'Could not check: are you connected to the internet?',
   'Hay una versión nueva del juego ({x} MB). ¿Actualizar ahora?': 'There is a new version of the game ({x} MB). Update now?',

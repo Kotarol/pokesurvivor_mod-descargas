@@ -15,6 +15,9 @@ G.CHANGELOG_MOD = [
      'Regional affinity: your partner gets +1% damage and HP for every 10% of its region you own (up to +10%). Shinies count double. You can see it on its Pokédex page.'],
     ['Brillo shiny: jugando con tu compañero shiny ganas un 15 % más de monedas y algunos tickets cuentan doble.',
      'Shiny glow: playing with your shiny partner gives you 15% more coins and some tickets count double.']
+  ], chg: [
+    ['Programa para Windows: debajo del menú se ve la versión del programa y la fecha y hora de la versión del juego.',
+     'Windows app: below the menu you can see the app version and the date and time of the game version.']
   ] }
 ];
 

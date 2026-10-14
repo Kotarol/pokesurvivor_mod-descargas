@@ -9,7 +9,11 @@ G.Escritorio = (() => {
   if (!D || !D.info) return null;
   let btn = null, busy = false;
 
-  const fecha = iso => iso.slice(8, 10) + '-' + iso.slice(5, 7) + '-' + iso.slice(0, 4);
+  // Fecha y hora (la de tu ordenador) de la versión del juego: puede haber varias el mismo día.
+  const fecha = iso => {
+    const d = new Date(iso), two = n => String(n).padStart(2, '0');
+    return two(d.getDate()) + '-' + two(d.getMonth() + 1) + '-' + d.getFullYear() + ', ' + two(d.getHours()) + ':' + two(d.getMinutes());
+  };
   const idle = () => { busy = false; btn.disabled = false; btn.textContent = G.T('Buscar actualizaciones'); };
 
   async function init() {
@@ -23,7 +27,9 @@ G.Escritorio = (() => {
     btn = row.querySelector('#desk-upd');
     btn.onclick = check;
     const info = await D.info();
-    if (info.juego) row.querySelector('#desk-ver').textContent = G.T('Versión del ' + fecha(info.juego));
+    // Programa (el .exe, cambia poco) y juego (se actualiza solo, por fecha).
+    row.querySelector('#desk-ver').textContent = G.T('Programa ' + info.app) +
+      (info.juego ? ' · ' + G.T('juego del ' + fecha(info.juego)) : '');
     if (!info.actualizable) btn.classList.add('hidden');
     D.onProgreso(p => { btn.textContent = G.T('Descargando… ' + p.hechos + '/' + p.total); });
     D.onAviso(appNotice);
