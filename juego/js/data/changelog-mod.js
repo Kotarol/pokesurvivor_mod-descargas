@@ -6,7 +6,9 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
-  { d: '2026-10-15', title: ['Medallas de cada región', 'Badges for every region'], new: [
+  { d: '2026-10-15', title: ['Medallas, estreno y maestría', 'Badges, debut and mastery'], new: [
+    ['Estreno, veterano y maestría: la primera vez que aguantas 5, 10 y 20 minutos con un Pokémon de compañero ganas 1 ticket, 2 tickets y un ticket ×10. Lo que llevas con cada uno se ve en su ficha de la Pokédex. Cuenta desde ahora: hay que jugarlo de nuevo aunque ya lo hubieras usado.',
+     'Debut, veteran and mastery: the first time you survive 5, 10 and 20 minutes with a Pokémon as your partner you earn 1 ticket, 2 tickets and a ×10 ticket. You can see your progress with each one on its Pokédex page. It counts from now on: you need to play it again even if you had used it before.'],
     ['Medallas: cada región tiene 8, con los nombres de sus gimnasios (en Alola, sus cristales Z). Ganas una por cada 10 % que tengas de la región, y los shiny cuentan doble. Las 7 primeras dan 2 tickets cada una y la octava, un ticket ×10.',
      'Badges: every region has 8, named after its gyms (in Alola, its Z-Crystals). You earn one for every 10% of the region you own, and shinies count double. The first 7 give 2 tickets each and the eighth gives a ×10 ticket.'],
     ['Cada medalla tiene la forma y el color de la de su gimnasio (las de Galar y Paldea, con el emblema de su tipo). Las que te faltan se ven en gris, y al conseguir una el aviso enseña esa medalla.',

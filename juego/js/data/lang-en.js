@@ -30,6 +30,15 @@ G.I18n.add({
   'Brillo shiny: +{x} monedas · +{x} ticket': 'Shiny glow: +{x} coins · +{x} ticket',
   'Brillo shiny: +{x} monedas': 'Shiny glow: +{x} coins', 'Brillo shiny: {x}': 'Shiny glow: {x}',
 
+  // ---------------- (mod) estreno, veterano y maestría ----------------
+  'Estreno': 'Debut', 'Veterano': 'Veteran', 'Maestría': 'Mastery',
+  'Estreno y Veterano': 'Debut and Veteran', 'Veterano y Maestría': 'Veteran and Mastery',
+  'Estreno, Veterano y Maestría': 'Debut, Veteran and Mastery',
+  '¡{x} con {x}! {x}': '{x} with {x}! {x}', 'Con este Pokémon:': 'With this Pokémon:',
+  'Estreno (5 min)': 'Debut (5 min)', 'Veterano (10 min)': 'Veteran (10 min)', 'Maestría (20 min)': 'Mastery (20 min)',
+  'Aguanta esos minutos con él de compañero: 1 ticket, 2 tickets y 1 ×10, una sola vez.':
+    'Survive that long with it as your partner: 1 ticket, 2 tickets and 1 ×10, once each.',
+
   // ---------------- (mod) medallas de cada región (los nombres, en js/systems/medals.js) ----------------
   'Ten {x} Pokémon de {x} ({x} %). Los shiny cuentan doble.': 'Own {x} Pokémon from {x} ({x}%). Shinies count double.',
   'Campeón de {x}': '{x} Champion', 'Completa {x}: los {x} Pokémon de la región.': 'Complete {x}: all {x} Pokémon in the region.',

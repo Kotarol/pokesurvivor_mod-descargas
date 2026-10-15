@@ -1,5 +1,5 @@
 /* ============ collection.js — (mod) premios por coleccionar ============
- * Sólo del mod (ver docs/IDEAS-COLECCION.md). Dos cosas:
+ * Sólo del mod (ver docs/IDEAS-COLECCION.md). Tres cosas:
  *
  *   Afinidad regional  tu compañero gana +1 % de daño y +1 % de vida por cada
  *                      10 % que tengas de su región (tope +10 %). Cada shiny
@@ -7,6 +7,11 @@
  *   Brillo shiny       jugando con tu compañero shiny: +15 % de monedas al
  *                      acabar, y cada ticket normal recogido tiene un 15 % de
  *                      contar doble (todo se suma al acabar la partida).
+ *   Estreno y maestría la primera vez que aguantas 5, 10 y 20 minutos con
+ *                      cada Pokémon de compañero: 1 ticket, 2 tickets y 1 ×10.
+ *                      Se apuntan en save.ach ('est_25', 'vet_25', 'mae_25'):
+ *                      así se juntan sin perder nada al sincronizar o importar
+ *                      una copia, y no cuentan como logros (no están en la lista).
  *
  * Se engancha en game.js: apply() al crear tu Pokémon y runEnd() al acabar.
  * La ficha de la Pokédex (menu.js) enseña detailHtml().
@@ -16,6 +21,12 @@ G.Collection = (() => {
   const TIERS = 10;
   const SHINY_COINS = 0.15;     // +15 % de monedas
   const SHINY_TICKET = 0.15;    // probabilidad de que un ticket cuente doble
+  // Una vez por Pokémon, al aguantar `min` minutos con él de compañero.
+  const GOALS = [
+    { id: 'est', min: 5, name: 'Estreno', reward: { t1: 1 } },
+    { id: 'vet', min: 10, name: 'Veterano', reward: { t1: 2 } },
+    { id: 'mae', min: 20, name: 'Maestría', reward: { t10: 1 } }
+  ];
 
   /** Pokémon de la región `gen` que tienes: { owned, shiny, total, pts, pct }. */
   function region(save, gen) {
@@ -55,7 +66,17 @@ G.Collection = (() => {
    * para que el resumen no las cuente como la mejora Fortuna.
    */
   function runEnd(pl, coins) {
-    if (!pl.shiny) return;
+    const msgs = [];
+    const goals = goalsEnd(pl);
+    if (goals) msgs.push(goals);
+    const shiny = pl.shiny && shinyEnd(pl, coins);
+    if (shiny) msgs.push(shiny);
+    // Un aviso detrás de otro (el segundo taparía al primero).
+    msgs.forEach((m, i) => setTimeout(() => G.UI.toast(m, 4500), i * 4700));
+  }
+
+  /** Brillo shiny: monedas y tickets de más. Devuelve el texto del aviso. */
+  function shinyEnd(pl, coins) {
     const s = G.DB.save;
     const extraCoins = Math.round((coins || 0) * SHINY_COINS);
     let extraT = 0;
@@ -65,7 +86,42 @@ G.Collection = (() => {
     const parts = [];
     if (extraCoins) parts.push('+' + extraCoins + ' monedas');
     if (extraT) parts.push('+' + extraT + (extraT === 1 ? ' ticket' : ' tickets'));
-    if (parts.length) G.UI.toast('Brillo shiny: ' + parts.join(' · '), 4500);
+    return parts.length ? 'Brillo shiny: ' + parts.join(' · ') : '';
+  }
+
+  const goalKey = (g, dex) => g.id + '_' + dex;
+
+  /** Qué objetivos (estreno, veterano, maestría) tienes ya con `dex`. */
+  function goalsDone(save, dex) {
+    return GOALS.map(g => !!(save && save.ach && save.ach[goalKey(g, dex)]));
+  }
+
+  /**
+   * Estreno, veterano y maestría que se consiguen en esta partida, con los
+   * minutos aguantados. Los tickets van a pl.t1 / pl.t10, como los recogidos:
+   * salen en el resumen y game.js los guarda justo después.
+   */
+  function goalsEnd(pl) {
+    const s = G.DB.save, mon = G.DEX_BY[pl.dex];
+    if (!s || !mon) return '';
+    const time = G.Game.st.time;
+    s.ach = s.ach || {};
+    const got = [];
+    for (const g of GOALS) {
+      if (time < g.min * 60 || s.ach[goalKey(g, pl.dex)]) continue;
+      s.ach[goalKey(g, pl.dex)] = Date.now();
+      pl.t1 += g.reward.t1 || 0;
+      pl.t10 += g.reward.t10 || 0;
+      got.push(g);
+    }
+    if (!got.length) return '';
+    const names = got.map(g => g.name);
+    const t1 = got.reduce((a, g) => a + (g.reward.t1 || 0), 0), t10 = got.reduce((a, g) => a + (g.reward.t10 || 0), 0);
+    const parts = [];
+    if (t1) parts.push('+' + t1 + (t1 === 1 ? ' ticket' : ' tickets'));
+    if (t10) parts.push('+' + t10 + ' ×10');
+    const what = names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' y ' + names[names.length - 1];
+    return `¡${what} con ${mon.name}! ${parts.join(' · ')}`;
   }
 
   /** Párrafo para la ficha de la Pokédex de un Pokémon que tienes. */
@@ -79,8 +135,12 @@ G.Collection = (() => {
       <b>Afinidad con ${name}:</b> <b class="gold">+${pct} % de daño y vida</b>
       <div class="sub" style="margin-top:2px">Tienes ${r.owned} de ${r.total} (y ${r.shiny} shiny, que cuentan doble). Cada 10 % de la región da +1 %, hasta +10 %.</div>`;
     if (shiny) html += `<div style="margin-top:6px">${G.Icons.html('shiny', 12)} <b>Brillo shiny:</b> +15 % de monedas y algunos tickets cuentan doble.</div>`;
+    const done = goalsDone(s, dex);
+    html += `<div style="margin-top:6px"><b>Con este Pokémon:</b> ` +
+      GOALS.map((g, i) => `<span class="${done[i] ? 'gold' : 'sub'}" style="white-space:nowrap">${G.Icons.html(done[i] ? 'star' : 'starDim', 12)} ${g.name} (${g.min} min)</span>`).join(' · ') +
+      `<div class="sub" style="margin-top:2px">Aguanta esos minutos con él de compañero: 1 ticket, 2 tickets y 1 ×10, una sola vez.</div></div>`;
     return html + '</div>';
   }
 
-  return { region, affinity, apply, runEnd, detailHtml, SHINY_COINS, SHINY_TICKET };
+  return { region, affinity, apply, runEnd, detailHtml, goalsDone, GOALS, SHINY_COINS, SHINY_TICKET };
 })();
