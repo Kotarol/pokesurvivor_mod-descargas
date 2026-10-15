@@ -1,10 +1,16 @@
 /* ============ collection.js — (mod) premios por coleccionar ============
- * Sólo del mod (ver docs/IDEAS-COLECCION.md). Cuatro cosas:
+ * Sólo del mod (ver docs/IDEAS-COLECCION.md). Cinco cosas:
  *
  *   Afinidad regional  tu compañero gana daño y vida según lo que tengas de su
  *                      región: +1 % por cada 10 % hasta el 50 %, +2 % por tramo
  *                      del 60 al 90 % y +18 % al completarla. Cada shiny de la
  *                      región cuenta como uno más (doble).
+ *   Sinergia por tipo  cada movimiento hace +1 % de daño por cada 10 % que
+ *                      tengas de su tipo, de todas las regiones (tope +10 %
+ *                      con el tipo entero; los shiny cuentan doble). Va en el
+ *                      daño del propio movimiento: las mejoras, evoluciones y
+ *                      vínculos la conservan. Con doble tipo, cada movimiento
+ *                      usa la de su tipo (no se suman).
  *   Pasaporte          +2 % de monedas al acabar por cada sello (medals.js).
  *   Brillo shiny       jugando con tu compañero shiny: +15 % de monedas al
  *                      acabar, y cada ticket normal recogido tiene un 15 % de
@@ -45,6 +51,25 @@ G.Collection = (() => {
     return { owned, shiny, total, pts, pct: total ? Math.min(1, pts / total) : 0 };
   }
 
+  /** Pokémon de tipo `type` que tienes (de todas las regiones), como region(). */
+  function typeCount(save, type) {
+    let owned = 0, shiny = 0, total = 0;
+    for (const p of G.DEX) {
+      if (!p.types.includes(type)) continue;
+      total++;
+      if (save.owned && save.owned[p.dex]) owned++;
+      if (save.shiny && save.shiny[p.dex]) shiny++;
+    }
+    const pts = owned + shiny;
+    return { owned, shiny, total, pts, pct: total ? Math.min(1, pts / total) : 0 };
+  }
+
+  /** Extra de daño (0 … 0,10) de los movimientos de tipo `type`: +1 % por cada 10 % del tipo. */
+  function synergy(save, type) {
+    if (!save) return 0;
+    return Math.min(TIERS, Math.floor(typeCount(save, type).pct * TIERS + 1e-9)) * PER_TIER;
+  }
+
   /**
    * Extra de daño y vida (0 … 0,18) de un Pokémon por la afinidad con su región.
    * Crece más al final: +1 % por tramo hasta el 50 %, +2 % por tramo del 60 al
@@ -68,6 +93,16 @@ G.Collection = (() => {
       pl.hp = pl.maxHp;
     }
     pl.affinity = b;
+    // Sinergia por tipo: cada movimiento que aprende lleva la de su tipo en su daño.
+    pl.synergy = {};
+    for (const t in G.U.TYPE_NAME) pl.synergy[t] = synergy(save, t);
+    const addMove = pl.addMove;
+    pl.addMove = function (id) {
+      const ok = addMove.call(this, id);
+      const m = ok && this.moves.find(x => x.id === id);
+      if (m && typeof m.dmg === 'number') m.dmg *= 1 + (this.synergy[m.type] || 0);
+      return ok;
+    };
   }
 
   /**
@@ -158,6 +193,14 @@ G.Collection = (() => {
       <b>Afinidad con ${name}:</b> <b class="gold">+${pct} % de daño y vida</b>
       <div class="sub" style="margin-top:2px">Tienes ${r.owned} de ${r.total} (y ${r.shiny} shiny, que cuentan doble). Hasta el 50 % de la región, +1 % por cada 10 %; del 60 al 90 %, +2 %; completa, +18 %.</div>`;
     if (shiny) html += `<div style="margin-top:6px">${G.Icons.html('shiny', 12)} <b>Brillo shiny:</b> +15 % de monedas y algunos tickets cuentan doble.</div>`;
+    // Sinergia: la de sus tipos y la de Normal (todos aprenden movimientos Normal).
+    const types = mon.types.concat(mon.types.includes('normal') ? [] : ['normal']);
+    html += `<div style="margin-top:6px"><b>Sinergia por tipo:</b>` + types.map(t => {
+      const c = typeCount(s, t);
+      return `<div style="margin-top:3px"><span class="type" style="background:${G.U.TYPE_COLOR[t]}">${G.U.TYPE_NAME[t]}</span> ` +
+        `<b class="gold">+${Math.round(synergy(s, t) * 100)} %</b> <span class="sub">(${c.owned} de ${c.total}${c.shiny ? ` + ${c.shiny} shiny` : ''})</span></div>`;
+    }).join('') +
+      `<div class="sub" style="margin-top:2px">Los movimientos de cada tipo hacen +1 % de daño por cada 10 % que tengas de ese tipo, de todas las regiones (hasta +10 %). Los shiny cuentan doble.</div></div>`;
     const done = goalsDone(s, dex);
     html += `<div style="margin-top:6px"><b>Con este Pokémon:</b> ` +
       GOALS.map((g, i) => `<span class="${done[i] ? 'gold' : 'sub'}" style="white-space:nowrap">${G.Icons.html(done[i] ? 'star' : 'starDim', 12)} ${g.name} (${g.min} min)</span>`).join(' · ') +
@@ -165,5 +208,5 @@ G.Collection = (() => {
     return html + '</div>';
   }
 
-  return { region, affinity, apply, runEnd, detailHtml, goalsDone, GOALS, SHINY_COINS, SHINY_TICKET };
+  return { region, typeCount, synergy, affinity, apply, runEnd, detailHtml, goalsDone, GOALS, SHINY_COINS, SHINY_TICKET };
 })();

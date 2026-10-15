@@ -30,6 +30,11 @@ G.I18n.add({
   'Brillo shiny: +{x} monedas · +{x} ticket': 'Shiny glow: +{x} coins · +{x} ticket',
   'Brillo shiny: +{x} monedas': 'Shiny glow: +{x} coins', 'Brillo shiny: {x}': 'Shiny glow: {x}',
 
+  // ---------------- (mod) sinergia por tipo ----------------
+  'Sinergia por tipo:': 'Type synergy:','({x} de {x})': '({x} of {x})', '({x} de {x} + {x} shiny)': '({x} of {x} + {x} shiny)',
+  'Los movimientos de cada tipo hacen +1 % de daño por cada 10 % que tengas de ese tipo, de todas las regiones (hasta +10 %). Los shiny cuentan doble.':
+    'Moves of each type deal +1% damage for every 10% of that type you own, across all regions (up to +10%). Shinies count double.',
+
   // ---------------- (mod) pasaporte ----------------
   'Pasaporte': 'Passport', 'Pasaporte {x}/{x}': 'Passport {x}/{x}', 'Sello de {x}': '{x} stamp', 'Trotamundos': 'Globetrotter',
   'Ten el 50 % de {x} ({x} Pokémon). Cada sello del pasaporte da +2 % de monedas al acabar cada partida.':

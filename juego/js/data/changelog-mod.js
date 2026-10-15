@@ -7,6 +7,8 @@
  */
 G.CHANGELOG_MOD = [
   { d: '2026-10-15', title: ['Medallas, Liga y pasaporte', 'Badges, League and passport'], new: [
+    ['Sinergia por tipo: los movimientos de cada tipo hacen +1 % de daño por cada 10 % que tengas de ese tipo, contando todas las regiones (hasta +10 % con el tipo entero). Los shiny cuentan doble. Con doble tipo, cada movimiento usa la de su tipo, y los movimientos Normal, la de Normal. Lo ves en la ficha de la Pokédex.',
+     'Type synergy: moves of each type deal +1% damage for every 10% of that type you own, across all regions (up to +10% with the whole type). Shinies count double. With two types, each move uses its own type\'s synergy, and Normal moves use Normal\'s. You can see it on the Pokédex page.'],
     ['La Liga en las grietas: con las 8 medallas de la región de tu compañero, desde el minuto 10 la primera grieta en la que entres trae al as de un miembro del Alto Mando, y desde el 20, al as del campeón (¡Cintia te reta con Garchomp!). Dan el premio de una grieta y el campeón, además, un ticket ×10 seguro. Si te faltan medallas, la Liga no te deja pasar.',
      'The League in the rifts: with all 8 badges of your partner\'s region, from minute 10 the first rift you enter brings an Elite Four member\'s ace, and from minute 20, the Champion\'s ace (Cynthia challenges you with Garchomp!). They give the usual rift reward and the Champion also drops a guaranteed ×10 ticket. If you are missing badges, the League won\'t let you in.'],
     ['Logros nuevos: "Vence a la Liga de <región>", uno por región, con un ticket ×10 cada uno.',
