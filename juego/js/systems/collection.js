@@ -1,9 +1,11 @@
 /* ============ collection.js — (mod) premios por coleccionar ============
- * Sólo del mod (ver docs/IDEAS-COLECCION.md). Tres cosas:
+ * Sólo del mod (ver docs/IDEAS-COLECCION.md). Cuatro cosas:
  *
- *   Afinidad regional  tu compañero gana +1 % de daño y +1 % de vida por cada
- *                      10 % que tengas de su región (tope +10 %). Cada shiny
- *                      de la región cuenta como uno más (doble).
+ *   Afinidad regional  tu compañero gana daño y vida según lo que tengas de su
+ *                      región: +1 % por cada 10 % hasta el 50 %, +2 % por tramo
+ *                      del 60 al 90 % y +18 % al completarla. Cada shiny de la
+ *                      región cuenta como uno más (doble).
+ *   Pasaporte          +2 % de monedas al acabar por cada sello (medals.js).
  *   Brillo shiny       jugando con tu compañero shiny: +15 % de monedas al
  *                      acabar, y cada ticket normal recogido tiene un 15 % de
  *                      contar doble (todo se suma al acabar la partida).
@@ -17,8 +19,10 @@
  * La ficha de la Pokédex (menu.js) enseña detailHtml().
  */
 G.Collection = (() => {
-  const PER_TIER = 0.01;        // +1 % por cada 10 % de la región
+  const PER_TIER = 0.01;        // +1 % por cada 10 % de la región (x2 del 60 al 90 %)
   const TIERS = 10;
+  const CHAMPION = 5;           // +5 % más al completar la región
+  const STAMP_COINS = 0.02;     // pasaporte: +2 % de monedas por sello
   const SHINY_COINS = 0.15;     // +15 % de monedas
   const SHINY_TICKET = 0.15;    // probabilidad de que un ticket cuente doble
   // Una vez por Pokémon, al aguantar `min` minutos con él de compañero.
@@ -41,12 +45,18 @@ G.Collection = (() => {
     return { owned, shiny, total, pts, pct: total ? Math.min(1, pts / total) : 0 };
   }
 
-  /** Extra de daño y vida (0 … 0,10) de un Pokémon por la afinidad con su región. */
+  /**
+   * Extra de daño y vida (0 … 0,18) de un Pokémon por la afinidad con su región.
+   * Crece más al final: +1 % por tramo hasta el 50 %, +2 % por tramo del 60 al
+   * 90 % (+13 %), y al completarla (Campeón de la región) +18 %.
+   */
   function affinity(save, dex) {
     const mon = G.DEX_BY[dex];
     if (!save || !mon) return 0;
     // (el 1e-9, para que el 30 % justo no se quede en 2 tramos por redondeo)
-    return Math.min(TIERS, Math.floor(region(save, mon.gen).pct * TIERS + 1e-9)) * PER_TIER;
+    const t = Math.min(TIERS, Math.floor(region(save, mon.gen).pct * TIERS + 1e-9));
+    const pts = Math.min(t, 5) + 2 * Math.max(0, Math.min(t, 9) - 5) + (t >= TIERS ? CHAMPION : 0);
+    return pts * PER_TIER;
   }
 
   /** Al crear tu Pokémon para la partida (game.js, startRun). */
@@ -71,6 +81,8 @@ G.Collection = (() => {
     if (goals) msgs.push(goals);
     const shiny = pl.shiny && shinyEnd(pl, coins);
     if (shiny) msgs.push(shiny);
+    const stamps = passportEnd(coins);
+    if (stamps) msgs.push(stamps);
     // Un aviso detrás de otro (el segundo taparía al primero).
     msgs.forEach((m, i) => setTimeout(() => G.UI.toast(m, 4500), i * 4700));
   }
@@ -87,6 +99,17 @@ G.Collection = (() => {
     if (extraCoins) parts.push('+' + extraCoins + ' monedas');
     if (extraT) parts.push('+' + extraT + (extraT === 1 ? ' ticket' : ' tickets'));
     return parts.length ? 'Brillo shiny: ' + parts.join(' · ') : '';
+  }
+
+  /** Pasaporte: +2 % de monedas por cada sello (región al 50 %, medals.js). */
+  function passportEnd(coins) {
+    const s = G.DB.save;
+    const n = s && G.Medals ? G.Medals.stamps(s) : 0;
+    const extra = Math.round((coins || 0) * STAMP_COINS * n);
+    if (!extra) return '';
+    s.coins += extra;
+    s.stats.coinsEarned += extra;
+    return `Pasaporte (${n === 1 ? '1 sello' : n + ' sellos'}): +${extra} ${extra === 1 ? 'moneda' : 'monedas'}`;
   }
 
   const goalKey = (g, dex) => g.id + '_' + dex;
@@ -133,7 +156,7 @@ G.Collection = (() => {
     const name = G.MenuUI.GEN_NAMES[mon.gen - 1];
     let html = `<div class="panel" style="margin:10px 0 0;padding:8px 10px;font-size:13px">
       <b>Afinidad con ${name}:</b> <b class="gold">+${pct} % de daño y vida</b>
-      <div class="sub" style="margin-top:2px">Tienes ${r.owned} de ${r.total} (y ${r.shiny} shiny, que cuentan doble). Cada 10 % de la región da +1 %, hasta +10 %.</div>`;
+      <div class="sub" style="margin-top:2px">Tienes ${r.owned} de ${r.total} (y ${r.shiny} shiny, que cuentan doble). Hasta el 50 % de la región, +1 % por cada 10 %; del 60 al 90 %, +2 %; completa, +18 %.</div>`;
     if (shiny) html += `<div style="margin-top:6px">${G.Icons.html('shiny', 12)} <b>Brillo shiny:</b> +15 % de monedas y algunos tickets cuentan doble.</div>`;
     const done = goalsDone(s, dex);
     html += `<div style="margin-top:6px"><b>Con este Pokémon:</b> ` +

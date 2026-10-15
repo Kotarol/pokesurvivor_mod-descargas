@@ -6,7 +6,9 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
-  { d: '2026-10-15', title: ['Medallas, estreno y maestría', 'Badges, debut and mastery'], new: [
+  { d: '2026-10-15', title: ['Medallas, pasaporte y maestría', 'Badges, passport and mastery'], new: [
+    ['Pasaporte: un sello por cada región de la que tengas al menos el 50 %. Cada sello da +2 % de monedas al acabar cada partida, y con los 9, el título "Trotamundos". Ábrelo desde la Pokédex.',
+     'Passport: one stamp for every region you own at least 50% of. Each stamp gives +2% coins at the end of every run, and with all 9, the "Globetrotter" title. Open it from the Pokédex.'],
     ['Estreno, veterano y maestría: la primera vez que aguantas 5, 10 y 20 minutos con un Pokémon de compañero ganas 1 ticket, 2 tickets y un ticket ×10. Lo que llevas con cada uno se ve en su ficha de la Pokédex. Cuenta desde ahora: hay que jugarlo de nuevo aunque ya lo hubieras usado.',
      'Debut, veteran and mastery: the first time you survive 5, 10 and 20 minutes with a Pokémon as your partner you earn 1 ticket, 2 tickets and a ×10 ticket. You can see your progress with each one on its Pokédex page. It counts from now on: you need to play it again even if you had used it before.'],
     ['Medallas: cada región tiene 8, con los nombres de sus gimnasios (en Alola, sus cristales Z). Ganas una por cada 10 % que tengas de la región, y los shiny cuentan doble. Las 7 primeras dan 2 tickets cada una y la octava, un ticket ×10.',
@@ -17,6 +19,9 @@ G.CHANGELOG_MOD = [
      'Complete a whole region to get the "<region> Champion" title.'],
     ['Las medallas se ven en la Pokédex, debajo de cada región, y en Logros, en su propia pestaña. Si ya tenías colección, recibes de golpe las que te tocan.',
      'You can see your badges in the Pokédex, below each region, and in Achievements, in their own tab (Medals). If you already had a collection, you get the ones you have earned all at once.']
+  ], chg: [
+    ['Afinidad regional: ahora crece más al final. Hasta el 50 % de la región, +1 % de daño y vida por cada 10 %; del 60 al 90 %, +2 % por tramo; y al completarla, +18 % (antes, como mucho +10 %).',
+     'Regional affinity now grows more at the end. Up to 50% of the region, +1% damage and HP for every 10%; from 60 to 90%, +2% per step; and when complete, +18% (it used to be +10% at most).']
   ] },
   { d: '2026-10-14', title: ['PokéSurvivor para Windows', 'PokéSurvivor for Windows'], new: [
     ['PokéSurvivor para Windows: el juego como programa, en su propia ventana y sin navegador. Se actualiza solo al abrirlo, o con "Buscar actualizaciones" debajo del menú.',

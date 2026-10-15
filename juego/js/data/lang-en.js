@@ -23,12 +23,22 @@ G.I18n.add({
 
   // ---------------- (mod) afinidad regional y brillo shiny ----------------
   'Afinidad con {x}:': 'Affinity with {x}:', '+{x} % de daño y vida': '+{x}% damage and HP',
-  'Tienes {x} de {x} (y {x} shiny, que cuentan doble). Cada 10 % de la región da +1 %, hasta +10 %.':
-    'You have {x} of {x} (and {x} shiny, which count double). Every 10% of the region gives +1%, up to +10%.',
+  'Tienes {x} de {x} (y {x} shiny, que cuentan doble). Hasta el 50 % de la región, +1 % por cada 10 %; del 60 al 90 %, +2 %; completa, +18 %.':
+    'You have {x} of {x} (and {x} shiny, which count double). Up to 50% of the region, +1% for every 10%; from 60 to 90%, +2%; complete, +18%.',
   'Brillo shiny:': 'Shiny glow:', '+15 % de monedas y algunos tickets cuentan doble.': '+15% coins and some tickets count double.',
   'Brillo shiny: +{x} monedas · +{x} tickets': 'Shiny glow: +{x} coins · +{x} tickets',
   'Brillo shiny: +{x} monedas · +{x} ticket': 'Shiny glow: +{x} coins · +{x} ticket',
   'Brillo shiny: +{x} monedas': 'Shiny glow: +{x} coins', 'Brillo shiny: {x}': 'Shiny glow: {x}',
+
+  // ---------------- (mod) pasaporte ----------------
+  'Pasaporte': 'Passport', 'Pasaporte {x}/{x}': 'Passport {x}/{x}', 'Sello de {x}': '{x} stamp', 'Trotamundos': 'Globetrotter',
+  'Ten el 50 % de {x} ({x} Pokémon). Cada sello del pasaporte da +2 % de monedas al acabar cada partida.':
+    'Own 50% of {x} ({x} Pokémon). Each passport stamp gives +2% coins at the end of every run.',
+  'Consigue los {x} sellos del pasaporte.': 'Collect all {x} passport stamps.',
+  'Un sello por cada región de la que tengas al menos el 50 % (los shiny cuentan doble).': 'One stamp for every region you own at least 50% of (shinies count double).',
+  'Sellos: {x} de {x}': 'Stamps: {x} of {x}', '+{x} % de monedas al acabar cada partida': '+{x}% coins at the end of every run',
+  '¡Trotamundos! Tienes todos los sellos.': 'Globetrotter! You have every stamp.', 'Con los {x} sellos: título "Trotamundos".': 'With all {x} stamps: the "Globetrotter" title.',
+  'sello al 50 %': 'stamp at 50%', 'Pasaporte ({x}): +{x} monedas': 'Passport ({x}): +{x} coins', 'Pasaporte ({x}): +{x} moneda': 'Passport ({x}): +{x} coin', '1 sello': '1 stamp', '{x} sellos': '{x} stamps', 'sello': 'stamp', 'sellos': 'stamps',
 
   // ---------------- (mod) estreno, veterano y maestría ----------------
   'Estreno': 'Debut', 'Veterano': 'Veteran', 'Maestría': 'Mastery',

@@ -216,18 +216,37 @@ G.MedalArt = (() => {
   const rowsCache = {};
   const rowsOf = (gen, k) => rowsCache[gen + '_' + k] || (rowsCache[gen + '_' + k] = grid(ART[gen - 1][k - 1][1]));
 
-  function def(gen, k, color) {
-    const b = ART[gen - 1][k - 1][0] || mix(color, '#ffffff', 0.45);
-    return { rows: rowsOf(gen, k), pal: Object.assign({}, FIXED, {
+  function palOn(color, b) {
+    b = b || mix(color, '#ffffff', 0.45);
+    return Object.assign({}, FIXED, {
       a: color, A: mix(color, '#ffffff', 0.4), 1: mix(color, '#000000', 0.35),
-      b, B: mix(b, '#ffffff', 0.4), 2: mix(b, '#000000', 0.35) }) };
+      b, B: mix(b, '#ffffff', 0.4), 2: mix(b, '#000000', 0.35) });
+  }
+
+  function palOff() {
+    const pal = { a: '#3a4870', b: '#3a4870', A: '#4a5a88', B: '#4a5a88', 1: '#2a3458', 2: '#2a3458', n: '#232b4a' };
+    for (const c of 'roygupw') pal[c] = '#465686';
+    return pal;
+  }
+
+  function def(gen, k, color) {
+    return { rows: rowsOf(gen, k), pal: palOn(color, ART[gen - 1][k - 1][0]) };
   }
 
   function off(gen, k) {
-    const pal = { a: '#3a4870', b: '#3a4870', A: '#4a5a88', B: '#4a5a88', 1: '#2a3458', 2: '#2a3458', n: '#232b4a' };
-    for (const c of 'roygupw') pal[c] = '#465686';
-    return { rows: rowsOf(gen, k), pal };
+    return { rows: rowsOf(gen, k), pal: palOff() };
   }
 
-  return { def, off };
+  // ---------------- pasaporte (medals.js) ----------------
+  // Sello: aro de tinta con una estrella dentro. Pasaporte: librito con su globo.
+  const STAMP = grid([['a', C(8, 8, 7)], ['x', C(8, 8, 5.6)], ['a', STAR(8, 8.3, 4.4, 1.9, 5)]]);
+  const BOOK = grid([['a', R(2.5, 1.5, 13.5, 14.5)], ['1', R(2.5, 1.5, 3.9, 14.5)],
+                     ['y', C(8.8, 7, 3.3)], ['a', C(8.8, 7, 2.3)], ['y', OR(L(8.8, 4.2, 8.8, 9.8, 0.45), L(6, 7, 11.6, 7, 0.45))],
+                     ['y', L(5.6, 11.8, 12, 11.8, 0.45)]]);
+  const stamp = color => ({ rows: STAMP, pal: palOn(color) });
+  const stampOff = () => ({ rows: STAMP, pal: palOff() });
+  const passport = color => ({ rows: BOOK, pal: palOn(color) });
+  const passportOff = () => ({ rows: BOOK, pal: palOff() });
+
+  return { def, off, stamp, stampOff, passport, passportOff };
 })();

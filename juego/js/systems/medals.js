@@ -12,6 +12,11 @@
  * comprueba y da los premios como a los demás. La Pokédex (menu.js) enseña la
  * fila de medallas de la región con dexRow(). La primera vez, quien ya tenía
  * colección recibe de golpe las que le tocan, con un solo aviso (catchUp).
+ *
+ * Pasaporte (idea E): un sello por región con al menos el 50 % (mismo
+ * contador). Cada sello da +2 % de monedas al acabar cada partida
+ * (collection.js) y con los 9, el título "Trotamundos". Los sellos son logros
+ * de la misma pestaña; la página del pasaporte se abre desde la Pokédex.
  */
 G.Medals = (() => {
   const REGIONS = [
@@ -87,6 +92,24 @@ G.Medals = (() => {
     return save ? status(save, gen).medals : 0;
   }
 
+  // ---------------- pasaporte ----------------
+  // Color de la tinta del sello de cada región.
+  const INK = ['#e0303c', '#d8a020', '#3aa860', '#4f78e0', '#5a6070', '#c04aa0', '#ff8a3c', '#9a5ae0', '#e05a7a'];
+  const STAMP_TIER = 5;   // el sello, al 50 % (como la 5.ª medalla)
+
+  /** ¿Tiene el sello de la región `gen`? */
+  function hasStamp(save, gen) {
+    const r = points(save)[gen];
+    return r.pts >= goal(r.total, STAMP_TIER);
+  }
+
+  /** Sellos del pasaporte (0-9). */
+  function stamps(save) {
+    let n = 0;
+    for (let g = 1; g <= REGIONS.length; g++) if (hasStamp(save, g)) n++;
+    return n;
+  }
+
   // ---------------- logros ----------------
 
   function register() {
@@ -106,7 +129,14 @@ G.Medals = (() => {
       D.LIST.push({ id: `champ_${g}`, cat: 'medallas', tier: 3, gen: g, medal: 10,
                     name: `Campeón de ${reg}`, desc: `Completa ${reg}: los ${total} Pokémon de la región.`,
                     value, goal: total, reward: {}, title: `Campeón de ${reg}` });
+      const ns = goal(total, STAMP_TIER);
+      D.LIST.push({ id: `stamp_${g}`, cat: 'medallas', tier: 2, gen: g, medal: 'stamp',
+                    name: `Sello de ${reg}`, desc: `Ten el 50 % de ${reg} (${ns} Pokémon). Cada sello del pasaporte da +2 % de monedas al acabar cada partida.`,
+                    value, goal: ns, reward: {} });
     }
+    D.LIST.push({ id: 'passport', cat: 'medallas', tier: 3, medal: 'passport', name: 'Trotamundos',
+                  desc: `Consigue los ${REGIONS.length} sellos del pasaporte.`, value: stamps, goal: REGIONS.length,
+                  reward: {}, title: 'Trotamundos' });
     for (const a of D.LIST) D.BY[a.id] = a;
 
     // Nombres en inglés: van aquí, con la región, porque en español se repiten.
@@ -136,9 +166,12 @@ G.Medals = (() => {
     const parts = [];
     if (sum.t1) parts.push(`+${sum.t1} tickets`);
     if (sum.t10) parts.push(`+${sum.t10} ×10`);
+    const st = due.filter(a => a.medal === 'stamp').length;
+    if (st) parts.push(st === 1 ? '1 sello' : `${st} sellos`);
     const champs = due.filter(a => a.title).length;
     if (champs) parts.push(champs === 1 ? 'nuevo título' : `${champs} títulos nuevos`);
-    G.UI.toast(`¡${due.length} medallas por tu colección! ` + parts.join(' · '), 6000);
+    const m = due.length - st - champs;
+    G.UI.toast(`¡${m} medallas por tu colección! ` + parts.join(' · '), 6000);
   }
 
   // ---------------- iconos ----------------
@@ -151,11 +184,15 @@ G.Medals = (() => {
       UI[`badge${gi + 1}_${ki + 1}_off`] = G.MedalArt.off(gi + 1, ki + 1);
     }));
     UI.trophyOff = { rows: UI.trophy.rows, pal: { y: '#3a4870', d: '#2a3458', w: '#4a5a88' } };
+    INK.forEach((c, gi) => { UI[`stamp${gi + 1}`] = G.MedalArt.stamp(c); UI[`stamp${gi + 1}_off`] = G.MedalArt.stampOff(); });
+    UI.passport = G.MedalArt.passport('#2f5aa8');
+    UI.passportOff = G.MedalArt.passportOff();
     // El aviso de logro y su carta (progress.js, goals-ui.js) usan icon / iconOff.
     for (const a of G.AchDefs.LIST) {
       if (a.cat !== 'medallas') continue;
-      a.icon = a.medal === 10 ? 'trophy' : `badge${a.gen}_${a.medal}`;
-      a.iconOff = a.medal === 10 ? 'trophyOff' : `badge${a.gen}_${a.medal}_off`;
+      const base = a.medal === 10 ? 'trophy' : a.medal === 'stamp' ? `stamp${a.gen}` : a.medal === 'passport' ? 'passport' : `badge${a.gen}_${a.medal}`;
+      a.icon = base;
+      a.iconOff = a.medal === 10 || a.medal === 'passport' ? base + 'Off' : base + '_off';
     }
   }
 
@@ -181,6 +218,10 @@ G.Medals = (() => {
     }
     icons += `<span class="dm-b dm-champ${st.champion ? ' ok' : ''}" title="Campeón de ${reg} · ${st.total}">` +
              G.Icons.html(st.champion ? 'trophy' : 'trophyOff', 32) + '</span>';
+    const stamp = hasStamp(s, gen);
+    icons += `<span class="dm-b dm-champ${stamp ? ' ok' : ''}" title="Sello de ${reg} · ${goal(st.total, STAMP_TIER)}">` +
+             G.Icons.html(`stamp${gen}` + (stamp ? '' : '_off'), 32) + '</span>';
+    passportButton();
 
     let next;
     if (st.champion) next = `<b class="gold">Campeón de ${reg}</b>`;
@@ -191,6 +232,61 @@ G.Medals = (() => {
       <div class="dm-icons">${icons}</div><small class="dm-next">${next}</small>`;
   }
 
+  /** Botón "Pasaporte 4/9" junto al contador de la Pokédex. */
+  function passportButton() {
+    const total = document.getElementById('dex-total');
+    if (!total) return;
+    let b = document.getElementById('dex-passport');
+    if (!b) {
+      b = document.createElement('button');
+      b.id = 'dex-passport';
+      b.className = 'btn small ghost dm-pp-btn';
+      b.onclick = openPassport;
+      total.after(b);
+    }
+    const n = stamps(G.DB.save);
+    b.innerHTML = G.Icons.html(n ? 'passport' : 'passportOff', 16) + ` <span>Pasaporte ${n}/${REGIONS.length}</span>`;
+  }
+
+  /** La página del pasaporte: los 9 sellos, conseguidos o no. */
+  function openPassport() {
+    const s = G.DB.save;
+    close();
+    const n = stamps(s);
+    let cells = '';
+    for (let g = 1; g <= REGIONS.length; g++) {
+      const r = points(s)[g], reg = regionName(g);
+      const pct = Math.floor(Math.min(1, r.pts / r.total) * 100);
+      if (hasStamp(s, g)) {
+        const at = s.ach && s.ach[`stamp_${g}`];
+        // Un giro distinto para cada sello, siempre el mismo.
+        const rot = ((g * 37) % 17) - 8;
+        cells += `<div class="pp-cell"><div class="pp-stamp" style="--c:${INK[g - 1]};--r:${rot}deg">
+          ${G.Icons.html(`stamp${g}`, 32)}<b>${reg}</b>${at ? `<small>${new Date(at).toLocaleDateString('es')}</small>` : ''}</div></div>`;
+      } else {
+        cells += `<div class="pp-cell"><div class="pp-stamp off"><b>${reg}</b><small>${pct} %</small><small>sello al 50 %</small></div></div>`;
+      }
+    }
+    const done = n >= REGIONS.length;
+    const ov = document.createElement('div');
+    ov.id = 'passport';
+    ov.className = 'pp-ov';
+    ov.innerHTML = `<div class="box pp-box">
+      <div class="row between"><h2>${G.Icons.html('passport', 24)} Pasaporte</h2><button class="btn small ghost" id="pp-close">Cerrar</button></div>
+      <p class="sub">Un sello por cada región de la que tengas al menos el 50 % (los shiny cuentan doble).</p>
+      <div class="pp-grid">${cells}</div>
+      <p class="pp-foot"><b class="gold">Sellos: ${n} de ${REGIONS.length}</b> · +${n * 2} % de monedas al acabar cada partida</p>
+      <p class="sub">${done ? '¡Trotamundos! Tienes todos los sellos.' : `Con los ${REGIONS.length} sellos: título "Trotamundos".`}</p></div>`;
+    ov.onclick = e => { if (e.target === ov) close(); };
+    document.body.appendChild(ov);
+    document.getElementById('pp-close').onclick = close;
+  }
+
+  function close() {
+    const ov = document.getElementById('passport');
+    if (ov) ov.remove();
+  }
+
   const CSS = `
     .dex-medals { display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; margin: 2px 2px 6px;
                   padding: 6px 10px; border-radius: 10px; background: rgba(0,0,0,.22); }
@@ -199,7 +295,21 @@ G.Medals = (() => {
     .dex-medals .dm-b { display: inline-flex; opacity: .75; }
     .dex-medals .dm-b.ok { opacity: 1; filter: drop-shadow(0 0 3px rgba(255,210,63,.45)); }
     .dex-medals .dm-champ { margin-left: 4px; }
-    .dex-medals .dm-next { color: var(--muted); font-size: 12px; }`;
+    .dex-medals .dm-next { color: var(--muted); font-size: 12px; }
+    .dm-pp-btn { margin-left: 10px; vertical-align: middle; display: inline-flex; align-items: center; gap: 4px; }
+    .pp-ov { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.6); display: flex;
+             align-items: center; justify-content: center; padding: 16px; }
+    .pp-box { width: min(560px, 100%); max-height: 100%; overflow: auto; }
+    .pp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0;
+               padding: 12px; border-radius: 10px; background: #e9dfc4; }
+    .pp-cell { display: flex; align-items: center; justify-content: center; }
+    .pp-stamp { width: 100%; max-width: 132px; aspect-ratio: 1; border-radius: 50%; border: 4px double var(--c);
+                color: var(--c); display: flex; flex-direction: column; align-items: center; justify-content: center;
+                gap: 2px; transform: rotate(var(--r)); text-transform: uppercase; text-align: center; }
+    .pp-stamp b { font-size: 14px; }
+    .pp-stamp small { font-size: 10px; text-transform: none; }
+    .pp-stamp.off { --c: #a89c80; border: 3px dashed #b8ac90; color: #8a7e62; transform: none; }
+    .pp-foot { margin: 4px 0 2px; }`;
 
   function init() {
     register();
@@ -210,5 +320,5 @@ G.Medals = (() => {
   }
   init();
 
-  return { count, status, goal, catchUp, dexRow, BADGES, REGIONS };
+  return { count, status, goal, catchUp, dexRow, stamps, hasStamp, openPassport, BADGES, REGIONS };
 })();
