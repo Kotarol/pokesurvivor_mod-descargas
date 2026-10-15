@@ -5,7 +5,7 @@
  *   con los nombres de sus gimnasios (Alola no tiene: sus cristales Z). Mismo
  *   contador que la afinidad (collection.js): cada shiny cuenta como uno más.
  *     medallas 1-7  → 2 tickets cada una
- *     medalla 8     → 1 ticket ×10 (y, más adelante, abre la Liga de la región)
+ *     medalla 8     → 1 ticket ×10 y abre la Liga de la región (league.js)
  *     100 %         → título "Campeón de <región>"
  *
  * Son logros normales (G.AchDefs, pestaña "Medallas"): progress.js los
@@ -123,7 +123,7 @@ G.Medals = (() => {
       for (let k = 1; k <= N; k++) {
         const n = goal(total, k);
         D.LIST.push({ id: `medal_${g}_${k}`, cat: 'medallas', tier: k < 4 ? 1 : k < N ? 2 : 3, gen: g, medal: k,
-                      name: badgeName(g, k), desc: `Ten ${n} Pokémon de ${reg} (${k * 10} %). Los shiny cuentan doble.`,
+                      name: badgeName(g, k), desc: `Ten ${n} Pokémon de ${reg} (${k * 10} %). Los shiny cuentan doble.` + (k === N ? ` Abre la Liga de ${reg}.` : ''),
                       value, goal: n, reward: k < N ? { t1: T1 } : { t10: 1 } });
       }
       D.LIST.push({ id: `champ_${g}`, cat: 'medallas', tier: 3, gen: g, medal: 10,

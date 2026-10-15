@@ -6,7 +6,11 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
-  { d: '2026-10-15', title: ['Medallas, pasaporte y maestría', 'Badges, passport and mastery'], new: [
+  { d: '2026-10-15', title: ['Medallas, Liga y pasaporte', 'Badges, League and passport'], new: [
+    ['La Liga en las grietas: con las 8 medallas de la región de tu compañero, desde el minuto 10 la primera grieta en la que entres trae al as de un miembro del Alto Mando, y desde el 20, al as del campeón (¡Cintia te reta con Garchomp!). Dan el premio de una grieta y el campeón, además, un ticket ×10 seguro. Si te faltan medallas, la Liga no te deja pasar.',
+     'The League in the rifts: with all 8 badges of your partner\'s region, from minute 10 the first rift you enter brings an Elite Four member\'s ace, and from minute 20, the Champion\'s ace (Cynthia challenges you with Garchomp!). They give the usual rift reward and the Champion also drops a guaranteed ×10 ticket. If you are missing badges, the League won\'t let you in.'],
+    ['Logros nuevos: "Vence a la Liga de <región>", uno por región, con un ticket ×10 cada uno.',
+     'New achievements: "Beat the <region> League", one per region, with a ×10 ticket each.'],
     ['Pasaporte: un sello por cada región de la que tengas al menos el 50 %. Cada sello da +2 % de monedas al acabar cada partida, y con los 9, el título "Trotamundos". Ábrelo desde la Pokédex.',
      'Passport: one stamp for every region you own at least 50% of. Each stamp gives +2% coins at the end of every run, and with all 9, the "Globetrotter" title. Open it from the Pokédex.'],
     ['Estreno, veterano y maestría: la primera vez que aguantas 5, 10 y 20 minutos con un Pokémon de compañero ganas 1 ticket, 2 tickets y un ticket ×10. Lo que llevas con cada uno se ve en su ficha de la Pokédex. Cuenta desde ahora: hay que jugarlo de nuevo aunque ya lo hubieras usado.',

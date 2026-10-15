@@ -56,6 +56,11 @@ G.I18n.add({
   'Completa {x} para ser Campeón: {x} de {x}.': 'Complete {x} to become Champion: {x} of {x}.',
   '¡{x} medallas por tu colección! {x}': '{x} medals for your collection! {x}',
   '+{x} tickets': '+{x} tickets', 'nuevo título': 'new title', '{x} títulos nuevos': '{x} new titles',
+  'Ten {x} Pokémon de {x} ({x} %). Los shiny cuentan doble. Abre la Liga de {x}.': 'Own {x} Pokémon from {x} ({x}%). Shinies count double. Unlocks the {x} League.',
+
+  // ---------------- (mod) la Liga en las grietas (los retos, en js/systems/league.js) ----------------
+  'La Liga de {x} no te deja pasar: te faltan {x} medallas': 'The {x} League won\'t let you in: you are missing {x} badges',
+  'La Liga de {x} no te deja pasar: te falta 1 medalla': 'The {x} League won\'t let you in: you are missing 1 badge',
 
   // ---------------- tipos y regiones ----------------
   'Acero': 'Steel', 'Agua': 'Water', 'Bicho': 'Bug', 'Dragón': 'Dragon', 'Eléctrico': 'Electric', 'Fantasma': 'Ghost',

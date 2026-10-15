@@ -103,9 +103,11 @@ G.Rift = (() => {
       // La arena es la de uno de sus tipos, al azar.
       type: forceType || G.U.pick(mon.types)
     };
+    if (G.League) G.League.pick(cfg);     // (mod) Liga: el as del Alto Mando o del campeón
     if (G.Coop.isHost) G.Coop.broadcast(['arena', cfg]);
     begin(cfg);
     spawnLegend();
+    if (G.League) G.League.spawned(arena);   // (mod) aviso de la Liga
   }
 
   /** En cada ordenador: viaje a la arena. */
