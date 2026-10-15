@@ -30,6 +30,14 @@ G.I18n.add({
   'Brillo shiny: +{x} monedas · +{x} ticket': 'Shiny glow: +{x} coins · +{x} ticket',
   'Brillo shiny: +{x} monedas': 'Shiny glow: +{x} coins', 'Brillo shiny: {x}': 'Shiny glow: {x}',
 
+  // ---------------- (mod) medallas de cada región (los nombres, en js/systems/medals.js) ----------------
+  'Ten {x} Pokémon de {x} ({x} %). Los shiny cuentan doble.': 'Own {x} Pokémon from {x} ({x}%). Shinies count double.',
+  'Campeón de {x}': '{x} Champion', 'Completa {x}: los {x} Pokémon de la región.': 'Complete {x}: all {x} Pokémon in the region.',
+  'Siguiente: {x} con {x} Pokémon (tienes {x}).': 'Next: {x} at {x} Pokémon (you have {x}).',
+  'Completa {x} para ser Campeón: {x} de {x}.': 'Complete {x} to become Champion: {x} of {x}.',
+  '¡{x} medallas por tu colección! {x}': '{x} medals for your collection! {x}',
+  '+{x} tickets': '+{x} tickets', 'nuevo título': 'new title', '{x} títulos nuevos': '{x} new titles',
+
   // ---------------- tipos y regiones ----------------
   'Acero': 'Steel', 'Agua': 'Water', 'Bicho': 'Bug', 'Dragón': 'Dragon', 'Eléctrico': 'Electric', 'Fantasma': 'Ghost',
   'Fuego': 'Fire', 'Hada': 'Fairy', 'Hielo': 'Ice', 'Lucha': 'Fighting', 'Planta': 'Grass', 'Psíquico': 'Psychic',

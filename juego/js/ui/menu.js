@@ -70,6 +70,7 @@ G.MenuUI = (() => {
 
     socialLine();
     // Premios de misiones por recoger.
+    if (G.Medals) G.Medals.catchUp();   // (mod) medallas que ya tocaban, con un solo aviso
     G.Progress.checkAch();
     const pend = G.Progress.pending();
     $('menu-goals-sub').textContent = pend ? pend + (pend === 1 ? ' premio por recoger' : ' premios por recoger') : 'Misiones, logros y perfil';
@@ -121,6 +122,7 @@ G.MenuUI = (() => {
       b.onclick = () => { dexGen = g; openDex(); };
       tabs.appendChild(b);
     });
+    if (G.Medals) G.Medals.dexRow(tabs, dexGen);   // (mod) medallas de la región
 
     const F = [['all', 'Todos'], ['own', 'Tengo'], ['miss', 'Me faltan'], ['shiny', 'Shiny'],
                ['5', 5], ['4', 4], ['3', 3], ['2', 2], ['1', 1]];
