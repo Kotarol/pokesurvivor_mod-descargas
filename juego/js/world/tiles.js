@@ -395,6 +395,7 @@ G.Tiles = (() => {
       const edge = pack('#14200f');
       if (B.prop === 'crystal') return PAINT.crystal(B);
       if (B.prop === 'dead') return PAINT.deadtree(B);
+      if (B.prop !== 'tree' && PAINT[B.prop]) return PAINT[B.prop](B);   // (mod) adornos de cada región
       for (let y = 26; y < 38; y++) for (let x = 13; x < 18; x++) P.set(x, y, Tr[x === 13 || x === 17 ? 0 : 1]);
       P.set(12, 37, Tr[0]); P.set(18, 37, Tr[0]); P.set(11, 38, Tr[0]); P.set(19, 38, Tr[0]);
       const blobs = [[15, 20, 10], [9, 16, 7], [21, 16, 7], [15, 10, 8], [10, 23, 6], [20, 23, 6]];
@@ -627,6 +628,7 @@ G.Tiles = (() => {
   function clearProps() { propCache.clear(); }
 
   return { T, BIOMES, NORMAL, ARENA, ARENA_THEMES, ARENA_TYPES, paintChunk, propSprite, clearProps,
+           PAINT, kit: { Pix, pack, disc, outline, shade, H, palette: arenaBiome },   // (mod) para world/region-biomes.js
            /** Índice de bioma de la arena de un tipo. */
            arenaBiome: type => ARENA + Math.max(0, ARENA_TYPES.indexOf(type)) };
 })();

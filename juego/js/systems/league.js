@@ -69,8 +69,10 @@ G.League = (() => {
     e4Done = true;
     if (champ) champDone = true;
     const pl = G.Game.player, mon = pl && G.DEX_BY[pl.dex];
-    if (!mon || !LEAGUES[mon.gen - 1]) return;
-    const gen = mon.gen, list = LEAGUES[gen - 1];
+    // (Mapas por región: en el de una región, la Liga es la de ese mapa.)
+    const gen = G.Maps && G.Maps.gen ? G.Maps.gen : mon && mon.gen;
+    if (!LEAGUES[gen - 1]) return;
+    const list = LEAGUES[gen - 1];
     const missing = N_MEDALS - G.Medals.count(G.DB.save, gen);
     if (missing > 0) {
       notice = `La Liga de ${regionName(gen)} no te deja pasar: ` +

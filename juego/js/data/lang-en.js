@@ -35,6 +35,25 @@ G.I18n.add({
   'Los movimientos de cada tipo hacen +1 % de daño por cada 10 % que tengas de ese tipo, de todas las regiones (hasta +10 %). Los shiny cuentan doble.':
     'Moves of each type deal +1% damage for every 10% of that type you own, across all regions (up to +10%). Shinies count double.',
 
+  // ---------------- (mod) mapas por región ----------------
+  'Elige mapa': 'Choose a map', 'Mundo Distorsión': 'Distortion World', 'Todas las regiones mezcladas': 'All regions mixed together',
+  'En el mapa de una región sólo salen Pokémon de esa región: salvajes, jefes, hordas y legendarios de las grietas. Y su Liga, si tienes sus 8 medallas.':
+    'On a region\'s map only Pokémon from that region appear: wild ones, bosses, hordes and rift legendaries. And its League, if you have its 8 badges.',
+  'Tu compañero es de aquí: +5 % de monedas': 'Your partner is from here: +5% coins',
+  'Viajar a {x}': 'Travel to {x}', 'Entrar en el Mundo Distorsión': 'Enter the Distortion World', 'Elegir {x}': 'Choose {x}',
+  'Mapa:': 'Map:', 'Cambiar mapa': 'Change map',
+  'En casa ({x}): +{x} monedas': 'Home region ({x}): +{x} coins', 'En casa ({x}): +{x} moneda': 'Home region ({x}): +{x} coin',
+  // Biomas de cada región (js/world/region-biomes.js): nombres oficiales.
+  'Bosque Verde': 'Viridian Forest', 'Isla Canela': 'Cinnabar Island',
+  'Bosque Encina': 'Ilex Forest', 'Ciudad Iris': 'Ecruteak City', 'Monte Plateado': 'Mt. Silver',
+  'Ruta 119': 'Route 119', 'Cascada Meteoro': 'Meteor Falls', 'Monte Cenizo': 'Mt. Chimney',
+  'Bosque Vetusta': 'Eterna Forest', 'Monte Corona': 'Mt. Coronet', 'Ruta 216': 'Route 216',
+  'Ciudad Porcelana': 'Castelia City', 'Zona Desierto': 'Desert Resort', 'Cueva Electrorroca': 'Chargestone Cave',
+  'Bosque de Novarte': 'Santalune Forest', 'Ciudad Luminalia': 'Lumiose City', 'Cueva de los Reflejos': 'Reflection Cave',
+  'Playa de Hanohano': 'Hano Beach', 'Jungla Umbría': 'Lush Jungle', 'Área Volcánica del Wela': 'Wela Volcano Park',
+  'Área Silvestre': 'Wild Area', 'Bosque Lumirinto': 'Glimwood Tangle', 'Ruta 10': 'Route 10',
+  'Desierto Rostiz': 'Asado Desert', 'Gran Cráter de Paldea': 'Great Crater of Paldea', 'Sierra Napada': 'Glaseado Mountain',
+
   // ---------------- (mod) pasaporte ----------------
   'Pasaporte': 'Passport', 'Pasaporte {x}/{x}': 'Passport {x}/{x}', 'Sello de {x}': '{x} stamp', 'Trotamundos': 'Globetrotter',
   'Ten el 50 % de {x} ({x} Pokémon). Cada sello del pasaporte da +2 % de monedas al acabar cada partida.':

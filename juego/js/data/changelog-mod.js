@@ -6,7 +6,13 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
-  { d: '2026-10-15', title: ['Medallas, Liga y pasaporte', 'Badges, League and passport'], new: [
+  { d: '2026-10-15', title: ['Medallas, Liga, pasaporte y mapas por región', 'Badges, League, passport and region maps'], new: [
+    ['Mapas por región: al pulsar Jugar eliges mapa. En el de una región sólo salen Pokémon de esa región: salvajes, jefes, hordas, el Pokémon perdido y los legendarios de las grietas. Su Liga aparece si tienes sus 8 medallas. El Mundo Distorsión las mezcla todas, como hasta ahora. Se recuerda el último mapa, y en grupo lo elige el anfitrión.',
+     'Region maps: when you press Play you choose a map. On a region\'s map only Pokémon from that region appear: wild ones, bosses, hordes, the lost Pokémon and rift legendaries. Its League appears if you have its 8 badges. The Distortion World mixes them all, as before. Your last map is remembered, and in a group the host chooses.'],
+    ['Cada región tiene sus 3 lugares, que se turnan cada 4 minutos, con sus colores, su clima y un adorno propio: Bosque Verde, Mt. Moon e Isla Canela en Kanto; la Ruta 216 de Sinnoh, con nieve y hielo que resbala; la Playa de Hanohano de Alola, con palmeras y sol; los círculos de piedras del Área Silvestre de Galar, bajo la lluvia; los cactus del Desierto Rostiz de Paldea…',
+     'Each region has its own 3 places, which change every 4 minutes, with their own colors, weather and scenery: Viridian Forest, Mt. Moon and Cinnabar Island in Kanto; Sinnoh\'s Route 216, with snow and slippery ice; Alola\'s Hano Beach, with palm trees and sun; the stone circles of Galar\'s Wild Area, in the rain; the cacti of Paldea\'s Asado Desert…'],
+    ['En casa: si juegas en el mapa de la región de tu compañero, +5 % de monedas al acabar la partida.',
+     'Home region: if you play on your partner\'s region map, +5% coins at the end of the run.'],
     ['Sinergia por tipo: los movimientos de cada tipo hacen +1 % de daño por cada 10 % que tengas de ese tipo, contando todas las regiones (hasta +10 % con el tipo entero). Los shiny cuentan doble. Con doble tipo, cada movimiento usa la de su tipo, y los movimientos Normal, la de Normal. Lo ves en la ficha de la Pokédex.',
      'Type synergy: moves of each type deal +1% damage for every 10% of that type you own, across all regions (up to +10% with the whole type). Shinies count double. With two types, each move uses its own type\'s synergy, and Normal moves use Normal\'s. You can see it on the Pokédex page.'],
     ['La Liga en las grietas: con las 8 medallas de la región de tu compañero, desde el minuto 10 la primera grieta en la que entres trae al as de un miembro del Alto Mando, y desde el 20, al as del campeón (¡Cintia te reta con Garchomp!). Dan el premio de una grieta y el campeón, además, un ticket ×10 seguro. Si te faltan medallas, la Liga no te deja pasar.',

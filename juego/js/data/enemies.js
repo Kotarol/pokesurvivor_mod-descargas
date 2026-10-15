@@ -113,7 +113,8 @@ G.Enemies = (() => {
 
   /** Todos los candidatos de un tramo (sin legendarios ni míticos). */
   function candidates(tier) {
-    return G.DEX.filter(p => p.rarity < 5 && p.bst >= tier.bst[0] && p.bst <= tier.bst[1] && G.SPRITE_META[p.dex]);
+    const all = G.DEX.filter(p => p.rarity < 5 && p.bst >= tier.bst[0] && p.bst <= tier.bst[1] && G.SPRITE_META[p.dex]);
+    return G.Maps ? G.Maps.tierPool(all, tier) : all;      // (mod) mapas por región
   }
 
   // ---------------- elenco de la run ----------------
@@ -157,6 +158,7 @@ G.Enemies = (() => {
       const ok = p => !p.leg && G.SPRITE_META[p.dex] && !used.has(p.dex);
       let pool = G.DEX.filter(p => ok(p) && p.bst >= slot.bst[0] && p.bst <= slot.bst[1]);
       if (!pool.length) pool = G.DEX.filter(p => ok(p) && p.bst >= 580);
+      if (G.Maps) pool = G.Maps.bossPool(pool, slot, ok);     // (mod) mapas por región
       const p = G.U.pick(pool);
       used.add(p.dex);
       return {
@@ -225,6 +227,7 @@ G.Enemies = (() => {
 
   return {
     TIERS, BOSS_SLOTS, rollRun, scale, bossScale, bagAt, upcomingDex, candidates, hordeTypes, hordeDefs,
+    defFor, behaviorOf, tierAt, NO_HORDE,      // (mod) para las hordas de los mapas por región
     get BOSSES() { if (!bosses) rollRun(); return bosses; },
     get cast() { if (!cast) rollRun(); return cast; }
   };

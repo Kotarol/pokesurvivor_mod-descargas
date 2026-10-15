@@ -83,7 +83,7 @@ G.Weather = (() => {
   }
 
   function pick(biome) {
-    const w = BIOME_W[biome % BIOME_W.length];
+    const w = G.Tiles.BIOMES[biome].weatherW || BIOME_W[biome % BIOME_W.length];   // (mod) los biomas de cada región traen el suyo
     let r = Math.random() * Object.values(w).reduce((a, b) => a + b, 0);
     for (const k in w) { r -= w[k]; if (r <= 0) return k; }
     return 'rain';

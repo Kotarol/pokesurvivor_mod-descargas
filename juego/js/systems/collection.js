@@ -1,5 +1,5 @@
 /* ============ collection.js — (mod) premios por coleccionar ============
- * Sólo del mod (ver docs/IDEAS-COLECCION.md). Cinco cosas:
+ * Sólo del mod (ver docs/IDEAS-COLECCION.md). Seis cosas:
  *
  *   Afinidad regional  tu compañero gana daño y vida según lo que tengas de su
  *                      región: +1 % por cada 10 % hasta el 50 %, +2 % por tramo
@@ -12,6 +12,8 @@
  *                      vínculos la conservan. Con doble tipo, cada movimiento
  *                      usa la de su tipo (no se suman).
  *   Pasaporte          +2 % de monedas al acabar por cada sello (medals.js).
+ *   En casa            +5 % de monedas al acabar en el mapa de la región de
+ *                      tu compañero (maps.js).
  *   Brillo shiny       jugando con tu compañero shiny: +15 % de monedas al
  *                      acabar, y cada ticket normal recogido tiene un 15 % de
  *                      contar doble (todo se suma al acabar la partida).
@@ -118,6 +120,8 @@ G.Collection = (() => {
     if (shiny) msgs.push(shiny);
     const stamps = passportEnd(coins);
     if (stamps) msgs.push(stamps);
+    const home = G.Maps && G.Maps.coinsEnd(pl, coins);     // mapas por región: +5 % jugando en casa
+    if (home) msgs.push(home);
     // Un aviso detrás de otro (el segundo taparía al primero).
     msgs.forEach((m, i) => setTimeout(() => G.UI.toast(m, 4500), i * 4700));
   }
