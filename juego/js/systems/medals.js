@@ -23,7 +23,7 @@ G.Medals = (() => {
     [['Medalla Roca', 'Boulder Badge', '#a3a9b3'], ['Medalla Cascada', 'Cascade Badge', '#4fa8ff'], ['Medalla Trueno', 'Thunder Badge', '#ff9a3c'],
      ['Medalla Arcoíris', 'Rainbow Badge', '#5fd6a0'], ['Medalla Alma', 'Soul Badge', '#ff7fb0'], ['Medalla Pantano', 'Marsh Badge', '#ffd23f'],
      ['Medalla Volcán', 'Volcano Badge', '#e0303c'], ['Medalla Tierra', 'Earth Badge', '#4fbf5a']],
-    [['Medalla Céfiro', 'Zephyr Badge', '#a8d8ff'], ['Medalla Colmena', 'Hive Badge', '#e0b030'], ['Medalla Planicie', 'Plain Badge', '#ffb0c8'],
+    [['Medalla Céfiro', 'Zephyr Badge', '#a8d8ff'], ['Medalla Colmena', 'Hive Badge', '#e04848'], ['Medalla Planicie', 'Plain Badge', '#ffb0c8'],
      ['Medalla Niebla', 'Fog Badge', '#9a7cd8'], ['Medalla Tormenta', 'Storm Badge', '#c08050'], ['Medalla Mineral', 'Mineral Badge', '#b8c0cc'],
      ['Medalla Glaciar', 'Glacier Badge', '#a0e8ff'], ['Medalla Dragón', 'Rising Badge', '#5060e0']],
     [['Medalla Piedra', 'Stone Badge', '#a08870'], ['Medalla Puño', 'Knuckle Badge', '#e07050'], ['Medalla Dinamo', 'Dynamo Badge', '#ffd23f'],
@@ -142,25 +142,21 @@ G.Medals = (() => {
   }
 
   // ---------------- iconos ----------------
-  // Una insignia de 12×12 (estilo de icons.js) por medalla, con su color.
-
-  const BADGE_ROWS = ['....kkkk....', '..kkwccckk..', '.kwwcccccdk.', 'kwccccccccdk', 'kwcccsscccdk', 'kcccssssccdk',
-                      'kcccssssccdk', 'kccccsscccdk', 'kcccccccdddk', '.kcccccdddk.', '..kkcdddkk..', '....kkkk....'];
-
-  function mix(hex, to, f) {
-    const a = parseInt(hex.slice(1), 16), b = parseInt(to.slice(1), 16);
-    const ch = sh => Math.round(((a >> sh) & 255) * (1 - f) + ((b >> sh) & 255) * f);
-    return '#' + ((1 << 24) | (ch(16) << 16) | (ch(8) << 8) | ch(0)).toString(16).slice(1);
-  }
+  // La forma de cada medalla (16×16) está en medal-art.js; sin conseguir, en gris.
 
   function registerIcons() {
     const UI = G.Icons.UI;
     BADGES.forEach((list, gi) => list.forEach(([, , c], ki) => {
-      UI[`badge${gi + 1}_${ki + 1}`] = { rows: BADGE_ROWS,
-        pal: { c, d: mix(c, '#000000', 0.35), w: mix(c, '#ffffff', 0.55), s: mix(c, '#ffffff', 0.3) } };
+      UI[`badge${gi + 1}_${ki + 1}`] = G.MedalArt.def(gi + 1, ki + 1, c);
+      UI[`badge${gi + 1}_${ki + 1}_off`] = G.MedalArt.off(gi + 1, ki + 1);
     }));
-    UI.badgeOff = { rows: BADGE_ROWS, pal: { c: '#3a4870', d: '#2a3458', w: '#4a5a88', s: '#3f4e7c' } };
     UI.trophyOff = { rows: UI.trophy.rows, pal: { y: '#3a4870', d: '#2a3458', w: '#4a5a88' } };
+    // El aviso de logro y su carta (progress.js, goals-ui.js) usan icon / iconOff.
+    for (const a of G.AchDefs.LIST) {
+      if (a.cat !== 'medallas') continue;
+      a.icon = a.medal === 10 ? 'trophy' : `badge${a.gen}_${a.medal}`;
+      a.iconOff = a.medal === 10 ? 'trophyOff' : `badge${a.gen}_${a.medal}_off`;
+    }
   }
 
   // ---------------- Pokédex ----------------
@@ -181,10 +177,10 @@ G.Medals = (() => {
     for (let k = 1; k <= N; k++) {
       const ok = st.medals >= k;
       icons += `<span class="dm-b${ok ? ' ok' : ''}" title="${badgeName(gen, k)} · ${goal(st.total, k)}">` +
-               G.Icons.html(ok ? `badge${gen}_${k}` : 'badgeOff', 24) + '</span>';
+               G.Icons.html(`badge${gen}_${k}` + (ok ? '' : '_off'), 32) + '</span>';
     }
     icons += `<span class="dm-b dm-champ${st.champion ? ' ok' : ''}" title="Campeón de ${reg} · ${st.total}">` +
-             G.Icons.html(st.champion ? 'trophy' : 'trophyOff', 24) + '</span>';
+             G.Icons.html(st.champion ? 'trophy' : 'trophyOff', 32) + '</span>';
 
     let next;
     if (st.champion) next = `<b class="gold">Campeón de ${reg}</b>`;

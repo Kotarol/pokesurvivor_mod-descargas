@@ -9,6 +9,8 @@ G.CHANGELOG_MOD = [
   { d: '2026-10-15', title: ['Medallas de cada región', 'Badges for every region'], new: [
     ['Medallas: cada región tiene 8, con los nombres de sus gimnasios (en Alola, sus cristales Z). Ganas una por cada 10 % que tengas de la región, y los shiny cuentan doble. Las 7 primeras dan 2 tickets cada una y la octava, un ticket ×10.',
      'Badges: every region has 8, named after its gyms (in Alola, its Z-Crystals). You earn one for every 10% of the region you own, and shinies count double. The first 7 give 2 tickets each and the eighth gives a ×10 ticket.'],
+    ['Cada medalla tiene la forma y el color de la de su gimnasio (las de Galar y Paldea, con el emblema de su tipo). Las que te faltan se ven en gris, y al conseguir una el aviso enseña esa medalla.',
+     'Each badge has the shape and color of its gym\'s badge (Galar and Paldea ones, with their type emblem). The ones you are missing show in grey, and when you earn one the notice shows that badge.'],
     ['Completa una región entera y consigues el título "Campeón de <región>".',
      'Complete a whole region to get the "<region> Champion" title.'],
     ['Las medallas se ven en la Pokédex, debajo de cada región, y en Logros, en su propia pestaña. Si ya tenías colección, recibes de golpe las que te tocan.',

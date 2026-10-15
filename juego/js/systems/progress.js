@@ -219,7 +219,7 @@ G.Progress = (() => {
     if (!n) return;
     let el = document.getElementById('ach-pop');
     if (!el) { el = document.createElement('div'); el.id = 'ach-pop'; el.className = 'box ach-pop'; document.body.appendChild(el); }
-    const icon = n.ach ? (n.ach.dex ? '' : G.Icons.html('medal' + n.ach.tier, 24)) : G.Icons.html('medal2', 24);
+    const icon = n.ach ? (n.ach.dex ? '' : G.Icons.html(n.ach.icon || 'medal' + n.ach.tier, 24)) : G.Icons.html('medal2', 24);
     el.innerHTML = `${icon}<div><b>${n.title}</b>${n.sub ? `<small>${n.sub}</small>` : ''}</div>`;
     if (n.ach && n.ach.dex) el.prepend(G.UI.spriteCanvas(n.ach.dex, 48, 40, { scale: 1 }));
     el.classList.remove('hidden');

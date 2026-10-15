@@ -136,7 +136,7 @@
       const v = Math.min(a.goal, a.value(s));
       const el = document.createElement('div');
       el.className = 'ach' + (ok ? ' ok' : '');
-      el.innerHTML = `${G.Icons.html(ok ? 'medal' + a.tier : 'medalOff', 36)}
+      el.innerHTML = `${G.Icons.html(ok ? a.icon || 'medal' + a.tier : a.iconOff || 'medalOff', 36)}
         <div class="a-txt"><b>${esc(a.name)}</b><small>${esc(a.desc)}</small>
           ${ok ? '' : `<div class="bar"><i style="width:${v / a.goal * 100}%"></i></div>`}
           <div class="a-rw">${ok ? '¡Conseguido!' : v.toLocaleString('es') + ' / ' + a.goal.toLocaleString('es')}${G.Progress.rewardText(a.reward) ? ' · ' + G.Progress.rewardText(a.reward) : ''}
