@@ -668,6 +668,17 @@ G.Combat = (() => {
       if (pl.hasItem('rockyhelmet')) e.hurt(15 + pl.level * 4, '#9aa6b5', e.x - pl.x, e.y - pl.y, 80);
       const [nx, ny] = G.U.norm(e.x - pl.x, e.y - pl.y);
       e.kx += nx * 150; e.ky += ny * 150;
+      // (mod) El corredor golpea y pasa de largo (ver enemy.js): no rebota y
+      // sigue 1 s hacia donde iba (o hacia donde corres si ya estaba encima de
+      // ti). Si vuelve a tocarte al salir por el otro lado, no se da la vuelta.
+      if (e.behavior === 'runner') {
+        e.kx -= nx * 150; e.ky -= ny * 150;
+        if (!(e.runT > 0)) {
+          let [rx, ry] = [-nx, -ny];
+          if (!rx && !ry) [rx, ry] = G.U.norm(pl._vx || 1, pl._vy || 0);
+          e.runT = 1; e.runDx = rx; e.runDy = ry;
+        }
+      }
     }
   }
 

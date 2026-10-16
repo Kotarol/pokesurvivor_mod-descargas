@@ -298,7 +298,11 @@
         return;
       }
       // Corredor: va a donde VAS a estar (te corta el paso si sólo huyes).
-      if (this.behavior === 'runner' && pl._vx != null) {
+      // (mod) Tras golpearte pasa de largo (runT, ver combat.js): sigue recto un
+      // momento y luego da la vuelta. Si no, como va mucho más rápido que tú, se
+      // quedaba pegado pegándote cada 0,55 s.
+      if (this.runT > 0) { this.runT -= dt; dx = this.runDx; dy = this.runDy; }
+      else if (this.behavior === 'runner' && pl._vx != null) {
         const lead = G.U.clamp(dist / Math.max(60, spd), 0, 1.4);
         [dx, dy] = G.U.norm(pl.x + pl._vx * lead - this.x, pl.y + pl._vy * lead - this.y);
         if (G.Camera.sees(this.x, this.y, 0) && Math.random() < dt * 10) G.FX.px(this.x - dx * 8 + G.U.rand(-4, 4), this.y, '#e8dcc0', { vy: -12, life: 0.35 });
@@ -332,7 +336,7 @@
       }
 
       // Camino alrededor de los obstáculos (los que no vuelan).
-      if (!this.flying && this.phase !== 'dash' && this.sideT <= 0) {
+      if (!this.flying && this.phase !== 'dash' && this.sideT <= 0 && !(this.runT > 0)) {
         const pd = G.Path.dirFor(this, pl);
         if (pd && !(this.keepsDistance() && dist < (this.def.range || 200) * 0.82)) { dx = pd[0]; dy = pd[1]; }
       }
