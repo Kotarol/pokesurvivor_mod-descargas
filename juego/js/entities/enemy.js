@@ -259,7 +259,10 @@
       }
       if (this.poison > 0) {
         this.poisonT -= dt; this.poisonTick -= dt;
-        if (this.poisonTick <= 0) { this.poisonTick = 0.6; this.hurt(this.maxHp * 0.012 * this.poison + 1, '#d47cf0'); }
+        // (mod) Cada acumulación quita un 1,2 % de la vida, pero con tope según tu
+        // nivel (como la quemadura): si no, jefes y élites caían en ~7 s.
+        const per = Math.min(this.maxHp * 0.012, 5 * (1 + pl.level * 0.06));
+        if (this.poisonTick <= 0) { this.poisonTick = 0.6; this.hurt(per * this.poison + 1, '#d47cf0'); }
         if (this.poisonT <= 0) this.poison = 0;
       }
       if (this.dead) return;
