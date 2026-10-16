@@ -229,6 +229,7 @@ G.I18n.add({
   '+35% de velocidad.': '+35% speed.', 'Los que te golpean cuerpo a cuerpo reciben daño.': 'Foes that hit you in melee take damage.',
   '+20% de reducción de daño recibido.': '+20% damage reduction.',
   '¡Un objeto!': 'An item!', 'Sólo puedes llevar uno ·': 'You can only hold one ·', 'Quedarme con': 'Keep', 'Cambiar a': 'Switch to',
+  'Coger {x}': 'Take {x}', 'No coger ninguno': 'Take none', 'Sigues sin objeto.': 'You keep going without an item.',
   '¡Llevas {x}!': 'You\'re holding {x}!', 'Ya llevas {x}': 'You already hold {x}', '¡Banda Focus!': 'Focus Sash!',
 
   // ---------------- mejoras permanentes ----------------

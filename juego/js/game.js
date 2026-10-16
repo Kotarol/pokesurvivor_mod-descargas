@@ -429,20 +429,21 @@ G.Game = (() => {
     if (openItem && !G.UI.isOpen('scr-item')) {
       const o = openItem;
       if (o.mine) { state = 'choice'; if (G.Coop.active) G.Coop.holdStart(); }
-      G.RunUI.showItemChoice(o.cur, o.next, o.take);
+      G.RunUI.showItemChoice(o.cur, o.next, o.take, o.alt);
       return;
     }
     if (laterItems.length) offerItem(laterItems.shift());
   }
 
-  /** Has cogido un objeto: si no llevas ninguno te lo pones; si no, eliges. */
+  /** Has cogido un objeto: si ya llevas uno, eliges con cuál te quedas; si no,
+   *  entre ése y otro al azar, o ninguno (algunos tienen contrapartida). */
   function offerItem(id) {
     if (!pl || !G.Items.BY[id]) return;
     if (state === 'levelup' || G.UI.isOpen('scr-levelup')) { laterItems.push(id); return; }
     let mine = false;            // esta elección es la que ha parado el juego
     const take = got => {
       openItem = null;
-      if (got !== pl.item) {
+      if (got && got !== pl.item) {
         pl.equip(got);
         G.Spawner.say('¡Llevas ' + G.Items.BY[got].name + '!', 2.6, true);
         G.Progress.event('item', { id: got });
@@ -452,7 +453,6 @@ G.Game = (() => {
       if (G.Coop.active) G.Coop.holdEnd();
       afterLevelUp();
     };
-    if (!pl.item) { take(id); return; }
     if (pl.item === id) { G.Spawner.say('Ya llevas ' + G.Items.BY[id].name, 2, true); return; }
     // Se para el juego mientras eliges; en grupo, para todos (como con las
     // fusiones). Antes en grupo seguía y te pegaban mientras elegías.
@@ -461,8 +461,9 @@ G.Game = (() => {
       state = 'choice';
       if (G.Coop.active) G.Coop.holdStart();
     }
-    openItem = { cur: pl.item, next: id, take, get mine() { return mine; } };
-    G.RunUI.showItemChoice(pl.item, id, take);
+    const alt = pl.item ? null : G.Items.roll(id);
+    openItem = { cur: pl.item, next: id, alt, take, get mine() { return mine; } };
+    G.RunUI.showItemChoice(pl.item, id, take, alt);
   }
 
   /** @param who  quien lo ha cogido (en cooperativo puede ser un compañero) */
@@ -539,8 +540,9 @@ G.Game = (() => {
       return;
     }
     if (G.UI.isOpen('scr-item')) {
-      for (let i = 0; i < 2; i++) {
-        if (G.Input.tap('digit' + (i + 1)) || G.Input.tap('numpad' + (i + 1))) document.querySelectorAll('#item-cards .card')[i].click();
+      const cards = document.querySelectorAll('#item-cards .card');
+      for (let i = 0; i < cards.length; i++) {
+        if (G.Input.tap('digit' + (i + 1)) || G.Input.tap('numpad' + (i + 1))) cards[i].click();
       }
       return;
     }

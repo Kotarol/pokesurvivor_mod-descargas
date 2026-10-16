@@ -140,16 +140,19 @@ G.RunUI = (() => {
     G.UI.show('scr-over');
   }
 
-  /** Has encontrado un objeto llevando ya otro: ¿con cuál te quedas? */
-  function showItemChoice(cur, next, cb) {
+  /** Has encontrado un objeto llevando ya otro: ¿con cuál te quedas?
+   *  Sin llevar ninguno (cur vacío): ése, otro al azar (alt) o ninguno. */
+  function showItemChoice(cur, next, cb, alt) {
     const box = $('item-cards');
     box.innerHTML = '';
-    [[cur, 'Quedarme con'], [next, 'Cambiar a']].forEach(([id, verb], i) => {
+    const opts = cur ? [[cur, 'Quedarme con'], [next, 'Cambiar a']]
+      : [[next, 'Coger'], [alt, 'Coger'], [null, 'No coger ninguno']];
+    opts.forEach(([id, verb], i) => {
       const it = G.Items.BY[id];
       const el = document.createElement('div');
       el.className = 'card' + (i === 1 ? ' evo' : '');
-      el.innerHTML = `<div class="ico">${G.Icons.html(id, 36)}</div>
-        <div class="txt"><div class="nm">${verb} ${it.name}</div><div class="ds">${it.desc}</div></div>
+      el.innerHTML = `<div class="ico">${it ? G.Icons.html(id, 36) : ''}</div>
+        <div class="txt"><div class="nm">${it ? verb + ' ' + it.name : verb}</div><div class="ds">${it ? it.desc : 'Sigues sin objeto.'}</div></div>
         <div class="key">${i + 1}</div>`;
       el.onclick = () => { G.UI.hide('scr-item'); cb(id); };
       box.appendChild(el);
