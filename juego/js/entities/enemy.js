@@ -602,9 +602,14 @@
       // mucho ×2,5. (Como los enemigos que tienen más vida si haces más daño.)
       const pow = Math.max(1, ...G.Game.everyone().map(p => (p.atk > 0 && p.baseAtk > 0 ? p.atk / p.baseAtk : 1)));
       const k = 0.07 * Math.min(2.5, Math.pow(pow, 0.35));
+      // (mod) No se curan entre curanderos (ni a sí mismos) y cada uno recibe
+      // como mucho una curación cada 3 s: varios juntos se sumaban sin tope y
+      // un grupo de 3-5 era imposible de bajar.
+      const now = G.Game.st.time;
       let n = 0;
       for (const e of G.EnemyMgr.queryCircle(this.x, this.y, 150)) {
-        if (e.dead || e.hp >= e.maxHp) continue;
+        if (e.dead || e.hp >= e.maxHp || e.behavior === 'healer' || now < (e.healedAt || -9) + 3) continue;
+        e.healedAt = now;
         e.hp = Math.min(e.maxHp, e.hp + e.maxHp * k);
         G.FX.burst(e.x, e.y - e.bodyH * 0.6, '#7dffb0', 5, 60);
         n++;
