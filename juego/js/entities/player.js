@@ -369,7 +369,10 @@ G.Player = class Player {
     const m = this.activeMove();
     const ranged = !!m && (m.kind === 'projectile' || m.kind === 'beam');
     const threat = G.Projectiles.nearest(all, this.x, this.y, this.r + 24);
-    const boss = all.find(e => e.boss && !e.dead && G.U.dist(this.x, this.y, e.x, e.y) < 330);
+    // (mod) El jefe sólo manda si el ataque activo le llega: si no, el cuerpo a
+    // cuerpo (y rayos, bumeranes...) se quedaba esperándolo sin pegar a nadie.
+    const far = Math.min(330, m ? G.Combat.reach(m) : 330);
+    const boss = all.find(e => e.boss && !e.dead && G.U.dist(this.x, this.y, e.x, e.y) < far);
     const tg = (ranged ? boss || threat : threat || boss)
             || G.Projectiles.nearest(all, this.x, this.y, 520)
             || G.World.nearestBreakable(this.x, this.y, 200);

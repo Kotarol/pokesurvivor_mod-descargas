@@ -6,6 +6,10 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
+  { d: '2026-10-16', title: ['Ataques sin parones con jefes', 'No more attack stalls near bosses'], fix: [
+    ['Con un jefe cerca, los ataques cuerpo a cuerpo y los de alcance corto o medio (rayos, bumeranes, abanicos, embestidas, cadenas) se quedaban sin lanzarse esperando a que se acercara, aunque tuvieras enemigos al lado. Ahora sólo apuntan al jefe si le llegan; si no, atacan al más cercano. Los proyectiles siguen yendo a por el jefe.',
+     'With a boss nearby, melee attacks and short or mid-range ones (beams, boomerangs, cones, dashes, chains) stopped firing while waiting for it to come closer, even with enemies right next to you. Now they only aim at the boss if they can reach it; otherwise they hit the closest enemy. Projectiles still go for the boss.']
+  ] },
   { d: '2026-10-15', title: ['Medallas, Liga, pasaporte y mapas por región', 'Badges, League, passport and region maps'], new: [
     ['Mapas por región: al pulsar Jugar eliges mapa. En el de una región sólo salen Pokémon de esa región: salvajes, jefes, hordas, el Pokémon perdido y los legendarios de las grietas. Su Liga aparece si tienes sus 8 medallas. El Mundo Distorsión las mezcla todas, como hasta ahora. Se recuerda el último mapa, y en grupo lo elige el anfitrión.',
      'Region maps: when you press Play you choose a map. On a region\'s map only Pokémon from that region appear: wild ones, bosses, hordes, the lost Pokémon and rift legendaries. Its League appears if you have its 8 badges. The Distortion World mixes them all, as before. Your last map is remembered, and in a group the host chooses.'],
