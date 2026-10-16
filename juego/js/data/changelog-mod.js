@@ -6,7 +6,12 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
-  { d: '2026-10-16', title: ['Ataques sin parones con jefes', 'No more attack stalls near bosses'], fix: [
+  { d: '2026-10-16', title: ['Perfiles y ataques sin parones', 'Profiles and no more attack stalls'], new: [
+    ['Perfiles en vez de cuenta y contraseña: al abrir el juego eliges tu perfil en uno de los 3 huecos, con un clic y sin contraseña. Cada uno enseña su % de Pokédex y sus medallas de cada región. Para crear uno sólo hace falta un nombre. Tus cuentas de antes siguen ahí como perfiles, con toda su partida.',
+     'Profiles instead of account and password: when you open the game you pick your profile from one of the 3 slots, with one click and no password. Each one shows its Pokédex % and its badges from every region. Creating one only needs a name. Your old accounts are still there as profiles, with all their progress.'],
+    ['Desde el botón ⋯ de cada perfil puedes exportar o importar su partida y borrarlo (hay que escribir su nombre para confirmarlo). En un hueco libre, "Importar partida" crea el perfil a partir del archivo: así puedes llevarte tu partida a otro ordenador. Se recuerda el último perfil usado.',
+     'From each profile\'s ⋯ button you can export or import its save and delete it (you have to type its name to confirm). In an empty slot, "Import save" creates the profile from the file: that way you can take your progress to another computer. The last profile you used is remembered.']
+  ], fix: [
     ['Con un jefe cerca, los ataques cuerpo a cuerpo y los de alcance corto o medio (rayos, bumeranes, abanicos, embestidas, cadenas) se quedaban sin lanzarse esperando a que se acercara, aunque tuvieras enemigos al lado. Ahora sólo apuntan al jefe si le llegan; si no, atacan al más cercano. Los proyectiles siguen yendo a por el jefe.',
      'With a boss nearby, melee attacks and short or mid-range ones (beams, boomerangs, cones, dashes, chains) stopped firing while waiting for it to come closer, even with enemies right next to you. Now they only aim at the boss if they can reach it; otherwise they hit the closest enemy. Projectiles still go for the boss.']
   ] },

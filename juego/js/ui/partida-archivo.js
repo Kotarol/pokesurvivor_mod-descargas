@@ -4,6 +4,7 @@
  * (G.DB.merge, como al sincronizar): no se pierde ningún Pokémon ni shiny,
  * mejoras y estadísticas se quedan con el máximo, y monedas y compañero con
  * la partida más reciente. Sirve en la web y en el programa de escritorio.
+ * La pantalla de perfiles (perfiles.js) usa lo mismo para cada perfil.
  * Va en su propio archivo y se añade a la pantalla de Ajustes desde fuera,
  * para no tocar settings-ui.js del original.
  */
@@ -19,24 +20,31 @@ G.SaveFile = (() => {
       <div class="row wrap" style="gap:8px">
         <button class="btn" id="set-export">Exportar partida</button>
         <button class="btn" id="set-import">Importar partida</button>
-      </div>
-      <input type="file" id="set-import-file" accept=".json,application/json" class="hidden">`;
-    div.querySelector('#set-export').onclick = exportSave;
+      </div>`;
+    div.querySelector('#set-export').onclick = () => exportSave();
     div.querySelector('#set-import').onclick = () => {
       if (G.Game.state !== 'ui') { G.UI.toast(G.T('Termina la partida antes de importar.')); return; }
-      div.querySelector('#set-import-file').click();
+      pick(importSave);
     };
-    div.querySelector('#set-import-file').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) importSave(f); };
     return div;
   }
 
-  function exportSave() {
-    const s = G.DB.save;
+  /** Abre el diálogo de elegir archivo y llama a fn(archivo). */
+  function pick(fn) {
+    const inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = '.json,application/json';
+    inp.onchange = () => { const f = inp.files[0]; if (f) fn(f); };
+    inp.click();
+  }
+
+  /** Descarga la partida `s` (por defecto, la de ahora) en un .json. */
+  function exportSave(s = G.DB.save, name = G.DB.user) {
     if (!s) return;
     const data = { juego: 'PokeSurvivor', tipo: 'partida', v: 1, fecha: new Date().toISOString(), save: s };
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' }));
-    a.download = 'PokeSurvivor-' + (G.DB.user || 'partida').replace(/[^\w-]+/g, '') + '-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.download = 'PokeSurvivor-' + (name || 'partida').replace(/[^\w-]+/g, '') + '-' + new Date().toISOString().slice(0, 10) + '.json';
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -46,7 +54,8 @@ G.SaveFile = (() => {
 
   const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
 
-  async function importSave(file) {
+  /** Lee un archivo de partida. → la partida, o null (con aviso) si no lo es. */
+  async function read(file) {
     let inc = null;
     try {
       const data = JSON.parse(await file.text());
@@ -54,10 +63,14 @@ G.SaveFile = (() => {
     } catch (e) { /* no es JSON */ }
     if (!isObj(inc) || !isObj(inc.owned) || !isObj(inc.stats)) {
       G.UI.toast(G.T('Ese archivo no es una partida de PokéSurvivor.'), 4000);
-      return;
+      return null;
     }
+    return inc;
+  }
+
+  /** Junta la partida `inc` con la de ahora, la guarda y recarga. */
+  function mergeIn(inc) {
     const cur = G.DB.save;
-    if (!confirm(G.T('¿Juntar la partida de {x} con la tuya? No pierdes nada de lo que tienes.').replace('{x}', inc.name || '?'))) return;
     // Lo que falte en la partida importada (de una versión vieja), de la actual:
     // merge() cuenta con que estén. Al recargar, db.js la revisa entera (migrate).
     for (const k in cur) if (inc[k] == null) inc[k] = clone(cur[k]);
@@ -70,6 +83,13 @@ G.SaveFile = (() => {
     G.DB.commit(true);
     G.UI.toast(G.T('Partida importada: recargando…'), 3000);
     setTimeout(() => location.reload(), 1200);
+  }
+
+  async function importSave(file) {
+    const inc = await read(file);
+    if (!inc) return;
+    if (!confirm(G.T('¿Juntar la partida de {x} con la tuya? No pierdes nada de lo que tienes.').replace('{x}', inc.name || '?'))) return;
+    mergeIn(inc);
   }
 
   // Ajustes > Cuenta se vuelve a pintar cada vez: se añade el bloque si es una
@@ -86,5 +106,5 @@ G.SaveFile = (() => {
   }
   init();
 
-  return { exportSave, importSave };
+  return { exportSave, importSave, pick, read, mergeIn };
 })();

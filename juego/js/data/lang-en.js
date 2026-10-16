@@ -13,6 +13,21 @@ G.I18n.add({
   'Ese archivo no es una partida de PokéSurvivor.': 'That file is not a PokéSurvivor save.',
   '¿Juntar la partida de {x} con la tuya? No pierdes nada de lo que tienes.': "Merge {x}'s save with yours? You lose nothing you already have.",
   'Partida importada: recargando…': 'Save imported: reloading…',
+  // ---------------- (mod) perfiles ----------------
+  'Elige tu perfil': 'Choose your profile', 'Último perfil usado': 'Last used profile', 'Opciones': 'Options',
+  'Nuevo perfil': 'New profile', 'Tu nombre': 'Your name', 'Crear': 'Create', 'Hueco libre': 'Empty slot', 'Crear perfil': 'Create profile',
+  'Para crear otro perfil, borra antes uno (puedes exportar su partida para no perderla).':
+    'To create another profile, delete one first (you can export its save so you don\'t lose it).',
+  'Ya hay un perfil con ese nombre.': 'There is already a profile with that name.', 'Ese perfil no existe.': 'That profile does not exist.',
+  'Opciones del perfil': 'Profile options', 'Borrar perfil': 'Delete profile', 'Perfil borrado': 'Profile deleted',
+  'Elegir perfil': 'Choose profile', 'Cambiar de perfil': 'Switch profile',
+  'Este perfil aún no tiene partida.': 'This profile has no save yet.',
+  '¿Juntar la partida de {x} con la de este perfil? No pierde nada de lo que tiene.': "Merge {x}'s save with this profile's? It loses nothing it already has.",
+  'Se borrará toda su partida para siempre: Pokémon, shinies, monedas, medallas y mejoras. No se puede deshacer.':
+    'All of its progress will be deleted forever: Pokémon, shinies, coins, badges and upgrades. This cannot be undone.',
+  'Si quieres conservarla, exporta antes la partida.': 'If you want to keep it, export the save first.',
+  'Escribe el nombre del perfil para confirmarlo:': 'Type the profile name to confirm:',
+  'Las partidas se guardan en este navegador.': 'Saves are kept in this browser.',
   // ---------------- (mod) programa de escritorio ----------------
   'Buscar actualizaciones': 'Check for updates', 'Buscando…': 'Checking…', 'Versión del {x}': 'Version of {x}', 'Programa {x}': 'App {x}', 'juego del {x}': 'game of {x}',
   'Descargando… {x}': 'Downloading… {x}', 'Ya tienes la última versión.': 'You already have the latest version.',

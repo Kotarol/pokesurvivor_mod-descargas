@@ -368,6 +368,15 @@ G.DB = (() => {
     return true;
   }
 
+  /** (mod) Entra en una cuenta local sin contraseña: los perfiles (js/ui/perfiles.js). */
+  function openProfile(k) {
+    const acc = (read(K_ACC) || {})[k];
+    if (mode !== 'local' || !acc) return { ok: false, error: 'Ese perfil no existe.' };
+    beginLocal(k, acc.name);
+    if (!read(K_SAVE + k)) write(K_SAVE + k, save);
+    return { ok: true, isNew: !save.partner };
+  }
+
   /** Partida de una cuenta local antigua, si el nombre y la contraseña coinciden. */
   async function legacySave(name, pass) {
     const k = (name || '').toLowerCase();
@@ -846,6 +855,7 @@ G.DB = (() => {
 
   return {
     ready, register, login, loginWithGoogle, playAsGuest, logout, commit, deleteAccount, flush: pushNow,
+    openProfile,
     owns, grant, ownsShiny, grantShiny, merge, setName, upgradesOf,
     onSync(fn) { listeners.add(fn); },
     onLeave(fn) { leaveHooks.push(fn); },
