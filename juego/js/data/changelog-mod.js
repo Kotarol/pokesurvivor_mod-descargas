@@ -6,7 +6,11 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
-  { d: '2026-10-16', title: ['Perfiles y ataques sin parones', 'Profiles and no more attack stalls'], new: [
+  { d: '2026-10-16', title: ['Perfiles, viaje por regiones y ataques sin parones', 'Profiles, region journey and no more attack stalls'], new: [
+    ['Viaje por regiones, como en los juegos: al principio sólo están abiertas Kanto y la región de tu primer compañero (el del test). Al vencer al campeón de la Liga de una región abierta se abre la siguiente, en el orden Kanto → Johto → Hoenn → Sinnoh → Teselia → Kalos → Alola → Galar → Paldea.',
+     'Region journey, as in the games: at first only Kanto and your first partner\'s region (the one from the test) are open. Beating the League Champion of an open region opens the next one, in the order Kanto → Johto → Hoenn → Sinnoh → Unova → Kalos → Alola → Galar → Paldea.'],
+    ['Las regiones cerradas salen con candado: no puedes viajar a su mapa, ni tirar en su banner, ni elegir de compañero a sus Pokémon (aunque ya los tengas). Si tu compañero era de una región cerrada, vuelve a serlo tu primer compañero; los demás siguen en tu Pokédex con sus mejoras. El Mundo Distorsión mezcla sólo las regiones abiertas.',
+     'Closed regions show a padlock: you can\'t travel to their map, pull on their banner or pick their Pokémon as your partner (even if you already have them). If your partner was from a closed region, your first partner takes its place again; the rest stay in your Pokédex with their upgrades. The Distortion World only mixes the open regions.'],
     ['Perfiles en vez de cuenta y contraseña: al abrir el juego eliges tu perfil en uno de los 3 huecos, con un clic y sin contraseña. Cada uno enseña su % de Pokédex y sus medallas de cada región. Para crear uno sólo hace falta un nombre. Tus cuentas de antes siguen ahí como perfiles, con toda su partida.',
      'Profiles instead of account and password: when you open the game you pick your profile from one of the 3 slots, with one click and no password. Each one shows its Pokédex % and its badges from every region. Creating one only needs a name. Your old accounts are still there as profiles, with all their progress.'],
     ['Desde el botón ⋯ de cada perfil puedes exportar o importar su partida y borrarlo (hay que escribir su nombre para confirmarlo). En un hueco libre, "Importar partida" crea el perfil a partir del archivo: así puedes llevarte tu partida a otro ordenador. Se recuerda el último perfil usado.',

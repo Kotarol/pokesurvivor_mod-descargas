@@ -103,6 +103,12 @@ G.I18n.add({
   'La Liga de {x} no te deja pasar: te faltan {x} medallas': 'The {x} League won\'t let you in: you are missing {x} badges',
   'La Liga de {x} no te deja pasar: te falta 1 medalla': 'The {x} League won\'t let you in: you are missing 1 badge',
 
+  // ---------------- (mod) viaje por regiones ----------------
+  'Vence al campeón de la Liga de {x} para viajar a {x}': 'Beat the {x} League Champion to travel to {x}',
+  '{x} está cerrada: {x} vuelve a ser tu compañero': '{x} is closed: {x} is your partner again',
+  '{x} está cerrada': '{x} is closed', '¡Nueva región abierta: {x}!': 'New region unlocked: {x}!',
+  '¡Ya puedes viajar a {x}!': 'You can now travel to {x}!', 'Las regiones abiertas mezcladas': 'The open regions mixed together',
+
   // ---------------- tipos y regiones ----------------
   'Acero': 'Steel', 'Agua': 'Water', 'Bicho': 'Bug', 'Dragón': 'Dragon', 'Eléctrico': 'Electric', 'Fantasma': 'Ghost',
   'Fuego': 'Fire', 'Hada': 'Fairy', 'Hielo': 'Ice', 'Lucha': 'Fighting', 'Planta': 'Grass', 'Psíquico': 'Psychic',

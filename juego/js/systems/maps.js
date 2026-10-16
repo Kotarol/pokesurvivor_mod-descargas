@@ -19,6 +19,10 @@
  * región (region-biomes.js) y, si tu compañero es de la región, +5 % de
  * monedas al acabar (collection.js).
  *
+ * Viaje por regiones (viaje.js): las regiones cerradas no tienen mapa y el
+ * Mundo Distorsión mezcla sólo las abiertas, con los mismos rellenos que el
+ * mapa de una región. Con todas abiertas, como el original.
+ *
  * Cooperativo: elige el anfitrión. El mapa va en la orden de empezar
  * ({ k:'start', map }) y, mientras estáis en la sala, en { k:'map', g }.
  *
@@ -42,10 +46,15 @@ G.Maps = (() => {
     return g ? G.Gacha.BANNERS[g - 1].name : 'Mundo Distorsión';
   }
 
-  /** El último mapa elegido (el que sale marcado). */
+  /** ¿Región abierta? (viaje.js) */
+  const isOpen = g => !G.Travel || G.Travel.isOpen(g);
+  /** Mundo Distorsión con todas las regiones abiertas: todo como en el original. */
+  const mixed = () => !gen && (!G.Travel || G.Travel.allOpen());
+
+  /** El último mapa elegido (el que sale marcado). Si se ha cerrado, el Mundo Distorsión. */
   function chosen() {
-    const s = G.DB.save;
-    return valid(s && s.lastMap);
+    const s = G.DB.save, g = valid(s && s.lastMap);
+    return isOpen(g) ? g : 0;
   }
 
   /** Eliges mapa para jugar tú solo (se recuerda). */
@@ -59,15 +68,15 @@ G.Maps = (() => {
   function setRun(g) { gen = valid(g); }
 
   /** ¿Puede salir este Pokémon en el mapa de ahora? */
-  function allows(p) { return !gen || p.gen === gen; }
+  function allows(p) { return gen ? p.gen === gen : isOpen(p.gen); }
 
-  /** Del mapa de ahora (para filtros). */
-  const mine = p => p.gen === gen && G.SPRITE_META[p.dex];
+  /** Del mapa de ahora (para filtros): su región, o en el Mundo Distorsión las abiertas. */
+  const mine = p => allows(p) && G.SPRITE_META[p.dex];
 
   /** Candidatos de un tramo (enemies.js, candidates): los de la región, y si faltan, del tramo anterior. */
   function tierPool(all, tier) {
-    if (!gen) return all;
-    const list = fewSummoners(all.filter(p => p.gen === gen));
+    if (mixed()) return all;
+    const list = fewSummoners(all.filter(allows));
     if (list.length >= tier.cast) return list;
     const below = fewSummoners(G.DEX.filter(p => mine(p) && p.rarity < 5 && p.bst < tier.bst[0]), SUMMON_MAX -
                                list.filter(p => G.Enemies.behaviorOf(p) === 'summoner').length).sort((a, b) => b.bst - a.bst);
@@ -89,7 +98,7 @@ G.Maps = (() => {
 
   /** Jefes (enemies.js, rollRun): `ok` ya quita legendarios, sin sprite y repetidos. */
   function bossPool(pool, slot, ok) {
-    if (!gen) return pool;
+    if (mixed()) return pool;
     const strong = G.DEX.filter(p => mine(p) && ok(p));
     const inSlot = strong.filter(p => p.bst >= slot.bst[0] && p.bst <= slot.bst[1]);
     if (inSlot.length) return inSlot;
@@ -104,9 +113,9 @@ G.Maps = (() => {
   const hordeMons = type => G.DEX.filter(p => mine(p) && p.rarity < 5 && !p.leg && p.types.includes(type) &&
                                               !E.NO_HORDE.has(E.behaviorOf(p)));
   const types0 = E.hordeTypes, defs0 = E.hordeDefs;
-  E.hordeTypes = t => (gen ? Object.keys(G.U.TYPE_COLOR).filter(ty => hordeMons(ty).length >= HORDE_MIN) : types0(t));
+  E.hordeTypes = t => (mixed() ? types0(t) : Object.keys(G.U.TYPE_COLOR).filter(ty => hordeMons(ty).length >= HORDE_MIN));
   E.hordeDefs = (type, t) => {
-    if (!gen) return defs0(type, t);
+    if (mixed()) return defs0(type, t);
     const ti = E.tierAt(t), tier = E.TIERS[ti], mid = (tier.bst[0] + tier.bst[1]) / 2;
     const near = hordeMons(type).sort((a, b) => Math.abs(a.bst - mid) - Math.abs(b.bst - mid)).slice(0, 6);
     return G.U.pickN(near, 4).map(p => E.defFor(p, tier, ti));

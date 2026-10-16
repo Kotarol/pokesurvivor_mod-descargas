@@ -223,6 +223,7 @@ G.MenuUI = (() => {
     });
     const pick = $('dex-pick');
     if (pick) pick.onclick = () => {
+      if (G.Travel && G.Travel.blockPartner(p)) return;     // (mod) viaje por regiones
       s.partner = dex;
       s.partnerShiny = hasSh && viewShiny;
       G.DB.commit();

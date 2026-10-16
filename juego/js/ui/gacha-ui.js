@@ -73,6 +73,7 @@ G.GachaUI = (() => {
     $('pull-1').disabled = !G.Gacha.costOf(s, 1);
     $('pull-10').disabled = !G.Gacha.costOf(s, 10, 't1');
     $('pull-10b').disabled = !G.Gacha.costOf(s, 10, 't10');
+    if (G.Travel) G.Travel.gacha(gen);     // (mod) viaje por regiones: candado en las cerradas
     G.UI.refreshCoins();
   }
 

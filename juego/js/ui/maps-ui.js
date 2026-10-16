@@ -3,6 +3,7 @@
  * esta pantalla: una carta por mapa, con los colores de su región (los de su
  * banner del gacha), un Pokémon que la representa, lo que tienes de ella y
  * sus medallas. Mundo Distorsión, oscuro y retorcido, mezcla todas.
+ * Las regiones cerradas (viaje.js) salen con candado y no se pueden elegir.
  *
  * En la sala del cooperativo, el anfitrión ve "Mapa: X · Cambiar" y los
  * demás, el mapa que ha elegido.
@@ -19,8 +20,9 @@ G.MapsUI = (() => {
   function card(g) {
     const s = G.DB.save, B = g ? G.Gacha.BANNERS[g - 1] : null;
     const col = B ? B.color : DISTORTION;
+    const shut = !!g && G.Travel && !G.Travel.isOpen(g);     // viaje por regiones: cerrada
     const el = document.createElement('button');
-    el.className = 'mp-card' + (g ? '' : ' mp-dist') + (g === pick ? ' on' : '');
+    el.className = 'mp-card' + (g ? '' : ' mp-dist') + (g === pick ? ' on' : '') + (shut ? ' mp-shut' : '');
     el.style.setProperty('--c0', col[0]); el.style.setProperty('--c1', col[1]); el.style.setProperty('--c2', col[2]);
     el.dataset.g = g;
     const places = G.RegionBiomes ? G.RegionBiomes.names(g) : [];
@@ -33,8 +35,10 @@ G.MapsUI = (() => {
       info = `<div class="mp-bar"><i style="width:${pct}%"></i></div>
         <div class="mp-stats"><span>${pct} %</span><span>${G.Icons.html(medals >= 8 ? 'medal3' : 'medal1', 14)} ${medals}/8</span></div>` +
         (home ? `<div class="mp-home">${G.Icons.html('star', 11)} Tu compañero es de aquí: +5 % de monedas</div>` : '');
+      if (shut) info += `<div class="mp-lock">${G.Icons.html('lock', 22)}<span>${esc(G.Travel.lockText(g))}</span></div>`;
     } else {
-      info = `<small class="mp-places">Bosque Umbrío · Cueva Cristal · Volcán Ceniza</small><div class="mp-mix">Todas las regiones mezcladas</div>`;
+      const all = !G.Travel || G.Travel.allOpen();
+      info = `<small class="mp-places">Bosque Umbrío · Cueva Cristal · Volcán Ceniza</small><div class="mp-mix">${all ? 'Todas las regiones mezcladas' : 'Las regiones abiertas mezcladas'}</div>`;
     }
     el.innerHTML = (g ? '' : '<i class="mp-swirl"></i>') + `<b class="mp-name">${esc(G.Maps.name(g))}</b><span class="mp-mon"></span>` +
       (places.length ? `<small class="mp-places">${places.map(esc).join(' · ')}</small>` : '') + info;
@@ -42,6 +46,10 @@ G.MapsUI = (() => {
     const prop = g && propIcon(g);
     if (prop) mon.appendChild(prop);
     mon.appendChild(G.UI.spriteCanvas(MASCOT[g], 120, 92, { scale: 3, hero: true, lively: true }));
+    if (shut) {
+      el.onclick = () => { G.Audio.sfx('error'); G.UI.toast(G.Travel.lockText(g), 3500); };
+      return el;
+    }
     el.onclick = () => select(g);
     el.ondblclick = go;
     return el;
@@ -167,6 +175,12 @@ G.MapsUI = (() => {
     .mp-stats span { display: inline-flex; align-items: center; gap: 3px; }
     .mp-home { font-size: 10.5px; color: #ffe98a; line-height: 1.2; }
     .mp-mix { font-size: 12px; opacity: .85; }
+    .mp-shut { cursor: not-allowed; border-style: dashed; }
+    .mp-shut:hover { transform: none; }
+    .mp-shut .mp-mon canvas:not(.mp-prop) { filter: brightness(0) opacity(.6); }
+    .mp-shut .mp-mon canvas.mp-prop { opacity: .35; }
+    .mp-lock { display: flex; align-items: center; gap: 6px; margin-top: 2px; padding: 5px 6px; border-radius: 8px;
+               background: rgba(0,0,0,.55); font-size: 11px; line-height: 1.2; text-align: left; color: #ffe98a; }
     .mp-dist { background: radial-gradient(circle at 30% 20%, rgba(123,60,255,.35), transparent 45%),
                            radial-gradient(circle at 75% 80%, rgba(40,200,180,.18), transparent 50%),
                            repeating-conic-gradient(from 20deg at 60% 45%, var(--c0) 0 14deg, var(--c1) 14deg 26deg, var(--c2) 26deg 40deg); }
