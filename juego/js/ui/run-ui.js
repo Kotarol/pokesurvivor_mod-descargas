@@ -157,6 +157,10 @@ G.RunUI = (() => {
       el.onclick = () => { G.UI.hide('scr-item'); cb(id); };
       box.appendChild(el);
     });
+    // Las teclas del subtítulo, una por opción (2 o 3).
+    const sub = $('scr-item').querySelector('.sub');
+    sub.replaceChildren(sub.firstChild);
+    sub.insertAdjacentHTML('beforeend', opts.map((_, i) => `<kbd>${i + 1}</kbd>`).join(' '));
     G.UI.show('scr-item');
   }
 
