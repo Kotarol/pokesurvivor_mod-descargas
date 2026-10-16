@@ -75,7 +75,7 @@ G.Collection = (() => {
   /**
    * Extra de daño y vida (0 … 0,18) de un Pokémon por la afinidad con su región.
    * Crece más al final: +1 % por tramo hasta el 50 %, +2 % por tramo del 60 al
-   * 90 % (+13 %), y al completarla (Campeón de la región) +18 %.
+   * 90 % (+13 %), y al completarla (Maestro de la región) +18 %.
    */
   function affinity(save, dex) {
     const mon = G.DEX_BY[dex];

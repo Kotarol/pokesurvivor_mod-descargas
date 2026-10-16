@@ -10,7 +10,8 @@
  *
  *   Premio como una grieta normal (el as es "legendario" para el botín); el
  *   campeón suelta además un ticket ×10 seguro. Vencer al campeón da, una vez
- *   por región, el logro "Vence a la Liga de <región>" (pestaña "Liga").
+ *   por región, el logro "Vence a la Liga de <región>" (pestaña "Liga") y el
+ *   título "Campeón de <región>" (el 100 % de la región es "Maestro", medals.js).
  *   No cuenta para los logros de legendarios (ni "Vence a X" ni los contadores).
  *
  * Nada se guarda entre partidas (salvo el logro, en save.ach 'ligaw_<gen>':
@@ -127,7 +128,8 @@ G.League = (() => {
       const a = { id: 'liga_' + gen, cat: 'liga', tier: 3, gen, icon: 'crown', iconOff: 'crownOff',
                   name: `Vence a la Liga de ${reg}`,
                   desc: `Con las 8 medallas de ${reg}, vence al as de ${champ[0]} en una grieta (desde el minuto 20).`,
-                  value: s => (s.ach && s.ach['ligaw_' + gen] ? 1 : 0), goal: 1, reward: { t10: 1 } };
+                  value: s => (s.ach && s.ach['ligaw_' + gen] ? 1 : 0), goal: 1, reward: { t10: 1 },
+                  title: `Campeón de ${reg}` };
       D.LIST.push(a);
       D.BY[a.id] = a;
       // En inglés: los nombres de los entrenadores cambian, así que van enteros.
@@ -137,12 +139,54 @@ G.League = (() => {
         const mon = G.DEX_BY[tr[2]].name;
         en[challenge(gen, tr)] = `${regEn} League: ${tr[1]} challenges you with ${mon}!`;
       }
+      // Textos del bloque "Liga" de la Pokédex (dexBlock).
+      const t = dexTexts(gen), te = dexTexts(gen, true);
+      en[t.beaten] = te.beaten;
+      en[t.open] = te.open;
+      for (let m = 1; m <= N_MEDALS; m++) en[t.closed(m)] = te.closed(m);
     });
+    Object.assign(en, { 'Vencida': 'Beaten', 'Abierta': 'Open', 'Cerrada': 'Closed' });
     G.I18n.add(en);
     const UI = G.Icons.UI;
     UI.crownOff = { rows: UI.crown.rows, pal: { y: '#3a4870', o: '#2a3458', r: '#4a5a88' } };
   }
+  // ---------------- Pokédex ----------------
+  // "Campeón de <región>" es vencer a la Liga (el 100 % de la región es otra
+  // cosa: "Maestro de <región>", medals.js). Lo explica este bloque.
+
+  /** Textos del bloque de la región `gen` (en español o, con `en`, en inglés). */
+  function dexTexts(gen, en = false) {
+    const list = LEAGUES[gen - 1], ch = list[list.length - 1], mon = G.DEX_BY[ch[2]].name;
+    const reg = en ? G.Medals.REGIONS[gen - 1][1] : regionName(gen);
+    const who = en ? ch[1] : ch[0];
+    // Galar no tiene Alto Mando: Roy.
+    const e4 = list.length === 2 ? (en ? list[0][1] : list[0][0]) : (en ? 'its Elite Four' : 'su Alto Mando');
+    if (en) return {
+      beaten: `${reg} Champion! You defeated ${who} and ${mon}.`,
+      open: `From minute 10, the first rift you enter brings ${e4}; from minute 20, ${who} with ${mon}. Win and you become ${reg} Champion.`,
+      closed: m => `You need ${m === 1 ? '1 more badge' : m + ' more badges'} to enter. With all 8, defeat ${who} in a rift to become ${reg} Champion.`
+    };
+    return {
+      beaten: `¡Campeón de ${reg}! Venciste a ${who} y a ${mon}.`,
+      open: `Desde el minuto 10, la primera grieta en la que entres trae a ${e4}; desde el 20, a ${who} con ${mon}. Si ganas, serás Campeón de ${reg}.`,
+      closed: m => `Te ${m === 1 ? 'falta 1 medalla' : 'faltan ' + m + ' medallas'} para entrar. Con las 8, vence a ${who} en una grieta y serás Campeón de ${reg}.`
+    };
+  }
+
+  /** Bloque "Liga" de la fila de la región en la Pokédex (medals.js, dexRow). */
+  function dexBlock(s, gen, medals) {
+    if (!LEAGUES[gen - 1]) return '';
+    const t = dexTexts(gen);
+    const beaten = !!(s && s.ach && s.ach['ligaw_' + gen]);
+    let state, text;
+    if (beaten) { state = '<span class="gold">Vencida</span>'; text = t.beaten; }
+    else if (medals >= N_MEDALS) { state = '<span class="gold">Abierta</span>'; text = t.open; }
+    else { state = '<span class="sub">Cerrada</span>'; text = t.closed(N_MEDALS - medals); }
+    return `<div class="dm-sec"><div class="dm-head">${G.Icons.html(beaten ? 'crown' : 'crownOff', 18)} <b>Liga</b> ${state}</div>
+      <small class="dm-next">${text}</small></div>`;
+  }
+
   register();
 
-  return { pick, spawned, LEAGUES, AT_E4, AT_CHAMP };
+  return { pick, spawned, dexBlock, LEAGUES, AT_E4, AT_CHAMP };
 })();

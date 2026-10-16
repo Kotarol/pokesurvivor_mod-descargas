@@ -6,7 +6,9 @@
  *   contador que la afinidad (collection.js): cada shiny cuenta como uno más.
  *     medallas 1-7  → 2 tickets cada una
  *     medalla 8     → 1 ticket ×10 y abre la Liga de la región (league.js)
- *     100 %         → título "Campeón de <región>"
+ *     100 %         → "<región> completa", título "Maestro de <región>"
+ *                     (hasta el 16-10-2026 era "Campeón de <región>": ahora
+ *                     el campeón es quien vence a la Liga, league.js)
  *
  * Son logros normales (G.AchDefs, pestaña "Medallas"): progress.js los
  * comprueba y da los premios como a los demás. La Pokédex (menu.js) enseña la
@@ -127,8 +129,8 @@ G.Medals = (() => {
                       value, goal: n, reward: k < N ? { t1: T1 } : { t10: 1 } });
       }
       D.LIST.push({ id: `champ_${g}`, cat: 'medallas', tier: 3, gen: g, medal: 10,
-                    name: `Campeón de ${reg}`, desc: `Completa ${reg}: los ${total} Pokémon de la región.`,
-                    value, goal: total, reward: {}, title: `Campeón de ${reg}` });
+                    name: `${reg} completa`, desc: `Completa ${reg}: los ${total} Pokémon de la región.`,
+                    value, goal: total, reward: {}, title: `Maestro de ${reg}` });
       const ns = goal(total, STAMP_TIER);
       D.LIST.push({ id: `stamp_${g}`, cat: 'medallas', tier: 2, gen: g, medal: 'stamp',
                     name: `Sello de ${reg}`, desc: `Ten el 50 % de ${reg} (${ns} Pokémon). Cada sello del pasaporte da +2 % de monedas al acabar cada partida.`,
@@ -142,6 +144,11 @@ G.Medals = (() => {
     // Nombres en inglés: van aquí, con la región, porque en español se repiten.
     const en = {};
     BADGES.forEach((list, gi) => list.forEach(([, eng], ki) => { en[badgeName(gi + 1, ki + 1)] = `${eng} (${REGIONS[gi][1]})`; }));
+    REGIONS.forEach(([es, eng]) => {
+      en[`${es} completa`] = `${eng} complete`;
+      en[`Maestro de ${es}`] = `${eng} Master`;
+      en[`¡${es} completa!`] = `${eng} complete!`;
+    });
     G.I18n.add(en);
   }
 
@@ -154,6 +161,12 @@ G.Medals = (() => {
     const s = G.DB.save;
     if (!s) return;
     s.ach = s.ach || {};
+    // Hasta el 16-10-2026 el 100 % daba "Campeón de <región>" (ahora es de la
+    // Liga): quien lo llevaba puesto sin haber vencido a la Liga pasa a Maestro.
+    const P = s.profile;
+    const old = P && P.title && /^Campeón de (.+)$/.exec(P.title);
+    const og = old ? REGIONS.findIndex(r => r[0] === old[1]) + 1 : 0;
+    if (og && !s.ach['liga_' + og]) P.title = s.ach['champ_' + og] ? `Maestro de ${old[1]}` : '';
     const due = G.AchDefs.LIST.filter(a => a.cat === 'medallas' && !s.ach[a.id] && a.value(s) >= a.goal);
     if (due.length < 3) return;           // pocas: con su aviso normal
     const sum = { t1: 0, t10: 0 };
@@ -198,7 +211,11 @@ G.Medals = (() => {
 
   // ---------------- Pokédex ----------------
 
-  /** Fila de medallas de la región `gen`, justo debajo de las pestañas de región. */
+  /**
+   * Fila de la región `gen`, justo debajo de las pestañas de región, en tres
+   * bloques separados (16-10-2026: con todo en una fila, el trofeo del 100 %
+   * parecía la 9.ª medalla): Medallas · Liga (league.js) · Colección.
+   */
   function dexRow(after, gen) {
     const s = G.DB.save;
     let el = document.getElementById('dex-medals');
@@ -216,20 +233,23 @@ G.Medals = (() => {
       icons += `<span class="dm-b${ok ? ' ok' : ''}" title="${badgeName(gen, k)} · ${goal(st.total, k)}">` +
                G.Icons.html(`badge${gen}_${k}` + (ok ? '' : '_off'), 32) + '</span>';
     }
-    icons += `<span class="dm-b dm-champ${st.champion ? ' ok' : ''}" title="Campeón de ${reg} · ${st.total}">` +
-             G.Icons.html(st.champion ? 'trophy' : 'trophyOff', 32) + '</span>';
-    const stamp = hasStamp(s, gen);
-    icons += `<span class="dm-b dm-champ${stamp ? ' ok' : ''}" title="Sello de ${reg} · ${goal(st.total, STAMP_TIER)}">` +
-             G.Icons.html(`stamp${gen}` + (stamp ? '' : '_off'), 32) + '</span>';
     passportButton();
+    const next = st.medals < N
+      ? `Siguiente: ${badgeName(gen, st.medals + 1)} con ${goal(st.total, st.medals + 1)} Pokémon (tienes ${st.pts}).`
+      : `¡Las 8! La Liga de ${reg} está abierta.`;
+    const medals = `<div class="dm-sec"><div class="dm-head"><b>Medallas</b> <span class="gold">${st.medals}/${N}</span></div>
+      <div class="dm-icons">${icons}</div><small class="dm-next">${next}</small></div>`;
 
-    let next;
-    if (st.champion) next = `<b class="gold">Campeón de ${reg}</b>`;
-    else if (st.medals < N) next = `<span>Siguiente: ${badgeName(gen, st.medals + 1)} con ${goal(st.total, st.medals + 1)} Pokémon (tienes ${st.pts}).</span>`;
-    else next = `<span>Completa ${reg} para ser Campeón: ${st.pts} de ${st.total}.</span>`;
+    // Colección: el sello (50 %) y la región completa (100 %), con su nombre debajo.
+    const stamp = hasStamp(s, gen);
+    const item = (ok, icon, label, n) => `<span class="dm-item${ok ? ' ok' : ''}">${G.Icons.html(icon, 28)}<small>${label}<br>${n} Pokémon</small></span>`;
+    const pct = Math.floor(Math.min(1, st.pts / st.total) * 100);
+    const coll = `<div class="dm-sec"><div class="dm-head"><b>Colección</b> <span class="gold">${pct} %</span></div>
+      <div class="dm-icons">${item(stamp, `stamp${gen}` + (stamp ? '' : '_off'), 'Sello (50 %)', goal(st.total, STAMP_TIER))}${
+        item(st.champion, st.champion ? 'trophy' : 'trophyOff', st.champion ? `¡${reg} completa!` : 'Completa (100 %)', st.total)}</div>
+      <small class="dm-next">Tienes ${st.pts} de ${st.total} (los shiny cuentan doble).</small></div>`;
 
-    el.innerHTML = `<div class="dm-head"><b>Medallas</b> <span class="gold">${st.medals}/${N}</span></div>
-      <div class="dm-icons">${icons}</div><small class="dm-next">${next}</small>`;
+    el.innerHTML = medals + (G.League ? G.League.dexBlock(s, gen, st.medals) : '') + coll;
   }
 
   /** Botón "Pasaporte 4/9" junto al contador de la Pokédex. */
@@ -288,13 +308,20 @@ G.Medals = (() => {
   }
 
   const CSS = `
-    .dex-medals { display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; margin: 2px 2px 6px;
-                  padding: 6px 10px; border-radius: 10px; background: rgba(0,0,0,.22); }
+    .dex-medals { display: flex; align-items: stretch; gap: 6px; flex-wrap: wrap; margin: 2px 2px 6px; }
+    .dex-medals .dm-sec { flex: 1 1 200px; display: flex; flex-direction: column; gap: 3px;
+                          padding: 6px 10px; border-radius: 10px; background: rgba(0,0,0,.22); }
+    .dex-medals .dm-sec:first-child { flex: 2 1 300px; }
     .dex-medals .dm-head { white-space: nowrap; }
-    .dex-medals .dm-icons { display: flex; gap: 3px; }
+    .dex-medals .dm-icons { display: flex; flex-wrap: wrap; gap: 3px 10px; align-items: center; }
     .dex-medals .dm-b { display: inline-flex; opacity: .75; }
     .dex-medals .dm-b.ok { opacity: 1; filter: drop-shadow(0 0 3px rgba(255,210,63,.45)); }
-    .dex-medals .dm-champ { margin-left: 4px; }
+    .dex-medals .dm-icons:has(.dm-b) { gap: 3px; }
+    .dex-medals .dm-item { display: inline-flex; align-items: center; gap: 5px; opacity: .8; }
+    .dex-medals .dm-item small { font-size: 11px; line-height: 1.2; color: var(--muted); }
+    .dex-medals .dm-item.ok { opacity: 1; }
+    .dex-medals .dm-item.ok > :first-child { filter: drop-shadow(0 0 3px rgba(255,210,63,.45)); }
+    .dex-medals .dm-item.ok small { color: inherit; }
     .dex-medals .dm-next { color: var(--muted); font-size: 12px; }
     .dm-pp-btn { margin-left: 10px; vertical-align: middle; display: inline-flex; align-items: center; gap: 4px; }
     .pp-ov { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.6); display: flex;
