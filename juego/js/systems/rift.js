@@ -142,13 +142,17 @@ G.Rift = (() => {
     const t = G.Game.st.time;
     const n = G.Game.everyone().length;
     const ts = TS();
+    // (mod, 16-10-2026) Desde el minuto 2,5 la vida crece más (×1,9 en el
+    // minuto 10, ×3,1 en el 20) y el daño un poco más: las grietas de después
+    // de la primera se hacían muy fáciles, porque los salvajes escalan mucho más.
+    const later = 1 + Math.max(0, t - 150) / 500;
     const def = {
       dex: mon.dex, name: mon.name,
-      hp: Math.round((3200 + t * 9) * G.Coop.scaleHp(n) * (n > 1 ? 1.4 : 1)),
+      hp: Math.round((3200 + t * 9) * later * G.Coop.scaleHp(n) * (n > 1 ? 1.4 : 1)),
       spd: Math.round(G.U.clamp(48 + (mon.spd - 78) * 0.6, 48, 105)),
-      dmg: Math.round(36 + t / 20), xp: Math.round(500 + t * 1.2),
+      dmg: Math.round(36 + t / 16), xp: Math.round(500 + t * 1.2),
       behavior: mon.types.some(x => ['psychic', 'electric', 'ghost', 'fairy', 'fire', 'water', 'ice', 'dragon'].includes(x)) ? 'ranged' : 'charger',
-      shotDmg: Math.round(18 + t / 40), shotCd: 0.9, range: 300
+      shotDmg: Math.round(18 + t / 32), shotCd: 0.9, range: 300
     };
     const e = new G.Enemy(def, arena.x, arena.y - ts * 3.5, { hp: 1, spd: 1, dmg: 1 }, true);
     e.legend = true;

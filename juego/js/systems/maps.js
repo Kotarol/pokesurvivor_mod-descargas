@@ -10,7 +10,8 @@
  * el Pokémon perdido y los legendarios de las grietas (aunque se repitan).
  * Los stats de combate siguen saliendo del tramo (enemies.js), así que la
  * dificultad es la misma en todas. Donde a una región le faltan Pokémon:
- *   tramos  se completa con los más fuertes de la región del tramo anterior
+ *   tramos  se completa con los más fuertes de la región del tramo anterior,
+ *           y con 1 invocador como mucho (si no, Kanto era más fácil)
  *   jefes   si no hay ninguno en su franja, otro fuerte no legendario de la región
  *   hordas  sólo de los tipos con al menos HORDE_MIN Pokémon en la región,
  *           los de stats más cercanos al tramo
@@ -28,6 +29,7 @@
 G.Maps = (() => {
   const BONUS = 0.05;           // +5 % de monedas con un compañero de la región
   const HORDE_MIN = 4;          // Pokémon de un tipo para que haya horda de ese tipo
+  const SUMMON_MAX = 1;         // invocadores como mucho entre los candidatos de un tramo
   const N = 9;                  // regiones
 
   let gen = 0;                  // mapa de la partida: 0 = Mundo Distorsión, 1..9 = región
@@ -65,10 +67,24 @@ G.Maps = (() => {
   /** Candidatos de un tramo (enemies.js, candidates): los de la región, y si faltan, del tramo anterior. */
   function tierPool(all, tier) {
     if (!gen) return all;
-    const list = all.filter(p => p.gen === gen);
+    const list = fewSummoners(all.filter(p => p.gen === gen));
     if (list.length >= tier.cast) return list;
-    const below = G.DEX.filter(p => mine(p) && p.rarity < 5 && p.bst < tier.bst[0]).sort((a, b) => b.bst - a.bst);
+    const below = fewSummoners(G.DEX.filter(p => mine(p) && p.rarity < 5 && p.bst < tier.bst[0]), SUMMON_MAX -
+                               list.filter(p => G.Enemies.behaviorOf(p) === 'summoner').length).sort((a, b) => b.bst - a.bst);
     return list.concat(below.slice(0, tier.cast - list.length));
+  }
+
+  /**
+   * Como mucho `max` invocadores (al azar) en un tramo. En Kanto casi todas
+   * las evoluciones finales llaman a su manada (Pidgeot, Nidoqueen, Arbok,
+   * Gyarados...) y salían 2-3 de 7 por tramo; sus crías pegan poco y ocupan
+   * el sitio de los demás, así que la región era más fácil (16-10-2026).
+   * Mezclando todas sale menos de 1 por tramo.
+   */
+  function fewSummoners(list, max = SUMMON_MAX) {
+    const isS = p => G.Enemies.behaviorOf(p) === 'summoner';
+    const keep = new Set(G.U.pickN(list.filter(isS), Math.max(0, max)));
+    return list.filter(p => !isS(p) || keep.has(p));
   }
 
   /** Jefes (enemies.js, rollRun): `ok` ya quita legendarios, sin sprite y repetidos. */
