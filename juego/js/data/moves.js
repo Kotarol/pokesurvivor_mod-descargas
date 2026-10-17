@@ -37,7 +37,8 @@
     ],
     melee: [
       { t: '+40% daño',                     m: { dmg: 1.40 } },
-      { t: '+25% alcance',                  m: { radius: 1.25 } },
+      // (mod) Desde aquí cada golpe suelta una onda de choque (combat.js).
+      { t: '+25% alcance y onda de choque', m: { radius: 1.25, wave: 0.5 } },
       { t: '-25% recarga',                  m: { cd: 0.75 } },
       { t: 'Golpea en 360° y +50% daño',    m: { arc: 9, dmg: 1.50 } }
     ],

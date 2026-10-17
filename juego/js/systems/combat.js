@@ -130,15 +130,33 @@ G.Combat = (() => {
     const col = G.U.TYPE_COLOR[m.type];
     const half = Math.min(m.arc, 6.2832) / 2;
     G.FX.slash(pl.x, pl.y - G.LIFT * 0.5, pl.aim, m.radius, m.arc, col, G.VFX.forMove(m));
+    if (m.wave) shockwave(pl, m, half);    // (mod) también la de los compañeros (sólo se ve)
     if (ghost) return;
 
     for (const e of G.EnemyMgr.queryCircle(pl.x, pl.y, m.radius)) {
       if (!inArc(pl.x, pl.y, e.x, e.y, pl.aim, half)) continue;
-      hit(pl, e, m.dmg * pl.atk, col, e.x - pl.x, e.y - pl.y, m.knock || 0, m);
+      hit(pl, e, m.dmg * pl.atk * remateK(m, e), col, e.x - pl.x, e.y - pl.y, m.knock || 0, m);    // (mod) remate
     }
     for (const p of G.World.propsInCircle(pl.x, pl.y, m.radius)) {
       if (inArc(pl.x, pl.y, p.x, p.y, pl.aim, half)) G.World.damageProp(p, m.dmg * pl.atk, col);
     }
+  }
+
+  // (mod) Onda de choque (cuerpo a cuerpo desde Nv3): un frente en el mismo arco
+  // que el golpe que crece desde su borde hasta el doble de su alcance, con
+  // m.wave del daño, y pasa por encima de todo (cada enemigo, una vez).
+  // Vive en `fields` (ver updateFields).
+  function shockwave(pl, m, half) {
+    fields.push({ kind: 'wave', owner: pl, ghost, m, col: G.U.TYPE_COLOR[m.type], vis: G.VFX.forMove(m),
+                  x: pl.x, y: pl.y, aim: pl.aim, half, r0: m.radius, t: 0, life: 0.3, fxT: 0,
+                  hits: new Set(), dmg: m.dmg * pl.atk * m.wave });
+  }
+
+  // (mod) Remate: el cuerpo a cuerpo hace más a quien está quemado, envenenado o
+  // frenado. El frenado que pone el propio golpe (Lengüetazo) no cuenta.
+  const REMATE = 1.6;
+  function remateK(m, e) {
+    return (e.burn > 0 || e.poison > 0 || (!m.slow && e.slow > 0)) ? REMATE : 1;
   }
 
   function beam(pl, m) {
@@ -399,6 +417,21 @@ G.Combat = (() => {
           }
         }
         if (f.kick > 0) f.kick -= dt;
+      } else if (f.kind === 'wave') {
+        // (mod) Onda de choque: el frente va de r0 a 2·r0; se ve como tajos que se alejan.
+        const R = f.r0 * (1 + f.t / f.life), full = f.half >= 3.1;
+        if ((f.fxT -= dt) <= 0) {
+          f.fxT = 0.06;
+          G.FX.slash(f.x, f.y - G.LIFT * 0.5, f.aim, R, f.half * 2, f.col, { pal: f.vis.pal });
+        }
+        if (!f.ghost) {
+          for (const e of G.EnemyMgr.queryCircle(f.x, f.y, R)) {
+            if (f.hits.has(e.id) || G.U.dist(f.x, f.y, e.x, e.y) < f.r0) continue;
+            if (!full && !inArc(f.x, f.y, e.x, e.y, f.aim, f.half)) continue;
+            f.hits.add(e.id);
+            hit(f.owner, e, f.dmg * remateK(f.m, e), f.col, e.x - f.x, e.y - f.y, 0, f.m);
+          }
+        }
       } else if (f.kind === 'patch') {
         f.tick -= dt;
         if (f.tick <= 0) { f.tick = 0.5; blast(f, f.r); }

@@ -228,7 +228,7 @@ G.I18n.add({
 
   // mejoras de los movimientos
   '+1 proyectil': '+1 projectile', '+1 proyectil y +1 perforación': '+1 projectile and +1 pierce', '+45% daño': '+45% damage',
-  '-25% recarga': '-25% cooldown', '+40% daño': '+40% damage', '+25% alcance': '+25% range', 'Golpea en 360° y +50% daño': 'Hits in 360° and +50% damage',
+  '-25% recarga': '-25% cooldown', '+40% daño': '+40% damage', '+25% alcance': '+25% range', '+25% alcance y onda de choque': '+25% range and shockwave','Golpea en 360° y +50% daño': 'Hits in 360° and +50% damage',
   '+30% alcance y grosor': '+30% range and width', '+50% daño': '+50% damage', '+1 orbe': '+1 orb', '+55% daño': '+55% damage',
   '+25% radio y gira más rápido': '+25% radius and spins faster', '+1 orbe y +55% daño': '+1 orb and +55% damage',
   '+4 proyectiles': '+4 projectiles', '+4 proyectiles y +1 perforación': '+4 projectiles and +1 pierce', '+30% radio': '+30% radius',
