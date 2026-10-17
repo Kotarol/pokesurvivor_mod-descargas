@@ -29,10 +29,11 @@ G.Minimapa = (() => {
   let runPl = null;                  // jugador de la partida que se está apuntando
   const explored = new Map();        // "cx,cy" -> { cx, cy, terr: Uint8Array, img }
   const chests = new Map();          // id -> prop (cofres vistos)
+  const altars = new Map();          // id -> prop (altares de poder vistos)
   let bakedBiome = -1;
 
   function resetRun(pl) {
-    runPl = pl; explored.clear(); chests.clear(); bakedBiome = -1;
+    runPl = pl; explored.clear(); chests.clear(); altars.clear(); bakedBiome = -1;
   }
 
   const KIND_N = { floor: 0, wall: 1, liquid: 2 };
@@ -53,7 +54,10 @@ G.Minimapa = (() => {
       added++;
     }
     for (const p of W.propsInCircle(pl.x, pl.y, 900)) if (p.type === 'chest') chests.set(p.id, p);
-    for (const p of W.specialsNear(pl.x, pl.y, 900)) if (p.type === 'bigchest') chests.set(p.id, p);
+    for (const p of W.specialsNear(pl.x, pl.y, 900)) {
+      if (p.type === 'bigchest') chests.set(p.id, p);
+      else if (p.type === 'altar') altars.set(p.id, p);
+    }
     for (const [id, p] of chests) if (p.hp <= 0 || (p.type === 'bigchest' && !W.specialsNear(p.x, p.y, 1).includes(p))) chests.delete(id);
   }
 
@@ -147,6 +151,7 @@ G.Minimapa = (() => {
       '<span><i style="background:#ff9a3d;border-radius:1px;transform:rotate(45deg) scale(.8)"></i>Jefe</span>' +
       '<span><i style="background:#b48aff"></i>Grieta</span>' +
       '<span><i style="background:#e8b04a;border-radius:2px"></i>Cofre</span>' +
+      '<span><i style="background:linear-gradient(90deg,' + G.Interact.POWERS.map(p => p.color).join(',') + ');border-radius:5px 5px 1px 1px"></i>Altar de poder</span>' +
       '<span><i style="background:#7dffb0"></i>Pokémon perdido</span>' +
       '<span><i style="background:rgba(255,80,80,.7);border-radius:2px"></i>Enemigos</span>' +
       '<span class="mm-hint"></span></div>';
@@ -231,6 +236,19 @@ G.Minimapa = (() => {
       c.fillStyle = p.type === 'bigchest' ? '#ffd86a' : '#e8b04a';
       c.strokeStyle = 'rgba(0,0,0,.85)'; c.lineWidth = 1;
       c.fillRect(px - s, py - s, s * 2, s * 2); c.strokeRect(px - s, py - s, s * 2, s * 2);
+    }
+
+    // Altares de poder: una torre con el color de su poder (gris si ya lo has usado).
+    const ar = isBig ? 6 : 3.5;
+    for (const p of altars.values()) {
+      const px = sx(p.x), py = sy(p.y);
+      if (px < -8 || px > w + 8 || py < -8 || py > h + 8) continue;
+      const pw = G.Interact.POWERS[p.kind];
+      c.beginPath();
+      c.moveTo(px, py - ar * 1.7); c.lineTo(px + ar, py - ar * 0.6); c.lineTo(px + ar, py + ar);
+      c.lineTo(px - ar, py + ar); c.lineTo(px - ar, py - ar * 0.6); c.closePath();
+      c.fillStyle = p.used ? '#6b7280' : (pw ? pw.color : '#ffffff'); c.fill();
+      c.lineWidth = 1; c.strokeStyle = 'rgba(0,0,0,.9)'; c.stroke();
     }
 
     const R = isBig ? 6 : 3.5;
@@ -496,6 +514,6 @@ G.Minimapa = (() => {
     get shown() { return wanted(); },
     get isOpen() { return isBig; },
     /** Para pruebas: lo apuntado en esta partida. */
-    _dbg() { return { chunks: explored.size, chests: chests.size, pref }; }
+    _dbg() { return { chunks: explored.size, chests: chests.size, altars: altars.size, pref }; }
   };
 })();
