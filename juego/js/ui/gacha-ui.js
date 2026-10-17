@@ -110,6 +110,7 @@ G.GachaUI = (() => {
         ? `<span class="new">${r.shiny ? '¡SHINY NUEVO!' : '¡NUEVO!'}</span>`
         : `Repetido · <span class="coin"></span> +${r.refund}`;
       c.insertAdjacentHTML('beforeend', `<b>${r.shiny ? G.Icons.html('shiny', 12) + ' ' : ''}${mon.name}</b><div class="tag">${tag}</div>`);
+      if (G.Polvo) G.Polvo.card(c, r);     // (mod) polvo regional
       out.appendChild(c);
       G.Audio.sfx('reveal', { rarity: r.rarity });
       await wait(n === 10 ? 150 : 0);

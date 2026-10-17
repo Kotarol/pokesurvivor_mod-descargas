@@ -4,6 +4,21 @@
  * son los oficiales en inglés.
  */
 G.I18n.add({
+  // ---------------- (mod) polvo regional ----------------
+  'Polvo Lunar': 'Moon Dust', 'Polvo Campana': 'Bell Dust', 'Polvo Meteoro': 'Meteor Dust', 'Polvo Lanza': 'Spear Dust',
+  'Polvo Dragospiral': 'Dragonspiral Dust', 'Polvo Mega': 'Mega Dust', 'Polvo Z': 'Z-Dust', 'Polvo Dinamax': 'Dynamax Dust',
+  'Polvo Teracristal': 'Tera Dust', 'Tienda': 'Shop', 'Tienda de polvo': 'Dust shop', 'Por repetido:': 'Per duplicate:',
+  'Precio:': 'Price:', 'Tu polvo:': 'Your dust:', 'Comprar': 'Buy',
+  'Elige el que quieras comprar.': 'Pick the one you want to buy.',
+  '¿Comprar a {x} por {x}?': 'Buy {x} for {x}?', '¡{x} es tuyo!': '{x} is yours!',
+  'Te falta {x}: cuesta {x} y tienes {x}': 'Not enough {x}: it costs {x} and you have {x}',
+  '¡No te falta ninguno que se pueda comprar en {x}!': 'You have every Pokémon you can buy in {x}!',
+  'Compra con {x} los Pokémon de {x} que te falten. Los legendarios y singulares no se venden: ésos, del banner o de las grietas.':
+    'Use {x} to buy the {x} Pokémon you are missing. Legendaries and Mythicals are not for sale: get those from the banner or the rifts.',
+  'Se abre al 90 % de {x} (llevas {x} %): desde entonces, los repetidos de {x} dan polvo para comprar los que te falten.':
+    'Opens at 90% of {x} (you have {x}%): from then on, {x} duplicates give dust to buy the ones you are missing.',
+  '· Desde el 90 % de la región, los repetidos dan también {x}: con él compras en la Pokédex los que te falten.':
+    '· From 90% of the region, duplicates also give {x}: use it in the Pokédex to buy the ones you are missing.',
   // ---------------- (mod) total de cada mejora ----------------
   'Ahora {x} · siguiente {x}': 'Now {x} · next {x}', 'Ahora {x} (máx.)': 'Now {x} (max.)',
   // ---------------- (mod) daño por movimiento ----------------
