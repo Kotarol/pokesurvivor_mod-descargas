@@ -1,6 +1,7 @@
 # Descargas
 
-Instalador y actualizaciones de un juego privado para Windows.
+Instalador y actualizaciones del juego de JPTER78 pero totalmente offline (ha excepción de actualizaciones) para Windows como instalador sin depender de navegador.
+Dispone de actualizaciones varias que difieren del proyecto original. Los botones de donación etc se han mantenido los originales de JRTER78 ya que es su trabajo original. Si llega a cambiar mucho este proyecto, se desvinculará pero no se incluirá nada nuevo. Proyecto personal totalmente gratuito, sin donaciones o publicidad.
 
 ## Instalar
 
