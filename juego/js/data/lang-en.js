@@ -127,9 +127,10 @@ G.I18n.add({
 
   // ---------------- (mod) viaje por regiones ----------------
   'Vence al campeón de la Liga de {x} para viajar a {x}': 'Beat the {x} League Champion to travel to {x}',
-  '{x} está cerrada: {x} vuelve a ser tu compañero': '{x} is closed: {x} is your partner again',
+  '{x} está cerrada: {x} pasa a ser tu compañero': '{x} is closed: {x} is now your partner',
   '{x} está cerrada': '{x} is closed', '¡Nueva región abierta: {x}!': 'New region unlocked: {x}!',
   '¡Ya puedes viajar a {x}!': 'You can now travel to {x}!', 'Las regiones abiertas mezcladas': 'The open regions mixed together',
+  'Los iniciales de Kanto, y dos amigos más.': 'The Kanto starters, plus two more friends.',
 
   // ---------------- tipos y regiones ----------------
   'Acero': 'Steel', 'Agua': 'Water', 'Bicho': 'Bug', 'Dragón': 'Dragon', 'Eléctrico': 'Electric', 'Fantasma': 'Ghost',

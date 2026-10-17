@@ -60,7 +60,7 @@ G.TestUI = (() => {
     $('starter-info').textContent = 'Selecciona un Pokémon';
     const grid = $('starter-grid');
     grid.innerHTML = '';
-    for (const s of G.STARTERS) {
+    for (const s of (G.Travel ? G.Travel.starters() : G.STARTERS)) {     // (mod) viaje por regiones: sólo Kanto
       const mon = G.DEX_BY[s.dex];
       const cell = document.createElement('div');
       cell.className = 'cell' + (result && s.dex === result.dex ? ' on' : '');

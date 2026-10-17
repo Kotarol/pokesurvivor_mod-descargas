@@ -3,26 +3,27 @@
  *
  *   Como en los juegos: no puedes ir a la siguiente región sin ser campeón de
  *   la Liga de la anterior. Orden fijo Kanto → Johto → … → Paldea.
- *   - Abiertas desde el principio: Kanto y la región de tu primer compañero
- *     (save.starter, el del test). Las demás, cerradas aunque ya tengas
- *     Pokémon de ellas.
+ *   - Abierta desde el principio, sólo Kanto (desde el 17-10-2026; antes,
+ *     también la región de tu primer compañero). Las demás, cerradas aunque
+ *     ya tengas Pokémon de ellas. Por eso el test sólo da iniciales de Kanto
+ *     (test.js, starters()).
  *   - Vencer al campeón de la Liga de una región abierta (league.js, logro
- *     save.ach['ligaw_<gen>']) abre la siguiente en el orden que siga cerrada
- *     (después de Paldea vuelve a empezar: quien empezó en Paldea también abre
- *     una al vencer a su campeón).
+ *     save.ach['ligaw_<gen>']) abre la siguiente en el orden que siga cerrada.
  *   - Una región cerrada no tiene mapa (maps-ui.js) ni banner (gacha-ui.js):
  *     candado y "Vence al campeón de la Liga de <anterior> para viajar a
  *     <región>". Sus Pokémon no salen en ningún sitio: el Mundo Distorsión
  *     mezcla sólo las abiertas (maps.js). Tampoco se pueden elegir de
- *     compañero (menu.js); si lo era, vuelve a serlo tu primer compañero.
+ *     compañero (menu.js); si lo era, pasa a serlo uno tuyo de una región
+ *     abierta (el de más mejoras) o, si no tienes ninguno, un inicial de Kanto.
  *
- * No se guarda nada propio: las regiones abiertas salen siempre de save.starter
- * y de los logros ligaw_<gen> (save.ach), así se juntan bien al sincronizar o
+ * No se guarda nada propio: las regiones abiertas salen siempre de los logros
+ * ligaw_<gen> (save.ach), así se juntan bien al sincronizar o
  * importar una copia. Que cada campeón abra "la siguiente cerrada" da el mismo
  * resultado sea cual sea el orden en que se vencieron.
  *
  * Ganchos en el original (una línea cada uno, con "(mod) viaje por regiones"):
- * gacha-ui.js (refresh) y menu.js (elegir compañero). Envuelve G.Gacha.pull,
+ * gacha-ui.js (refresh), menu.js (elegir compañero) y test.js (iniciales).
+ * Envuelve G.personalityResult, G.Gacha.pull,
  * G.Progress.kill y G.Rift.update (el aviso, al salir de la arena),
  * G.Collection.detailHtml y G.Flow.goMenu (por eso se carga después de game.js).
  */
@@ -38,13 +39,11 @@ G.Travel = (() => {
   function open(s = G.DB.save) {
     if (!s) return new Set([1]);
     const won = g => !!(s.ach && s.ach['ligaw_' + g]);
-    const first = G.DEX_BY[s.starter] || G.DEX_BY[s.partner];   // cuentas sin test: su compañero
-    let key = (first ? first.gen : 0) + ':';
+    let key = '';
     for (let g = 1; g <= N; g++) key += won(g) ? 1 : 0;
     if (s === cacheSave && key === cacheKey) return cache;
 
     const base = new Set([1]);
-    if (first) base.add(first.gen);
     let res = base;
     // Cada campeón vencido de una región abierta abre la siguiente cerrada;
     // las que se abren pueden tener ya su campeón vencido: se repite hasta que no cambie.
@@ -121,15 +120,47 @@ G.Travel = (() => {
     return html + `<p class="tv-note">${G.Icons.html('lock', 14)} ${lockText(mon.gen)}</p>`;
   };
 
-  /** Si tu compañero es de una región cerrada (ya lo tenías), vuelve a serlo el primero. */
+  /**
+   * Si tu compañero es de una región cerrada (ya lo tenías): pasa a serlo el
+   * tuyo de una región abierta con más mejoras (a igualdad, tu primer
+   * compañero si se puede, y si no el de número más bajo). Si no tienes
+   * ninguno, se te da el inicial de Kanto del tipo de tu primer compañero.
+   */
   function fixPartner() {
     const s = G.DB.save, mon = s && G.DEX_BY[s.partner];
-    if (!mon || isOpen(mon.gen) || !G.DEX_BY[s.starter]) return;
-    s.partner = s.starter;
+    if (!mon || isOpen(mon.gen)) return;
+    const levels = d => Object.values((s.pupg && s.pupg[d]) || {}).reduce((a, b) => a + (+b || 0), 0);
+    const mine = Object.keys(s.owned).map(Number).filter(d => G.DEX_BY[d] && isOpen(G.DEX_BY[d].gen))
+      .sort((a, b) => levels(b) - levels(a) || (b === s.starter) - (a === s.starter) || a - b);
+    let dex = mine[0];
+    if (!dex) {
+      const types = (G.DEX_BY[s.starter] || mon).types;
+      dex = types.includes('grass') ? 1 : types.includes('water') ? 7 : 4;
+      G.DB.grant(dex, 'starter');
+    }
+    s.partner = dex;
     s.partnerShiny = false;
     G.DB.commit();
-    G.UI.toast(`${regionName(mon.gen)} está cerrada: ${G.DEX_BY[s.starter].name} vuelve a ser tu compañero`, 4500);
+    G.UI.toast(`${regionName(mon.gen)} está cerrada: ${G.DEX_BY[dex].name} pasa a ser tu compañero`, 4500);
   }
+
+  // ---------------- el test ----------------
+
+  /** Iniciales que puede dar el test: sólo los de Kanto (la única abierta al empezar). */
+  const starters = () => G.STARTERS.filter(st => (G.DEX_BY[st.dex] || {}).gen === 1);
+
+  // El texto de la rejilla de iniciales (está en dev.html).
+  for (const p of document.querySelectorAll('#scr-starters p.sub')) {
+    if (p.textContent.startsWith('Los iniciales de todas las regiones')) p.textContent = 'Los iniciales de Kanto, y dos amigos más.';
+  }
+
+  // El resultado del test, también entre los de Kanto (personalityResult recorre G.STARTERS).
+  const result0 = G.personalityResult;
+  G.personalityResult = function () {
+    const all = G.STARTERS;
+    G.STARTERS = starters();
+    try { return result0.apply(this, arguments); } finally { G.STARTERS = all; }
+  };
 
   // ---------------- al vencer al campeón ----------------
 
@@ -190,5 +221,5 @@ G.Travel = (() => {
   st.textContent = CSS;
   document.head.appendChild(st);
 
-  return { N, open, isOpen, allOpen, lockText, gacha, blockPartner, fixPartner };
+  return { N, open, isOpen, allOpen, lockText, gacha, blockPartner, fixPartner, starters };
 })();
