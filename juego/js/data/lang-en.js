@@ -4,6 +4,13 @@
  * son los oficiales en inglés.
  */
 G.I18n.add({
+  // ---------------- (mod) minimapa ----------------
+  'Mapa': 'Map', 'Mapa (M)': 'Map (M)', 'Esconder el minimapa': 'Hide the minimap', 'Sacar el minimapa': 'Show the minimap',
+  'Alejar': 'Zoom out', 'Acercar': 'Zoom in', 'Centrar en ti': 'Center on you', 'Compañeros': 'Teammates', 'Jefe': 'Boss',
+  'Grieta': 'Rift', 'Cofre': 'Chest', 'Pokémon perdido': 'Lost Pokémon', 'Enemigos': 'Enemies',
+  'Rueda o + / − para el zoom · arrastra para mover el mapa · M o Esc para cerrar': 'Wheel or + / − to zoom · drag to move the map · M or Esc to close',
+  'Pellizca o usa + / − para el zoom · arrastra para mover el mapa': 'Pinch or use + / − to zoom · drag to move the map',
+
   // ---------------- (mod) polvo regional ----------------
   'Polvo Lunar': 'Moon Dust', 'Polvo Campana': 'Bell Dust', 'Polvo Meteoro': 'Meteor Dust', 'Polvo Lanza': 'Spear Dust',
   'Polvo Dragospiral': 'Dragonspiral Dust', 'Polvo Mega': 'Mega Dust', 'Polvo Z': 'Z-Dust', 'Polvo Dinamax': 'Dynamax Dust',
