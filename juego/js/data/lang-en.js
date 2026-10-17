@@ -70,6 +70,12 @@ G.I18n.add({
   'Ese archivo no es una partida de PokéSurvivor.': 'That file is not a PokéSurvivor save.',
   '¿Juntar la partida de {x} con la tuya? No pierdes nada de lo que tienes.': "Merge {x}'s save with yours? You lose nothing you already have.",
   'Partida importada: recargando…': 'Save imported: reloading…',
+  // ---------------- (mod) registro de partidas ----------------
+  'Registro de partidas': 'Run log', 'Exportar registro': 'Export log', 'Registro exportado': 'Log exported',
+  'Aún no hay partidas en el registro.': 'There are no runs in the log yet.',
+  '1 partida': '1 run', '{x} partidas': '{x} runs',
+  'Cómo fueron tus últimas {x} partidas, minuto a minuto (vida, enemigos, daño hecho y recibido, caídas y grietas). Se guarda sólo en este dispositivo. Sirve para ajustar la dificultad del juego.':
+    'How your last {x} runs went, minute by minute (HP, enemies, damage dealt and taken, faints and rifts). It is only kept on this device. It helps tune the game\'s difficulty.',
   // ---------------- (mod) perfiles ----------------
   'Elige tu perfil': 'Choose your profile', 'Último perfil usado': 'Last used profile', 'Opciones': 'Options',
   'Nuevo perfil': 'New profile', 'Tu nombre': 'Your name', 'Crear': 'Create', 'Hueco libre': 'Empty slot', 'Crear perfil': 'Create profile',
