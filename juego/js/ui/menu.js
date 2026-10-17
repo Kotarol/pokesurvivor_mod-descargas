@@ -251,6 +251,16 @@ G.MenuUI = (() => {
     renderUpgrades();
   }
 
+  // (mod) Lo que llevas de cada mejora y lo que tendrás con el siguiente nivel.
+  // `unit` es lo de un nivel ("+4% daño"): su primer número por el nivel.
+  function upgTotal(u, lvl) {
+    const m = /([+-]?)(\d+(?:\.\d+)?)(%?)/.exec(u.unit);
+    if (!m || u.max < 2) return '';
+    const v = n => (n ? m[1] : '') + Math.round(+m[2] * n * 100) / 100 + m[3];
+    const txt = lvl >= u.max ? `Ahora ${v(lvl)} (máx.)` : `Ahora ${v(lvl)} · siguiente ${v(lvl + 1)}`;
+    return `<div style="color:var(--muted);font-size:12px;margin-top:3px">${txt}</div>`;
+  }
+
   function renderUpgrades() {
     const s = G.DB.save;
     const levels = G.DB.upgradesOf(upgDex);
@@ -271,6 +281,7 @@ G.MenuUI = (() => {
         <div>
           <b>${u.name}</b> <span style="color:var(--muted);font-size:13px">${u.unit}</span>
           <div class="pips">${Array.from({ length: u.max }, (_, i) => `<i class="${i < lvl ? 'on' : ''}"></i>`).join('')}</div>
+          ${upgTotal(u, lvl)}
         </div>
         <div class="upg-btns">
           ${u.id === 'ban' && lvl > 0 ? `<button class="btn small" data-ban>Elegir (${banList().length}/${lvl})</button>` : ''}

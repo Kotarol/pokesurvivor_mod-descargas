@@ -4,6 +4,8 @@
  * son los oficiales en inglés.
  */
 G.I18n.add({
+  // ---------------- (mod) total de cada mejora ----------------
+  'Ahora {x} · siguiente {x}': 'Now {x} · next {x}', 'Ahora {x} (máx.)': 'Now {x} (max.)',
   // ---------------- (mod) daño por movimiento ----------------
   'Daño de la partida': 'Damage this run', 'Top de daño': 'Top damage', 'Total': 'Total', 'Objetos': 'Items',
   'Objeto': 'Item', 'Daño': 'Damage', 'Daño extra': 'Extra damage', 'Aún no ha hecho daño': 'No damage yet',
