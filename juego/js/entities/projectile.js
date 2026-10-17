@@ -88,7 +88,7 @@ G.Projectiles = (() => {
       p.y += p.vy * dt;
 
       // Fuera de la vista con margen generoso -> se descarta.
-      if (!G.Camera.sees(p.x, p.y, 260)) { list.splice(i, 1); continue; }
+      if (!G.Camera.sees(p.x, p.y, 260, true)) { list.splice(i, 1); continue; }
     }
   }
 

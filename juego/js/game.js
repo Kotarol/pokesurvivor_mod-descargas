@@ -511,7 +511,7 @@ G.Game = (() => {
       const R = G.Camera.outerRadius();
       G.FX.ring(who.x, who.y, 20, R, '#ff7b3d', 0.5, 6);
       for (const e of G.EnemyMgr.all()) {
-        if (mine ? !G.Camera.sees(e.x, e.y, 0) : G.U.dist2(e.x, e.y, who.x, who.y) > R * R) continue;
+        if (mine ? !G.Camera.sees(e.x, e.y, 0, true) : G.U.dist2(e.x, e.y, who.x, who.y) > R * R) continue;
         e.hurt(60 + pl.level * 14, '#ff7b3d', e.x - who.x, e.y - who.y, 160);
       }
     }

@@ -4,6 +4,11 @@
  * son los oficiales en inglés.
  */
 G.I18n.add({
+  // ---------------- (mod) alejar la vista ----------------
+  'Vista': 'View', 'Vista {x}': 'View {x}', 'Vista bloqueada': 'View locked',
+  'Bloquear': 'Lock', 'Desbloquear': 'Unlock',
+  'La rueda del ratón no cambia la vista': 'The mouse wheel does not change the view',
+  'La rueda del ratón aleja o acerca la vista': 'The mouse wheel zooms the view out or in',
   // ---------------- (mod) minimapa ----------------
   'Mapa': 'Map', 'Mapa (M)': 'Map (M)', 'Esconder el minimapa': 'Hide the minimap', 'Sacar el minimapa': 'Show the minimap',
   'Alejar': 'Zoom out', 'Acercar': 'Zoom in', 'Centrar en ti': 'Center on you', 'Compañeros': 'Teammates', 'Jefe': 'Boss',
