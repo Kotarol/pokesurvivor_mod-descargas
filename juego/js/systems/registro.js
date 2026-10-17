@@ -18,13 +18,12 @@
  *
  * No toca el original: envuelve métodos (Player.hurt/update, Enemy.update/
  * strike, Projectiles.spawn, Hazards.add/update, Combat.resolve,
- * Interact.update, Judgment.update, Spawner.update/burst, Rift.update,
+ * Interact.update, Judgment.update, Rift.update,
  * Game.startRun y RunUI.showOver). Sólo cuenta lo TUYO (G.Game.player).
  */
 G.Registro = (() => {
   const MAX = 30;                       // partidas que se guardan
   const NEAR = 260;                     // "cerca" al caer (px)
-  const ELITE_FROM = 0.85;              // como spawner.js: élite desde el 85 % del tope
   const r1 = v => Math.round(v * 10) / 10;
   const mine = p => !!p && G.Game && p === G.Game.player;
   const key = () => 'ps.registro.' + (G.DB.user || 'invitado');
@@ -42,7 +41,6 @@ G.Registro = (() => {
   let ctx = null;                       // de dónde viene el daño que entra ahora
   let curEnemy = null;                  // enemigo que está actuando ahora (para disparos y zonas)
   let striker = null;                   // enemigo que acaba de tocarte (combat.js: strike y hurt seguidos)
-  let spawning = false;                 // dentro del Spawner: los que salen con el tope casi lleno son élite
 
   const blank = () => ({ kills: 0, hecho: 0, rec: { golpe: 0, disparo: 0, zona: 0, rayo: 0, otro: 0 }, n: {} });
 
@@ -247,20 +245,7 @@ G.Registro = (() => {
     return o;
   };
 
-  // Élite: spawner.js los refuerza sin marcarlos; se marcan al añadirlos.
-  for (const fn of ['update', 'burst']) {
-    const orig = G.Spawner[fn];
-    if (typeof orig !== 'function') continue;
-    G.Spawner[fn] = function () {
-      const prev = spawning; spawning = true;
-      try { return orig.apply(this, arguments); } finally { spawning = prev; }
-    };
-  }
-  const add = G.EnemyMgr.add;
-  G.EnemyMgr.add = function (e) {
-    if (spawning && e && !e.boss && G.EnemyMgr.count >= G.Spawner.CAP * ELITE_FROM) e.elite = true;
-    return add.apply(this, arguments);
-  };
+  // Élite: los marca spawner.js (e.elite). Desde el 17-10-2026 no salen (ELITE_FROM).
 
   // ---------------- ganchos de la partida ----------------
 
