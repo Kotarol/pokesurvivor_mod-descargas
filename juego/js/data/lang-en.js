@@ -4,6 +4,28 @@
  * son los oficiales en inglés.
  */
 G.I18n.add({
+  // ---------------- (mod) cooperativo con código de sala ----------------
+  'Cooperativo': 'Co-op', 'Crear sala': 'Create room', 'Entrar en una sala': 'Join a room', 'Código de la sala': 'Room code',
+  'Jugad juntos hasta 4, cada uno desde su casa. Uno crea la sala y pasa el código a los demás.':
+    'Play together, up to 4, each from your own home. One of you creates the room and gives the code to the others.',
+  'En grupo, tu juego se conecta directamente con el del anfitrión (como en una videollamada), así que podéis llegar a ver vuestra dirección IP. Juega sólo con gente que conozcas.':
+    'In a group, your game connects directly to the host\'s (like a video call), so you may be able to see each other\'s IP address. Only play with people you know.',
+  'Creando la sala…': 'Creating the room…', 'No se pudo crear la sala.': 'Could not create the room.',
+  'Esperando a que el anfitrión te acepte…': 'Waiting for the host to let you in…',
+  'Eres el anfitrión. Pasa el código a tus amigos (hasta 4) y empezad cuando estéis.': 'You are the host. Give the code to your friends (up to 4) and start when you\'re ready.',
+  'Copiar': 'Copy', 'Código copiado': 'Code copied', 'Conectando con el servidor de salas…': 'Connecting to the room server…',
+  'La sala está llena.': 'The room is full.', 'Pásaselo sólo a tus amigos. Tú decides quién entra.': 'Only give it to your friends. You decide who gets in.',
+  '{x} · quiere entrar': '{x} · wants to join', '{x} quiere entrar en tu sala': '{x} wants to join your room',
+  'Se ha cortado la conexión del anfitrión. Esperando a que vuelva…': 'The host lost their connection. Waiting for them to come back…',
+  'Ese código no es válido. Son 10 letras y números, como ABCDE-FGHJK.': 'That code is not valid. It has 10 letters and numbers, like ABCDE-FGHJK.',
+  'No hay ninguna sala con ese código.': 'There is no room with that code.', 'La sala está llena (máximo 4).': 'The room is full (4 max).',
+  'No se pudo entrar en la sala. Prueba otra vez.': 'Could not join the room. Try again.',
+  'El anfitrión te ha sacado de la sala.': 'The host removed you from the room.', 'El anfitrión no te ha aceptado.': 'The host did not let you in.',
+  'Tu juego y el del anfitrión no tienen la misma versión. Actualizad los dos y probad otra vez.':
+    'Your game and the host\'s are not the same version. Update both and try again.',
+  'El anfitrión no ha respondido.': 'The host did not answer.',
+  'No se pudo conectar con el servidor de salas. Comprueba tu conexión a internet.': 'Could not connect to the room server. Check your internet connection.',
+  'En el mod se entra con el código de la sala.': 'In the mod you join with the room code.',
   // ---------------- (mod) copia de la partida en un archivo ----------------
   'Copia de la partida': 'Save backup',
   'Guarda tu partida en un archivo o recupera una que guardaste. Al recuperarla se junta con la de ahora: no pierdes ningún Pokémon ni shiny, y las monedas y el compañero son los de la partida más reciente.':

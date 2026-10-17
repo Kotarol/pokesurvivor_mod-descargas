@@ -6,6 +6,12 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
+  { d: '2026-10-17', title: ['Cooperativo con código de sala', 'Co-op with a room code'], new: [
+    ['Cooperativo en línea, hasta 4, cada uno desde su casa: en "Cooperativo" (antes "Amigos"), uno pulsa "Crear sala" y pasa el código (como ABCDE-FGHJK) a los demás, que lo escriben en "Entrar en una sala". El anfitrión ve quién quiere entrar y lo acepta o lo rechaza; nadie entra sin su permiso.',
+     'Online co-op, up to 4, each from your own home: in "Co-op" (formerly "Friends"), one player presses "Create room" and gives the code (like ABCDE-FGHJK) to the others, who type it in "Join a room". The host sees who wants to join and accepts or rejects them; nobody gets in without their permission.'],
+    ['Para jugar juntos hace falta la misma versión del juego: si no coincide, el juego lo avisa. Mientras jugáis la sala no admite a nadie nuevo, y al acabar volvéis todos a la sala para echar otra.',
+     'Playing together needs the same game version: if it doesn\'t match, the game tells you. While you play the room lets nobody new in, and when you finish you all go back to the room for another round.']
+  ] },
   { d: '2026-10-16', title: ['Perfiles, viaje por regiones y ataques sin parones', 'Profiles, region journey and no more attack stalls'], new: [
     ['Viaje por regiones, como en los juegos: al principio sólo están abiertas Kanto y la región de tu primer compañero (el del test). Al vencer al campeón de la Liga de una región abierta se abre la siguiente, en el orden Kanto → Johto → Hoenn → Sinnoh → Teselia → Kalos → Alola → Galar → Paldea.',
      'Region journey, as in the games: at first only Kanto and your first partner\'s region (the one from the test) are open. Beating the League Champion of an open region opens the next one, in the order Kanto → Johto → Hoenn → Sinnoh → Unova → Kalos → Alola → Galar → Paldea.'],
