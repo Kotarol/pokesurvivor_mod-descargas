@@ -145,9 +145,9 @@ G.Rift = (() => {
     // (mod, 16-10-2026) Desde el minuto 2,5 la vida crece más (×1,9 en el
     // minuto 10, ×3,1 en el 20) y el daño un poco más: las grietas de después
     // de la primera se hacían muy fáciles, porque los salvajes escalan mucho más.
-    // (mod, 17-10-2026) Seguían cayendo en 4-7 s: ahora además tienen un mínimo
-    // de vida y daño según los salvajes del momento, y el cooperativo lo pone
-    // equilibrio.js (por eso aquí la vida va sin él).
+    // (mod, 17/18-10-2026) Seguían cayendo en 4-7 s: equilibrio.js les da la vida
+    // de unos segundos de vuestro daño (esta es el mínimo) y el cooperativo
+    // (por eso aquí la vida va sin él).
     const later = 1 + Math.max(0, t - 150) / 500;
     const def = {
       dex: mon.dex, name: mon.name,
@@ -236,7 +236,10 @@ G.Rift = (() => {
     G.Hazards.clear();
     for (const p of G.Game.everyone()) { p.x = a.back.x; p.y = a.back.y; }
     pl.x = a.back.x; pl.y = a.back.y;
-    if (pl.dead) pl.revive(0.3);
+    // (mod, 18-10-2026) Si os ha expulsado, volvéis con más vida y 3 s sin daño:
+    // con el 30 % y el mapa lleno se caía a los pocos segundos.
+    if (a.phase === 'lost') { if (pl.dead) pl.revive(0.6); else pl.hp = Math.max(pl.hp, pl.maxHp * 0.6); pl.invuln = Math.max(pl.invuln, 3); }
+    else if (pl.dead) pl.revive(0.3);
     G.Camera.x = pl.x; G.Camera.y = pl.y;
     G.Game.flash('#c9a6ff', 0.8);
     if (pl.bonds > 0) G.Game.offerBond();

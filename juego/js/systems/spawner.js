@@ -23,7 +23,10 @@ G.Spawner = (() => {
   const SHOT_K = 1.5;     // (mod, 17-10-2026) sus disparos, ×1,5 y no ×2,4: casi todas las caídas eran por ellos
   // La resistencia extra crece con la run: al principio ×3,3 y hasta ×5
   // hacia el minuto 6, cuando ya tienes ataques para tumbarlos.
-  const hpK = t => 3.3 + Math.min(1.7, t / 210);
+  // (mod, 18-10-2026) Sube hasta ×4 hacia el minuto 5 (era hasta ×5 en el 6): con
+  // un Mew muy mejorado y con un Venusaur sin mejoras la pantalla se llenaba ya
+  // hacia el minuto 3 (no se mataba más que el 70-80 % de lo que salía).
+  const hpK = t => 3.3 + Math.min(0.7, t / 430);
   const SHINY_RATE = 1 / 4096;
   let acc = 0, bossIdx = 0, surgeT = 32, announce = null, announceT = 0, preloadT = 0;
   let forceShiny = 0;           // para pruebas: los N próximos salen shiny
@@ -87,6 +90,9 @@ G.Spawner = (() => {
     const e = new G.Enemy(def, pt[0], pt[1], scaled(G.Enemies.scale(t), G.Coop.scaleHp(players.length) * hpK(t)));
     e.dmg *= DMG_K; e.xp = Math.round(e.xp * XP_K);
     e.shotK = SHOT_K / DMG_K;    // (mod) ver Enemy.shoot
+    // (mod, 18-10-2026) Con la pantalla casi llena, la experiencia de los élites
+    // (×1,6), pero sin su vida ni su daño: sin élites se subía muy despacio al final.
+    if (G.EnemyMgr.count >= CAP * 0.85) e.xp = Math.round(e.xp * 1.6);
     if (G.EnemyMgr.count >= CAP * ELITE_FROM) { e.maxHp = e.hp = Math.round(e.maxHp * 1.6); e.dmg *= 1.25; e.xp = Math.round(e.xp * 1.6); e.elite = true; }
     if (shiny) e.makeShiny();
     if (G.Events.golden) e.makeGolden();

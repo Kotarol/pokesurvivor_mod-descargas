@@ -6,6 +6,20 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
+  { d: '2026-10-18', title: ['Grietas y jefes a tu medida', 'Rifts and bosses that fit you'], chg: [
+    ['Los legendarios de las grietas aguantan unos 20 segundos de tu daño y los jefes salvajes unos 25, nunca menos que antes del 17-10. Con un Pokémon muy mejorado ya no caen en un momento ni se hacen eternos, y sin mejoras vuelven a ser como antes. En cooperativo cuenta el daño de todos.',
+     'Rift legendaries last about 20 seconds of your damage and wild bosses about 25, never less than before 17-10. With a heavily upgraded Pokémon they no longer go down instantly or take forever, and without upgrades they are back to how they were. In co-op everyone\'s damage counts.'],
+    ['Como los jefes ya no se quedan vivos toda la partida, vuelven a abrirse grietas después del minuto 10 (y con ellas el Alto Mando y el campeón).',
+     'Since bosses no longer stay alive all game, rifts open again after minute 10 (and with them the Elite Four and the Champion).'],
+    ['Si una grieta os expulsa, volvéis con al menos el 60 % de la vida y 3 segundos sin recibir daño.',
+     'If a rift throws you out, you come back with at least 60% HP and 3 seconds without taking damage.'],
+    ['Los ataques cuerpo a cuerpo saltan hacia un jefe o un legendario que esté un poco fuera de su alcance (como mucho una vez por segundo): ya se puede luchar contra los que disparan desde lejos.',
+     'Melee attacks leap towards a boss or legendary that is just out of reach (at most once per second): you can now fight the ones that shoot from afar.'],
+    ['Los Pokémon salvajes tienen algo menos de vida a partir del minuto 3 (hasta un 20 % menos desde el 6).',
+     'Wild Pokémon have somewhat less HP from minute 3 on (up to 20% less from minute 6).'],
+    ['Con la pantalla casi llena, los Pokémon que salen dan más experiencia (×1,6), como antes los élites, pero sin su vida ni su daño extra.',
+     'With the screen almost full, new Pokémon give more experience (×1.6), as elites used to, but without their extra HP or damage.']
+  ] },
   { d: '2026-10-17', title: ['Cooperativo con código de sala', 'Co-op with a room code'], new: [
     ['Cooperativo en línea, hasta 4, cada uno desde su casa: en "Cooperativo" (antes "Amigos"), uno pulsa "Crear sala" y pasa el código (como ABCDE-FGHJK) a los demás, que lo escriben en "Entrar en una sala". El anfitrión ve quién quiere entrar y lo acepta o lo rechaza; nadie entra sin su permiso.',
      'Online co-op, up to 4, each from your own home: in "Co-op" (formerly "Friends"), one player presses "Create room" and gives the code (like ABCDE-FGHJK) to the others, who type it in "Join a room". The host sees who wants to join and accepts or rejects them; nobody gets in without their permission.'],
