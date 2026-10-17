@@ -254,7 +254,7 @@
       if (this.slowT > 0) { this.slowT -= dt; if (this.slowT <= 0) this.slow = 0; }
       if (this.burn > 0) {
         this.burnT -= dt; this.burnTick -= dt;
-        if (this.burnTick <= 0) { this.burnTick = 0.5; this.hurt(1.6 * this.burn * (1 + pl.level * 0.06), '#ff9a4d'); }
+        if (this.burnTick <= 0) { this.burnTick = 0.5; this.hurt(G.Danyo.dot(this, 'b', 1.6 * this.burn * (1 + pl.level * 0.06)), '#ff9a4d'); }    // (mod) daño por movimiento
         if (this.burnT <= 0) this.burn = 0;
       }
       if (this.poison > 0) {
@@ -262,7 +262,7 @@
         // (mod) Cada acumulación quita un 1,2 % de la vida, pero con tope según tu
         // nivel (como la quemadura): si no, jefes y élites caían en ~7 s.
         const per = Math.min(this.maxHp * 0.012, 5 * (1 + pl.level * 0.06));
-        if (this.poisonTick <= 0) { this.poisonTick = 0.6; this.hurt(per * this.poison + 1, '#d47cf0'); }
+        if (this.poisonTick <= 0) { this.poisonTick = 0.6; this.hurt(G.Danyo.dot(this, 'p', per * this.poison + 1), '#d47cf0'); }    // (mod) daño por movimiento
         if (this.poisonT <= 0) this.poison = 0;
       }
       if (this.dead) return;

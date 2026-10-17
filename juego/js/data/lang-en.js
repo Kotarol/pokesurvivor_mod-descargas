@@ -4,6 +4,12 @@
  * son los oficiales en inglés.
  */
 G.I18n.add({
+  // ---------------- (mod) daño por movimiento ----------------
+  'Daño de la partida': 'Damage this run', 'Top de daño': 'Top damage', 'Total': 'Total', 'Objetos': 'Items',
+  'Objeto': 'Item', 'Daño': 'Damage', 'Daño extra': 'Extra damage', 'Aún no ha hecho daño': 'No damage yet',
+  'Vida recuperada': 'HP recovered', 'Experiencia extra': 'Extra XP', 'Ataques de más': 'Extra attacks',
+  'Casillas de más recorridas': 'Extra tiles travelled', 'Daño evitado': 'Damage avoided',
+  'Veces que te ha salvado': 'Times it saved you', 'Pokémonedas extra': 'Extra PokéCoins', 'Llevado': 'Carried',
   // ---------------- (mod) cooperativo con código de sala ----------------
   'Cooperativo': 'Co-op', 'Crear sala': 'Create room', 'Entrar en una sala': 'Join a room', 'Código de la sala': 'Room code',
   'Jugad juntos hasta 4, cada uno desde su casa. Uno crea la sala y pasa el código a los demás.':
