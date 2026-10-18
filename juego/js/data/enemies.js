@@ -86,12 +86,14 @@ G.Enemies = (() => {
 
   /** Construye la definición de enemigo de un Pokémon para un tramo. */
   function defFor(p, tier, ti) {
-    const hpK = G.U.clamp(baseHp(p) / 65, 0.7, 1.6);
+    // (mod, 18-10-2026) Entre ×0,8 y ×1,3 (era ×0,7-×1,6) y los tanque ×1,25 (era
+    // ×1,5): Lapras iba a ×1,6 y Snorlax a ×2,4 de un salvaje medio del tramo.
+    const hpK = G.U.clamp(baseHp(p) / 65, 0.8, 1.3);
     const spdK = G.U.clamp(0.75 + baseSpd(p) / 260, 0.75, 1.3);
     const behavior = behaviorOf(p);
     const d = {
       dex: p.dex, name: p.name, behavior,
-      hp: Math.round(tier.hp * hpK * (behavior === 'tank' ? 1.5 : 1)),
+      hp: Math.round(tier.hp * hpK * (behavior === 'tank' ? 1.25 : 1)),
       spd: Math.round(tier.spd * spdK * (behavior === 'tank' ? 0.7 : 1)),
       dmg: Math.round(tier.dmg * (behavior === 'tank' ? 1.2 : 1)),
       xp: Math.max(3, Math.round(tier.xp * (behavior === 'tank' ? 1.3 : 1)))

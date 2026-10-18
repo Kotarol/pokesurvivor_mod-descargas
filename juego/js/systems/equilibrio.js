@@ -18,6 +18,17 @@
  * invitados llegan al anfitrión). Lo de antes, el mínimo, sube como la carga de
  * salvajes (más vida y más que salen), no sólo con la vida.
  *
+ * (18-10-2026, registro de un amigo) Un jefe que salió justo al volver de una
+ * grieta no caía en 8 minutos: la medida de judgment.js contaba la grieta (todo
+ * el daño a un único blanco) y los curanderos le curaban un % de su vida
+ * enorme. Ahora el daño se mide aquí, sólo en el mapa y sin contar jefes, con un
+ * tope de 5 veces la vida de antes; los curanderos y escudos ya no tocan a
+ * jefes (enemy.js).
+ *
+ * Defensa: la reducción de Coraza y la de Fortaleza se sumaban con tope del
+ * 80 % (te llegaba un quinto del daño: "con fortaleza vas más que sobrado").
+ * Ahora se combinan multiplicando y el tope es del 60 %.
+ *
  * Vida por nivel: la vida máxima sube con cada nivel. Los golpes enemigos
  * pasan de ~13 a ~58 en una partida y la vida sólo subía con Vigor, que
  * nadie cogía. Va por aquí y no en Player.gainXp porque en cooperativo el
@@ -28,6 +39,8 @@ G.Equilibrio = (() => {
   const HIT = 1.2, SHOT = 0.45;           // golpe y disparo mínimos, frente al golpe de un salvaje
                                           // (el disparo de un salvaje es 0,5: el legendario dispara el doble de seguido)
   const LV_HP = 3;                        // vida máxima por nivel
+  const CAP_K = 5;                        // jefes y legendarios: como mucho 5 veces la vida de antes
+  const MAX_RED = 0.6;                    // tope de reducción de daño (era 0,8)
 
   /** Un salvaje normal del tramo más nuevo en el segundo `t` (sin cooperativo). */
   function mob(t) {
@@ -35,8 +48,31 @@ G.Equilibrio = (() => {
     return { hp: tier.hp * sc.hp * G.Spawner.hpK(t), dmg: tier.dmg * sc.dmg * G.Spawner.DMG_K };
   }
 
-  /** Daño por segundo a un solo enemigo (los últimos 30 s; judgment.js). */
-  const single = () => (G.Judgment.debug && G.Judgment.debug.single) || 0;
+  // Daño a un solo enemigo por segundo: el que más recibe en cada segundo, sólo
+  // en el mapa y sin jefes. Vale la media de los 6 mejores de los últimos 30.
+  let hits = new Map(), hitT = 0, samples = [], lastT = 0;
+  const noteDmg = G.Judgment.noteDmg;
+  G.Judgment.noteDmg = function (d, e) {
+    if (e && !e.boss && !G.Rift.inArena) hits.set(e.id, (hits.get(e.id) || 0) + d);
+    return noteDmg.apply(this, arguments);
+  };
+  function sample(dt) {
+    const t = G.Game.st.time;
+    if (t < lastT) { samples = []; hits.clear(); hitT = 0; }     // partida nueva
+    lastT = t;
+    if (G.Rift.inArena || G.Judgment.active || (hitT += dt) < 1) return;
+    let best = 0;
+    for (const v of hits.values()) if (v > best) best = v;
+    samples.push(best / hitT);
+    if (samples.length > 30) samples.shift();
+    hits.clear(); hitT = 0;
+  }
+  function single() {
+    const top = samples.slice().sort((a, b) => b - a).slice(0, 6);
+    return top.length ? top.reduce((a, b) => a + b, 0) / top.length : 0;
+  }
+  /** La vida de antes (base) o la de tu daño, como mucho CAP_K veces la de antes. */
+  const fit = (base, secs) => Math.round(G.U.clamp(single() * secs, base, base * CAP_K));
 
   /** Cooperativo: lo mismo que la carga de salvajes (vida × cantidad). */
   const coop = n => G.Coop.scaleHp(n) * G.Coop.scaleRate(n);
@@ -44,7 +80,7 @@ G.Equilibrio = (() => {
   /** Legendario de la grieta. `def` trae su vida de antes, sin cooperativo (rift.js). */
   function legend(def, t, n) {
     const m = mob(t);
-    def.hp = Math.round(Math.max(def.hp * coop(n), single() * LEGEND_S));
+    def.hp = fit(def.hp * coop(n), LEGEND_S);
     def.dmg = Math.round(Math.max(def.dmg, m.dmg * HIT));
     def.shotDmg = Math.round(Math.max(def.shotDmg, m.dmg * SHOT));
     return def;
@@ -53,7 +89,7 @@ G.Equilibrio = (() => {
   /** Jefe salvaje recién creado en spawner.js (que ya le dio su escala de cooperativo). */
   function boss(e, t, n) {
     const m = mob(t), had = G.Coop.scaleHp(n) * (n > 1 ? 1.4 : 1);
-    e.maxHp = e.hp = Math.round(Math.max(e.maxHp / had * coop(n), single() * BOSS_S));
+    e.maxHp = e.hp = fit(e.maxHp / had * coop(n), BOSS_S);
     e.dmg = Math.max(e.dmg, m.dmg * HIT);      // sus disparos suben con él (Enemy.shotDmg)
   }
 
@@ -97,9 +133,22 @@ G.Equilibrio = (() => {
   }
   const tick = G.Combat.tick;
   G.Combat.tick = function (dt, pl) {
+    sample(dt);
     if (pl && !pl.dead) lunge(pl, dt);
     return tick.apply(this, arguments);
   };
 
-  return { mob, legend, boss, single, LV_HP };
+  // Defensa: Coraza (dmgReduce) y Fortaleza (buff def) multiplicando, con tope.
+  // Coraza (+6 % por carta) llega al tope con 10: la carta deja de salir ahí (eran 12).
+  const coraza = G.LevelUp.STATS.find(x => x.id === 'def');
+  if (coraza) coraza.max = 10;
+  Object.defineProperty(G.Player.prototype, 'reduction', {
+    configurable: true,
+    get() {
+      const buff = this.buffs.def.n * this.buffs.def.amount;
+      return Math.min(MAX_RED, 1 - (1 - this.dmgReduce) * (1 - Math.min(1, buff)));
+    }
+  });
+
+  return { mob, legend, boss, single, LV_HP, MAX_RED };
 })();

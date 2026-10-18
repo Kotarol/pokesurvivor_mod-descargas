@@ -18,7 +18,13 @@ G.CHANGELOG_MOD = [
     ['Los Pokémon salvajes tienen algo menos de vida a partir del minuto 3 (hasta un 20 % menos desde el 6).',
      'Wild Pokémon have somewhat less HP from minute 3 on (up to 20% less from minute 6).'],
     ['Con la pantalla casi llena, los Pokémon que salen dan más experiencia (×1,6), como antes los élites, pero sin su vida ni su daño extra.',
-     'With the screen almost full, new Pokémon give more experience (×1.6), as elites used to, but without their extra HP or damage.']
+     'With the screen almost full, new Pokémon give more experience (×1.6), as elites used to, but without their extra HP or damage.'],
+    ['Los curanderos (Chansey...) y los que ponen escudos ya no ayudan a jefes ni legendarios: les curaban un trozo de su vida máxima y había jefes que no caían en minutos. Y un jefe que sale justo al volver de una grieta ya no tiene una vida desorbitada.',
+     'Healers (Chansey...) and shield casters no longer help bosses or legendaries: they healed a chunk of their max HP and some bosses would not go down for minutes. And a boss that appears right after you return from a rift no longer has absurd HP.'],
+    ['Defensa: la reducción de daño de Coraza y la de Fortaleza ya no se suman, se combinan, y como mucho reducen el 60 % del daño (antes el 80 %). Coraza sale como mucho 10 veces.',
+     'Defense: damage reduction from Armor and from Harden no longer add up, they combine, and they reduce at most 60% of the damage (80% before). Armor can be picked at most 10 times.'],
+    ['Los Pokémon con mucha vida (Lapras, Snorlax, Gyarados...) tienen bastante menos de más: como mucho un 30 % más que la media de su tramo (antes hasta un 140 %).',
+     'Pokémon with a lot of HP (Lapras, Snorlax, Gyarados...) have much less extra: at most 30% more than the average of their tier (up to 140% before).']
   ] },
   { d: '2026-10-17', title: ['Cooperativo con código de sala', 'Co-op with a room code'], new: [
     ['Cooperativo en línea, hasta 4, cada uno desde su casa: en "Cooperativo" (antes "Amigos"), uno pulsa "Crear sala" y pasa el código (como ABCDE-FGHJK) a los demás, que lo escriben en "Entrar en una sala". El anfitrión ve quién quiere entrar y lo acepta o lo rechaza; nadie entra sin su permiso.',

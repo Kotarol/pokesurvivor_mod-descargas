@@ -604,11 +604,12 @@
       const k = 0.07 * Math.min(2.5, Math.pow(pow, 0.35));
       // (mod) No se curan entre curanderos (ni a sí mismos) y cada uno recibe
       // como mucho una curación cada 3 s: varios juntos se sumaban sin tope y
-      // un grupo de 3-5 era imposible de bajar.
+      // un grupo de 3-5 era imposible de bajar. (18-10-2026) Tampoco a jefes ni
+      // legendarios: curan un % de la vida máxima y un jefe no caía en 8 minutos.
       const now = G.Game.st.time;
       let n = 0;
       for (const e of G.EnemyMgr.queryCircle(this.x, this.y, 150)) {
-        if (e.dead || e.hp >= e.maxHp || e.behavior === 'healer' || now < (e.healedAt || -9) + 3) continue;
+        if (e.dead || e.boss || e.hp >= e.maxHp || e.behavior === 'healer' || now < (e.healedAt || -9) + 3) continue;
         e.healedAt = now;
         e.hp = Math.min(e.maxHp, e.hp + e.maxHp * k);
         G.FX.burst(e.x, e.y - e.bodyH * 0.6, '#7dffb0', 5, 60);
@@ -621,7 +622,7 @@
     }
 
     castShields() {
-      const near = G.EnemyMgr.queryCircle(this.x, this.y, 160).filter(e => !e.dead)
+      const near = G.EnemyMgr.queryCircle(this.x, this.y, 160).filter(e => !e.dead && !e.boss)    // (mod) a jefes no: 35 % de su vida
         .sort((a, b) => G.U.dist2(a.x, a.y, this.x, this.y) - G.U.dist2(b.x, b.y, this.x, this.y)).slice(0, 6);
       for (const e of near) { e.shield = Math.max(e.shield, e.maxHp * 0.35); e.shieldT = 8; }
       this.anim.play('Charge');
