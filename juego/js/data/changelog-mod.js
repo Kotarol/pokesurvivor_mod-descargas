@@ -25,6 +25,9 @@ G.CHANGELOG_MOD = [
      'Defense: damage reduction from Armor and from Harden no longer add up, they combine, and they reduce at most 60% of the damage (80% before). Armor can be picked at most 10 times.'],
     ['Los Pokémon con mucha vida (Lapras, Snorlax, Gyarados...) tienen bastante menos de más: como mucho un 30 % más que la media de su tramo (antes hasta un 140 %).',
      'Pokémon with a lot of HP (Lapras, Snorlax, Gyarados...) have much less extra: at most 30% more than the average of their tier (up to 140% before).']
+  ], fix: [
+    ['Al aprender un movimiento nuevo sigues usando el que tenías activo: el nuevo queda en su hueco y lo eliges cuando quieras (teclas 1-4 o sus iconos). Antes se cambiaba solo al nuevo, de nivel 1, aunque estuvieras rodeado.',
+     'When you learn a new move you keep using your active one: the new move goes to its slot and you pick it whenever you want (keys 1-4 or its icons). Before, it switched to the new level-1 move on its own, even when you were surrounded.']
   ] },
   { d: '2026-10-17', title: ['Cooperativo con código de sala', 'Co-op with a room code'], new: [
     ['Cooperativo en línea, hasta 4, cada uno desde su casa: en "Cooperativo" (antes "Amigos"), uno pulsa "Crear sala" y pasa el código (como ABCDE-FGHJK) a los demás, que lo escriben en "Entrar en una sala". El anfitrión ve quién quiere entrar y lo acepta o lo rechaza; nadie entra sin su permiso.',

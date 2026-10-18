@@ -104,8 +104,8 @@ G.Player = class Player {
     const group = [m];
     this.slots.push(group);
     this.arrange();
-    // Se cambia al nuevo, salvo si estás usando un vínculo (no te quita el grupo).
-    if (!(this.slots[this.active] && this.slots[this.active].length > 1)) this.setActive(this.slots.indexOf(group));
+    // (mod) Sigues con el que tenías: el nuevo queda en su hueco para elegirlo
+    // (1-4 o el HUD). El primero de la partida ya es el activo (hueco 0).
     return true;
   }
 
