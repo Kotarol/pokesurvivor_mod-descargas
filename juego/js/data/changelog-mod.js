@@ -7,6 +7,8 @@
  */
 G.CHANGELOG_MOD = [
   { d: '2026-10-18', title: ['Grietas y jefes a tu medida', 'Rifts and bosses that fit you'], chg: [
+    ['Región completa: el trofeo "<región> completa" y el título "Maestro de <región>" piden ahora todos los Pokémon de la región de verdad; para eso los shiny ya no cuentan doble. Para las medallas, el sello del pasaporte y lo demás siguen contando doble.',
+     'Complete region: the "<region> complete" trophy and the "<region> Master" title now require every Pokémon in the region for real; shinies no longer count double for that. For badges, the passport stamp and everything else they still count double.'],
     ['Los legendarios de las grietas aguantan unos 20 segundos de tu daño y los jefes salvajes unos 25, nunca menos que antes del 17-10. Con un Pokémon muy mejorado ya no caen en un momento ni se hacen eternos, y sin mejoras vuelven a ser como antes. En cooperativo cuenta el daño de todos.',
      'Rift legendaries last about 20 seconds of your damage and wild bosses about 25, never less than before 17-10. With a heavily upgraded Pokémon they no longer go down instantly or take forever, and without upgrades they are back to how they were. In co-op everyone\'s damage counts.'],
     ['Como los jefes ya no se quedan vivos toda la partida, vuelven a abrirse grietas después del minuto 10 (y con ellas el Alto Mando y el campeón).',

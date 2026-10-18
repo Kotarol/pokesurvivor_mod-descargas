@@ -8,7 +8,9 @@
  *     medalla 8     → 1 ticket ×10 y abre la Liga de la región (league.js)
  *     100 %         → "<región> completa", título "Maestro de <región>"
  *                     (hasta el 16-10-2026 era "Campeón de <región>": ahora
- *                     el campeón es quien vence a la Liga, league.js)
+ *                     el campeón es quien vence a la Liga, league.js).
+ *                     Para completarla, los shiny NO cuentan doble: hacen
+ *                     falta todos los Pokémon de verdad (desde el 18-10-2026).
  *
  * Son logros normales (G.AchDefs, pestaña "Medallas"): progress.js los
  * comprueba y da los premios como a los demás. La Pokédex (menu.js) enseña la
@@ -86,7 +88,8 @@ G.Medals = (() => {
     const r = points(save)[gen];
     let medals = 0;
     for (let k = 1; k <= N; k++) if (r.pts >= goal(r.total, k)) medals = k;
-    return { pts: r.pts, total: r.total, owned: r.owned, shiny: r.shiny, medals, champion: r.pts >= r.total };
+    // Completa (el trofeo): todos de verdad, sin que los shiny cuenten doble.
+    return { pts: r.pts, total: r.total, owned: r.owned, shiny: r.shiny, medals, champion: r.owned >= r.total };
   }
 
   /** Medallas que tienes de la región `gen` (0-8). Para la Liga. */
@@ -129,8 +132,8 @@ G.Medals = (() => {
                       value, goal: n, reward: k < N ? { t1: T1 } : { t10: 1 } });
       }
       D.LIST.push({ id: `champ_${g}`, cat: 'medallas', tier: 3, gen: g, medal: 10,
-                    name: `${reg} completa`, desc: `Completa ${reg}: los ${total} Pokémon de la región.`,
-                    value, goal: total, reward: {}, title: `Maestro de ${reg}` });
+                    name: `${reg} completa`, desc: `Completa ${reg}: los ${total} Pokémon de la región. Aquí los shiny no cuentan doble.`,
+                    value: s => points(s)[g].owned, goal: total, reward: {}, title: `Maestro de ${reg}` });
       const ns = goal(total, STAMP_TIER);
       D.LIST.push({ id: `stamp_${g}`, cat: 'medallas', tier: 2, gen: g, medal: 'stamp',
                     name: `Sello de ${reg}`, desc: `Ten el 50 % de ${reg} (${ns} Pokémon). Cada sello del pasaporte da +2 % de monedas al acabar cada partida.`,
@@ -243,11 +246,13 @@ G.Medals = (() => {
     // Colección: el sello (50 %) y la región completa (100 %), con su nombre debajo.
     const stamp = hasStamp(s, gen);
     const item = (ok, icon, label, n) => `<span class="dm-item${ok ? ' ok' : ''}">${G.Icons.html(icon, 28)}<small>${label}<br>${n} Pokémon</small></span>`;
-    const pct = Math.floor(Math.min(1, st.pts / st.total) * 100);
+    // El % de la colección, el de verdad (el que pide "completa"); las medallas y el sello cuentan los shiny doble.
+    const pct = Math.floor(Math.min(1, st.owned / st.total) * 100);
     const coll = `<div class="dm-sec"><div class="dm-head"><b>Colección</b> <span class="gold">${pct} %</span></div>
       <div class="dm-icons">${item(stamp, `stamp${gen}` + (stamp ? '' : '_off'), 'Sello (50 %)', goal(st.total, STAMP_TIER))}${
         item(st.champion, st.champion ? 'trophy' : 'trophyOff', st.champion ? `¡${reg} completa!` : 'Completa (100 %)', st.total)}</div>
-      <small class="dm-next">Tienes ${st.pts} de ${st.total} (los shiny cuentan doble).</small></div>`;
+      <small class="dm-next">Tienes ${st.pts} de ${st.total} (los shiny cuentan doble).${st.champion ? ''
+        : ` Para completarla no cuentan doble: tienes ${st.owned} de ${st.total}.`}</small></div>`;
 
     el.innerHTML = medals + (G.League ? G.League.dexBlock(s, gen, st.medals) : '') + coll;
   }

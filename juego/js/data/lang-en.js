@@ -158,6 +158,9 @@ G.I18n.add({
   '¡Las 8! La Liga de {x} está abierta.': 'All 8! The {x} League is open.',
   'Sello (50 %)': 'Stamp (50%)', 'Completa (100 %)': 'Complete (100%)',
   'Tienes {x} de {x} (los shiny cuentan doble).': 'You own {x} of {x} (shinies count double).',
+  'Tienes {x} de {x} (los shiny cuentan doble). Para completarla no cuentan doble: tienes {x} de {x}.':
+    'You own {x} of {x} (shinies count double). To complete it they don\'t: you own {x} of {x}.',
+  'Completa {x}: los {x} Pokémon de la región. Aquí los shiny no cuentan doble.': 'Complete {x}: all {x} Pokémon in the region. Shinies don\'t count double here.',
   '¡{x} medallas por tu colección! {x}': '{x} medals for your collection! {x}',
   '+{x} tickets': '+{x} tickets', 'nuevo título': 'new title', '{x} títulos nuevos': '{x} new titles',
   'Ten {x} Pokémon de {x} ({x} %). Los shiny cuentan doble. Abre la Liga de {x}.': 'Own {x} Pokémon from {x} ({x}%). Shinies count double. Unlocks the {x} League.',
