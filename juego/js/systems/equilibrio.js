@@ -108,7 +108,12 @@ G.Equilibrio = (() => {
   // legendario y está un poco más lejos de lo que llega el golpe, al tocar
   // golpear saltas hacia él. Los legendarios que disparan se quedan a ~245 px y
   // un Látigo Cepa llega a ~136: un Venusaur pasó 81 s sin poder darle a Mewtwo.
+  // (18-10, más tarde) En la grieta el jefe es siempre tu blanco y no había
+  // forma de alejarse: cada segundo volvías a caerle encima (también con
+  // Confusión y Placaje vinculados). Ahora no saltas si te estás alejando ni si
+  // otro ataque del hueco ya le llega, y caes al borde del golpe, no encima.
   const LUNGE = 130, LUNGE_CD = 1;
+  const SHOOT = ['projectile', 'beam', 'boomerang', 'chain', 'meteor', 'dash', 'cone'];
   function lunge(pl, dt) {
     if ((pl.lungeT = (pl.lungeT || 0) - dt) > 0) return;
     const tg = pl.target;
@@ -117,7 +122,9 @@ G.Equilibrio = (() => {
     if (!m) return;
     const reach = G.Combat.reach(m), d = G.U.dist(pl.x, pl.y, tg.x, tg.y);
     if (d <= reach || d > reach + LUNGE) return;
-    const ca = (tg.x - pl.x) / d, sa = (tg.y - pl.y) / d, want = d - m.radius * 0.6;
+    const ca = (tg.x - pl.x) / d, sa = (tg.y - pl.y) / d, want = d - m.radius;
+    if ((pl.svx || 0) * ca + (pl.svy || 0) * sa < 0) return;
+    if (pl.activeGroup().some(x => SHOOT.includes(x.kind) && G.Combat.reach(x) >= d)) return;
     let len = 0;
     for (let s = 8; s <= want; s += 8) {
       if (!G.World.isFree(pl.x + ca * s, pl.y + sa * s, pl.r * 0.8, true)) break;

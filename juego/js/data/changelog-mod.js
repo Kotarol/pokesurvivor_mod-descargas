@@ -26,6 +26,8 @@ G.CHANGELOG_MOD = [
     ['Los Pokémon con mucha vida (Lapras, Snorlax, Gyarados...) tienen bastante menos de más: como mucho un 30 % más que la media de su tramo (antes hasta un 140 %).',
      'Pokémon with a lot of HP (Lapras, Snorlax, Gyarados...) have much less extra: at most 30% more than the average of their tier (up to 140% before).']
   ], fix: [
+    ['El salto del cuerpo a cuerpo hacia jefes y legendarios ya no te tiene pegado a ellos: no salta si te estás alejando ni si otro ataque vinculado ya le llega (como Confusión con Placaje), y caes al borde de tu golpe, no encima. En las grietas no había forma de coger distancia.',
+     'The melee leap towards bosses and legendaries no longer keeps you glued to them: it does not leap while you are moving away or if another bonded move already reaches them (like Confusion with Tackle), and you land at the edge of your hit, not on top of them. In rifts there was no way to get some distance.'],
     ['Al aprender un movimiento nuevo sigues usando el que tenías activo: el nuevo queda en su hueco y lo eliges cuando quieras (teclas 1-4 o sus iconos). Antes se cambiaba solo al nuevo, de nivel 1, aunque estuvieras rodeado.',
      'When you learn a new move you keep using your active one: the new move goes to its slot and you pick it whenever you want (keys 1-4 or its icons). Before, it switched to the new level-1 move on its own, even when you were surrounded.']
   ] },
