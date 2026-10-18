@@ -6,7 +6,12 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
-  { d: '2026-10-18', title: ['Grietas y jefes a tu medida', 'Rifts and bosses that fit you'], chg: [
+  { d: '2026-10-18', title: ['Grietas y jefes a tu medida', 'Rifts and bosses that fit you'], new: [
+    ['Cada región es más difícil que la anterior: los Pokémon salvajes, los jefes y los legendarios tienen un 15 % más de vida y de daño por cada región después de Kanto (Johto ×1,15 ... Paldea ×2,2) y al acabar ganas monedas de más en la misma proporción. El Mundo Distorsión, la media de las regiones abiertas. Se ve en cada mapa al elegirlo.',
+     'Each region is harder than the previous one: wild Pokémon, bosses and legendaries have 15% more HP and damage for each region after Kanto (Johto ×1.15 ... Paldea ×2.2) and you earn extra coins at the end in the same proportion. The Distortion World, the average of the open regions. It is shown on each map when choosing it.'],
+    ['Jugar en casa: si tu Pokémon es de la región del mapa, +15 % de daño y de vida (además del +5 % de monedas). Te lo dice al empezar y en la carta del mapa. En cooperativo, cada uno con su Pokémon.',
+     'Playing at home: if your Pokémon is from the map region, +15% damage and HP (on top of the +5% coins). You are told when starting and on the map card. In co-op, each player with their own Pokémon.']
+  ], chg: [
     ['Región completa: el trofeo "<región> completa" y el título "Maestro de <región>" piden ahora todos los Pokémon de la región de verdad; para eso los shiny ya no cuentan doble. Para las medallas, el sello del pasaporte y lo demás siguen contando doble.',
      'Complete region: the "<region> complete" trophy and the "<region> Master" title now require every Pokémon in the region for real; shinies no longer count double for that. For badges, the passport stamp and everything else they still count double.'],
     ['Los legendarios de las grietas aguantan unos 20 segundos de tu daño y los jefes salvajes unos 25, nunca menos que antes del 17-10. Con un Pokémon muy mejorado ya no caen en un momento ni se hacen eternos, y sin mejoras vuelven a ser como antes. En cooperativo cuenta el daño de todos.',

@@ -33,6 +33,15 @@
  * pasan de ~13 a ~58 en una partida y la vida sólo subía con Vigor, que
  * nadie cogía. Va por aquí y no en Player.gainXp porque en cooperativo el
  * nivel de los invitados lo pone el anfitrión (Game.syncTeam).
+ *
+ * Dificultad por región (18-10-2026): con un Mewtwo casi al máximo se llegaba a
+ * Arceus en Kanto y se podía limpiar cualquier región igual. Ahora la vida y el
+ * daño de salvajes, jefes y legendarios van por G.Maps.hard() (Kanto ×1, cada
+ * región +15 %, Paldea ×2,2; el Mundo Distorsión, la media de las abiertas) y
+ * jugar en casa da +15 % de daño y de vida. Jefes y legendarios se miden con
+ * tu daño: en solitario se mide sin la ventaja de casa, para que se note.
+ * En cooperativo, la dificultad es la del mapa del anfitrión y la ventaja, la
+ * de cada uno con su Pokémon.
  */
 G.Equilibrio = (() => {
   const LEGEND_S = 20, BOSS_S = 25;       // segundos de vuestro daño a un solo enemigo que aguantan
@@ -41,6 +50,14 @@ G.Equilibrio = (() => {
   const LV_HP = 3;                        // vida máxima por nivel
   const CAP_K = 5;                        // jefes y legendarios: como mucho 5 veces la vida de antes
   const MAX_RED = 0.6;                    // tope de reducción de daño (era 0,8)
+
+  // Dificultad por región: vida y daño de los salvajes (spawner.js, hordas, mob()).
+  const hard = () => (G.Maps ? G.Maps.hard() : 1);
+  const scale0 = G.Enemies.scale;
+  G.Enemies.scale = function (t) {
+    const sc = scale0.apply(this, arguments), k = hard();
+    return k === 1 ? sc : Object.assign({}, sc, { hp: sc.hp * k, dmg: sc.dmg * k });
+  };
 
   /** Un salvaje normal del tramo más nuevo en el segundo `t` (sin cooperativo). */
   function mob(t) {
@@ -71,8 +88,17 @@ G.Equilibrio = (() => {
     const top = samples.slice().sort((a, b) => b - a).slice(0, 6);
     return top.length ? top.reduce((a, b) => a + b, 0) / top.length : 0;
   }
-  /** La vida de antes (base) o la de tu daño, como mucho CAP_K veces la de antes. */
-  const fit = (base, secs) => Math.round(G.U.clamp(single() * secs, base, base * CAP_K));
+  /** Tu Pokémon juega en casa (mapa de su región). */
+  const home = pl => !!(pl && G.Maps && G.Maps.atHome(pl.dex));
+  /**
+   * La vida de antes (base) o la de tu daño, como mucho CAP_K veces la de
+   * antes, y por la dificultad del mapa. En solitario tu daño se mide sin la
+   * ventaja de casa (si no, se la comerían jefes y legendarios).
+   */
+  const fit = (base, secs, n) => {
+    const own = n <= 1 && home(G.Game.player) ? 1 + G.Maps.HOME : 1;
+    return Math.round(G.U.clamp(single() / own * secs, base, base * CAP_K) * hard());
+  };
 
   /** Cooperativo: lo mismo que la carga de salvajes (vida × cantidad). */
   const coop = n => G.Coop.scaleHp(n) * G.Coop.scaleRate(n);
@@ -80,18 +106,33 @@ G.Equilibrio = (() => {
   /** Legendario de la grieta. `def` trae su vida de antes, sin cooperativo (rift.js). */
   function legend(def, t, n) {
     const m = mob(t);
-    def.hp = fit(def.hp * coop(n), LEGEND_S);
-    def.dmg = Math.round(Math.max(def.dmg, m.dmg * HIT));
-    def.shotDmg = Math.round(Math.max(def.shotDmg, m.dmg * SHOT));
+    def.hp = fit(def.hp * coop(n), LEGEND_S, n);
+    def.dmg = Math.round(Math.max(def.dmg * hard(), m.dmg * HIT));          // mob() ya va con la región
+    def.shotDmg = Math.round(Math.max(def.shotDmg * hard(), m.dmg * SHOT));
     return def;
   }
 
   /** Jefe salvaje recién creado en spawner.js (que ya le dio su escala de cooperativo). */
   function boss(e, t, n) {
     const m = mob(t), had = G.Coop.scaleHp(n) * (n > 1 ? 1.4 : 1);
-    e.maxHp = e.hp = fit(e.maxHp / had * coop(n), BOSS_S);
-    e.dmg = Math.max(e.dmg, m.dmg * HIT);      // sus disparos suben con él (Enemy.shotDmg)
+    e.maxHp = e.hp = fit(e.maxHp / had * coop(n), BOSS_S, n);
+    e.dmg = Math.max(e.dmg * hard(), m.dmg * HIT);      // sus disparos suben con él (Enemy.shotDmg)
   }
+
+  // Jugar en casa: +15 % de daño y de vida (con tu Pokémon recién creado, game.js).
+  // Cada uno con el suyo: en cooperativo cada jugador crea su Pokémon.
+  const apply0 = G.Collection.apply;
+  G.Collection.apply = function (pl) {
+    const r = apply0.apply(this, arguments);
+    pl.home = home(pl);
+    if (pl.home) {
+      pl.atkMul *= 1 + G.Maps.HOME;
+      pl.maxHp = pl.hp = Math.round(pl.maxHp * (1 + G.Maps.HOME));
+      const txt = `En casa (${G.Maps.name(G.Maps.gen)}): +${Math.round(G.Maps.HOME * 100)} % de daño y de vida`;
+      setTimeout(() => { if (G.Game.player === pl) G.UI.toast(txt, 4000); }, 1200);
+    }
+    return r;
+  };
 
   // Vida por nivel: cada fotograma se ponen al día los niveles aún no contados.
   const update = G.Player.prototype.update;

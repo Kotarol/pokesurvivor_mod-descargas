@@ -8,8 +8,13 @@
  * En el mapa de una región sólo salen Pokémon de esa región: el elenco de
  * cada tramo, los jefes, las hordas, los shiny salvajes (salen del elenco),
  * el Pokémon perdido y los legendarios de las grietas (aunque se repitan).
- * Los stats de combate siguen saliendo del tramo (enemies.js), así que la
- * dificultad es la misma en todas. Donde a una región le faltan Pokémon:
+ * Los stats de combate salen del tramo (enemies.js) y, desde el 18-10-2026,
+ * cada región es un 15 % más dura que la anterior (hard(): vida y daño de
+ * salvajes, jefes y legendarios, en equilibrio.js) y da un 15 % más de monedas
+ * al acabar; el Mundo Distorsión, la media de las abiertas. Jugar en casa (tu
+ * Pokémon es de la región) da +15 % de daño y de vida. Antes un Mewtwo muy
+ * mejorado limpiaba igual Kanto que Paldea y no compensaba cambiar.
+ * Donde a una región le faltan Pokémon:
  *   tramos  se completa con los más fuertes de la región del tramo anterior,
  *           y con 1 invocador como mucho (si no, Kanto era más fácil)
  *   jefes   si no hay ninguno en su franja, otro fuerte no legendario de la región
@@ -35,6 +40,8 @@ G.Maps = (() => {
   const HORDE_MIN = 4;          // Pokémon de un tipo para que haya horda de ese tipo
   const SUMMON_MAX = 1;         // invocadores como mucho entre los candidatos de un tramo
   const N = 9;                  // regiones
+  const STEP = 0.15;            // cada región, +15 % de vida y daño enemigos (y de monedas) sobre la anterior
+  const HOME = 0.15;            // tu Pokémon es de la región: +15 % de daño y de vida
 
   let gen = 0;                  // mapa de la partida: 0 = Mundo Distorsión, 1..9 = región
 
@@ -107,6 +114,26 @@ G.Maps = (() => {
     return top.length ? top : pool;
   }
 
+  // ---------------- dificultad por región ----------------
+
+  const hardOf = g => 1 + STEP * (g - 1);
+  /** Dificultad de un mapa (×1 Kanto ... ×2,2 Paldea). Mundo Distorsión: la media de las abiertas. */
+  function hard(g = gen) {
+    g = valid(g);
+    if (g) return hardOf(g);
+    let sum = 0, n = 0;
+    for (let r = 1; r <= N; r++) if (isOpen(r)) { sum += hardOf(r); n++; }
+    return n ? sum / n : 1;
+  }
+  /** "×1,15" */
+  const hardText = (g = gen) => '×' + String(Math.round(hard(g) * 100) / 100).replace('.', G.I18n.lang === 'en' ? '.' : ',');
+  /** ¿Juega en casa? (el Pokémon `dex` es de la región del mapa `g`) */
+  function atHome(dex, g = gen) {
+    const mon = G.DEX_BY[dex];
+    g = valid(g);
+    return !!g && !!mon && mon.gen === g;
+  }
+
   // ---------------- hordas ----------------
 
   const E = G.Enemies;
@@ -131,15 +158,24 @@ G.Maps = (() => {
 
   // ---------------- premio ----------------
 
-  /** +5 % de monedas al acabar si tu compañero es de la región del mapa (collection.js). */
+  /**
+   * Al acabar (collection.js): monedas de más por la dificultad del mapa y
+   * +5 % si tu compañero es de la región.
+   */
   function coinsEnd(pl, coins) {
-    const mon = G.DEX_BY[pl.dex], s = G.DB.save;
-    if (!gen || !mon || mon.gen !== gen || !s) return '';
-    const extra = Math.round((coins || 0) * BONUS);
-    if (!extra) return '';
-    s.coins += extra;
-    s.stats.coinsEarned += extra;
-    return `En casa (${name(gen)}): +${extra} ${extra === 1 ? 'moneda' : 'monedas'}`;
+    const s = G.DB.save;
+    if (!s) return '';
+    const parts = [];
+    const add = (k, label) => {
+      const extra = Math.round((coins || 0) * k);
+      if (extra <= 0) return;
+      s.coins += extra;
+      s.stats.coinsEarned += extra;
+      parts.push(`${label}: +${extra} ${extra === 1 ? 'moneda' : 'monedas'}`);
+    };
+    add(hard() - 1, `Dificultad ${hardText()}`);
+    if (atHome(pl.dex)) add(BONUS, `En casa (${name(gen)})`);
+    return parts.join(' · ');
   }
 
   // ---------------- cooperativo ----------------
@@ -167,7 +203,7 @@ G.Maps = (() => {
   }
 
   return {
-    N, BONUS, name, chosen, choose, setRun, allows, tierPool, bossPool, biome, coinsEnd,
+    N, BONUS, HOME, name, hard, hardText, atHome, chosen, choose, setRun, allows, tierPool, bossPool, biome, coinsEnd,
     tellRoom, roomChoice, hookFlow,
     get gen() { return gen; }
   };

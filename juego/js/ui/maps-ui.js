@@ -34,13 +34,15 @@ G.MapsUI = (() => {
       const home = (G.DEX_BY[s.partner] || {}).gen === g;
       info = `<div class="mp-bar"><i style="width:${pct}%"></i></div>
         <div class="mp-stats"><span>${pct} %</span><span>${G.Icons.html(medals >= 8 ? 'medal3' : 'medal1', 14)} ${medals}/8</span></div>` +
-        (home ? `<div class="mp-home">${G.Icons.html('star', 11)} Tu compañero es de aquí: +5 % de monedas</div>` : '');
+        (home ? `<div class="mp-home">${G.Icons.html('star', 11)} Tu compañero juega en casa: +${Math.round(G.Maps.HOME * 100)} % de daño y vida, +5 % de monedas</div>` : '');
       if (shut) info += `<div class="mp-lock">${G.Icons.html('lock', 22)}<span>${esc(G.Travel.lockText(g))}</span></div>`;
     } else {
       const all = !G.Travel || G.Travel.allOpen();
       info = `<small class="mp-places">Bosque Umbrío · Cueva Cristal · Volcán Ceniza</small><div class="mp-mix">${all ? 'Todas las regiones mezcladas' : 'Las regiones abiertas mezcladas'}</div>`;
     }
-    el.innerHTML = (g ? '' : '<i class="mp-swirl"></i>') + `<b class="mp-name">${esc(G.Maps.name(g))}</b><span class="mp-mon"></span>` +
+    // Dificultad del mapa (maps.js): más vida y daño enemigos y más monedas.
+    const hard = `<span class="mp-hard" title="${esc('Enemigos con más vida y daño, y más monedas al acabar')}">Dificultad ${G.Maps.hardText(g)}</span>`;
+    el.innerHTML = (g ? '' : '<i class="mp-swirl"></i>') + `<b class="mp-name">${esc(G.Maps.name(g))}</b>${hard}<span class="mp-mon"></span>` +
       (places.length ? `<small class="mp-places">${places.map(esc).join(' · ')}</small>` : '') + info;
     const mon = el.querySelector('.mp-mon');
     const prop = g && propIcon(g);
@@ -94,6 +96,7 @@ G.MapsUI = (() => {
     ov.innerHTML = `<div class="box mp-box">
       <div class="row between"><h2>Elige mapa</h2><button class="btn small ghost" id="mp-back">Volver</button></div>
       <p class="sub">En el mapa de una región sólo salen Pokémon de esa región: salvajes, jefes, hordas y legendarios de las grietas. Y su Liga, si tienes sus 8 medallas.</p>
+      <p class="sub">Cada región es más difícil que la anterior y da más monedas. Con un Pokémon de la región juegas en casa: +${Math.round(G.Maps.HOME * 100)} % de daño y vida.</p>
       <div class="mp-grid"></div>
       <div class="row mp-foot"><button class="btn gold grow" id="mp-go"></button></div></div>`;
     document.body.appendChild(ov);
@@ -173,6 +176,7 @@ G.MapsUI = (() => {
     .mp-bar i { display: block; height: 100%; background: linear-gradient(90deg, #ffd23f, #ffe98a); }
     .mp-stats { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
     .mp-stats span { display: inline-flex; align-items: center; gap: 3px; }
+    .mp-hard { align-self: center; font-size: 10.5px; padding: 1px 7px; border-radius: 8px; background: rgba(0,0,0,.45); color: #ffb39a; }
     .mp-home { font-size: 10.5px; color: #ffe98a; line-height: 1.2; }
     .mp-mix { font-size: 12px; opacity: .85; }
     .mp-shut { cursor: not-allowed; border-style: dashed; }

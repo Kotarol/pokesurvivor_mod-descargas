@@ -5,7 +5,7 @@
  * ninguna nube), con las últimas MAX partidas, y se exporta en un .json desde
  * Ajustes > Cuenta ("Exportar registro").
  *
- * De cada partida: fecha, mapa, tu Pokémon (shiny, mejoras de la tienda,
+ * De cada partida: fecha, mapa (con su dificultad y si jugabas en casa), tu Pokémon (shiny, mejoras de la tienda,
  * movimientos y objeto al acabar), solitario o cooperativo (cuántos),
  * duración, nivel, derrotados, y una línea por minuto:
  *   lv, hp, hpMax         al cerrar el minuto
@@ -65,6 +65,7 @@ G.Registro = (() => {
     run = {
       fecha: new Date().toISOString(),
       mapa: G.Maps ? G.Maps.name(gen) : 'Mundo Distorsión', gen,
+      dificultad: G.Maps ? +G.Maps.hard().toFixed(2) : 1, casa: !!(G.Maps && G.Maps.atHome(pl.dex)),
       poke: { dex: pl.dex, nombre: pl.mon.name, shiny: !!pl.shiny, tipos: pl.mon.types,
               mejoras: Object.assign({}, G.DB.upgradesOf(pl.dex)) },
       grupo: coop ? (coop.members ? coop.members.length : 2) : 1,
