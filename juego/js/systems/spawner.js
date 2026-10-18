@@ -90,9 +90,10 @@ G.Spawner = (() => {
     const e = new G.Enemy(def, pt[0], pt[1], scaled(G.Enemies.scale(t), G.Coop.scaleHp(players.length) * hpK(t)));
     e.dmg *= DMG_K; e.xp = Math.round(e.xp * XP_K);
     e.shotK = SHOT_K / DMG_K;    // (mod) ver Enemy.shoot
-    // (mod, 18-10-2026) Con la pantalla casi llena, la experiencia de los élites
-    // (×1,6), pero sin su vida ni su daño: sin élites se subía muy despacio al final.
-    if (G.EnemyMgr.count >= CAP * 0.85) e.xp = Math.round(e.xp * 1.6);
+    // (mod, 18-10-2026) Con la pantalla casi llena, más experiencia (como los
+    // élites), pero sin su vida ni su daño: sin élites se subía muy despacio al
+    // final. Era ×1,6, pero se llegaba al nivel 248 en el minuto 30: ×1,3.
+    if (G.EnemyMgr.count >= CAP * 0.85) e.xp = Math.round(e.xp * 1.3);
     if (G.EnemyMgr.count >= CAP * ELITE_FROM) { e.maxHp = e.hp = Math.round(e.maxHp * 1.6); e.dmg *= 1.25; e.xp = Math.round(e.xp * 1.6); e.elite = true; }
     if (shiny) e.makeShiny();
     if (G.Events.golden) e.makeGolden();

@@ -190,6 +190,16 @@ G.Equilibrio = (() => {
   // Coraza (+6 % por carta) llega al tope con 10: la carta deja de salir ahí (eran 12).
   const coraza = G.LevelUp.STATS.find(x => x.id === 'def');
   if (coraza) coraza.max = 10;
+
+  // Potencia (18-10-2026): cada carta suma +10 % del daño base en vez de
+  // multiplicar ×1,10: con 40 cartas era ×45 (un Mewtwo llegó a nivel 248 y desde
+  // el minuto 14 nada le tocaba); ahora ×5.
+  const potencia = G.LevelUp.STATS.find(x => x.id === 'atk');
+  if (potencia) potencia.apply = pl => {
+    const n = (pl._potencia || 0) + 1;
+    pl.atkMul *= (1 + 0.1 * n) / (1 + 0.1 * (n - 1));
+    pl._potencia = n;
+  };
   Object.defineProperty(G.Player.prototype, 'reduction', {
     configurable: true,
     get() {
