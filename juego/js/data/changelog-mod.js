@@ -13,6 +13,8 @@ G.CHANGELOG_MOD = [
     ['La onda de choque del cuerpo a cuerpo pega, como el golpe, con el Ataque físico de tu Pokémon (ataques físicos y especiales del juego original).',
      'The melee shockwave hits, like the strike itself, with your Pokémon\'s physical Attack (physical and special moves from the original game).']
   ], fix: [
+    ['El Pokémon corredor (el muy rápido que te corta el paso, como Lopunny o Jolteon) se te seguía quedando pegado si te alcanzaba por detrás mientras huías: te adelantaba tan despacio que te golpeaba tres veces seguidas. Ahora acelera al pasar de largo y sólo te golpea una vez en cada pasada.',
+     'The runner Pokémon (the very fast one that cuts you off, like Lopunny or Jolteon) still stuck to you if it caught you from behind while you were running away: it overtook you so slowly that it hit you three times in a row. Now it speeds up as it runs past and only hits you once per pass.'],
     ['Danza Espada y Danza Dragón (sólo suben el Ataque físico) y Maquinación (sólo el Especial) ya no salen al subir de nivel como si fueran de tu lado bueno: con un Pokémon de ataque especial como Magnezone, Danza Espada sale la mitad de veces y con un aviso de que apenas le sirve, y lo mismo Maquinación con uno físico como Machamp.',
      'Swords Dance and Dragon Dance (they only raise physical Attack) and Nasty Plot (only Special Attack) no longer show up on level-up as if they matched your strong side: with a special attacker like Magnezone, Swords Dance shows up half as often and with a warning that it barely helps, and the same for Nasty Plot with a physical one like Machamp.'],
     ['Pokédex: en la nueva pestaña "Todas" ya no sale la fila de medallas, Liga, colección y polvo, que son de una región.',

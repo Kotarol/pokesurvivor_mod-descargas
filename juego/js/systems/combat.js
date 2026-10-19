@@ -712,12 +712,14 @@ G.Combat = (() => {
       // (mod) El corredor golpea y pasa de largo (ver enemy.js): no rebota y
       // sigue 1 s hacia donde iba (o hacia donde corres si ya estaba encima de
       // ti). Si vuelve a tocarte al salir por el otro lado, no se da la vuelta.
+      // Un solo golpe por pasada: no vuelve a pegar hasta que acaba.
       if (e.behavior === 'runner') {
         e.kx -= nx * 150; e.ky -= ny * 150;
         if (!(e.runT > 0)) {
           let [rx, ry] = [-nx, -ny];
           if (!rx && !ry) [rx, ry] = G.U.norm(pl._vx || 1, pl._vy || 0);
           e.runT = 1; e.runDx = rx; e.runDy = ry;
+          e.touchCd = e.runT + 0.2;
         }
       }
     }

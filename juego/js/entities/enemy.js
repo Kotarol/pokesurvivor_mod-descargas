@@ -326,8 +326,9 @@
       // Corredor: va a donde VAS a estar (te corta el paso si sólo huyes).
       // (mod) Tras golpearte pasa de largo (runT, ver combat.js): sigue recto un
       // momento y luego da la vuelta. Si no, como va mucho más rápido que tú, se
-      // quedaba pegado pegándote cada 0,55 s.
-      if (this.runT > 0) { this.runT -= dt; dx = this.runDx; dy = this.runDy; }
+      // quedaba pegado pegándote cada 0,55 s. La pasada va a ×1,5: si te alcanza
+      // por detrás mientras huyes, sin eso te adelantaba tan despacio que seguía encima.
+      if (this.runT > 0) { this.runT -= dt; dx = this.runDx * 1.5; dy = this.runDy * 1.5; }
       else if (this.behavior === 'runner' && pl._vx != null) {
         const lead = G.U.clamp(dist / Math.max(60, spd), 0, 1.4);
         [dx, dy] = G.U.norm(pl.x + pl._vx * lead - this.x, pl.y + pl._vy * lead - this.y);
