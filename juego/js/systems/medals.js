@@ -222,6 +222,8 @@ G.Medals = (() => {
   function dexRow(after, gen) {
     const s = G.DB.save;
     let el = document.getElementById('dex-medals');
+    // Pestaña "Todas" del original (gen 0, 19-10-2026): las medallas son de una región.
+    if (!gen) { if (el) el.remove(); passportButton(); return; }
     if (!el) {
       el = document.createElement('div');
       el.id = 'dex-medals';

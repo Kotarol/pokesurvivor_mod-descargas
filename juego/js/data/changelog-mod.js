@@ -6,6 +6,18 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
+  { d: '2026-10-19', title: ['Lo nuevo del original, con el mod', 'The original\'s new features, with the mod'], new: [
+    ['Daño por segundo: en la pausa y en el resumen final, cada movimiento (y el Casco Dentado) enseña también su daño por segundo desde que lo tienes, y el total el de toda la partida.',
+     'Damage per second: in the pause menu and the final summary, each move (and the Rocky Helmet) also shows its damage per second since you got it, and the total shows the whole run\'s.']
+  ], chg: [
+    ['La onda de choque del cuerpo a cuerpo pega, como el golpe, con el Ataque físico de tu Pokémon (ataques físicos y especiales del juego original).',
+     'The melee shockwave hits, like the strike itself, with your Pokémon\'s physical Attack (physical and special moves from the original game).']
+  ], fix: [
+    ['Pokédex: en la nueva pestaña "Todas" ya no sale la fila de medallas, Liga, colección y polvo, que son de una región.',
+     'Pokédex: the new "All" tab no longer shows the badges, League, collection and dust row, which belong to a single region.'],
+    ['Pausa: el resumen nuevo ya no repite el daño de cada ataque con otra cuenta. Queda arriba "Daño de la partida" (el daño de verdad, con objetos y vínculos) y debajo tus estadísticas, tu objeto y tus cartas.',
+     'Pause: the new summary no longer repeats each move\'s damage with a different count. "Run damage" stays on top (real damage, with items and bonds) and your stats, item and cards below.']
+  ] },
   { d: '2026-10-18', title: ['Grietas y jefes a tu medida', 'Rifts and bosses that fit you'], new: [
     ['Cada región es más difícil que la anterior: los Pokémon salvajes, los jefes y los legendarios tienen un 15 % más de vida y de daño por cada región después de Kanto (Johto ×1,15 ... Paldea ×2,2) y al acabar ganas monedas de más en la misma proporción. El Mundo Distorsión, la media de las regiones abiertas. Se ve en cada mapa al elegirlo.',
      'Each region is harder than the previous one: wild Pokémon, bosses and legendaries have 15% more HP and damage for each region after Kanto (Johto ×1.15 ... Paldea ×2.2) and you earn extra coins at the end in the same proportion. The Distortion World, the average of the open regions. It is shown on each map when choosing it.'],

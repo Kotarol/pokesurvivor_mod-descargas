@@ -1,11 +1,12 @@
 /* ============ danyo-ui.js — (mod) daño de la partida en la pausa y al acabar ============
  * La pausa enseña tus movimientos (nivel y vínculo) y tus objetos con el daño
- * de cada uno y su % del total, de más a menos. El resumen final, lo mismo
+ * de cada uno, su daño por segundo y su % del total, de más a menos. El resumen final, lo mismo
  * como "Top de daño", con el primero destacado (en lugar de la fila de
  * movimientos). Los objetos que no hacen daño propio van aparte, con lo que
  * aportan (daño extra, vida recuperada...). Lo apuntado: js/systems/danyo.js.
  *
- * Envuelve G.RunUI.showPause y G.RunUI.showOver: run-ui.js no se toca.
+ * Envuelve G.RunUI.showPause y G.RunUI.showOver: run-ui.js no se toca. Del
+ * resumen de la pausa del original (18-10-2026) se quita su tabla de ataques.
  */
 G.DanyoUI = (() => {
   const $ = id => document.getElementById(id);
@@ -27,6 +28,8 @@ G.DanyoUI = (() => {
 .dn-row .tag { color: #c9a0ff; }
 .dn-row .val { font-weight: 700; }
 .dn-row .pc { width: 44px; text-align: right; color: var(--muted); font-size: 12px; }
+.dn-row .dps { width: 62px; text-align: right; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.dn-head b small { color: var(--muted); font-size: 12px; font-weight: 400; }
 .dn-row.top { box-shadow: inset 0 0 0 2px var(--gold); }
 .dn-row.top .nm, .dn-row.top .val { color: var(--gold); }
 .dn-row.top > i { background: rgba(255,210,63,.32); }
@@ -68,22 +71,29 @@ G.DanyoUI = (() => {
   /** HTML de la lista. @param over  el resumen de endRun (null en la pausa). */
   function html(pl, over) {
     const b = G.Danyo.book(pl);
+    const now = G.Game.st.time;
     const rows = [];
     const seen = new Set();
+    // secs: segundos desde que lo tienes (movimientos: m.since del original) o
+    // que lo has llevado (Casco Dentado), para el daño por segundo.
     for (const m of pl.moves) {
       seen.add(m.id);
       const slot = pl.slots.find(g => g.includes(m));
       rows.push({ ico: 'move:' + m.id, name: m.name, lvl: m.lvl, bond: !!slot && slot.length > 1,
-                  partners: slot ? slot.filter(o => o !== m).map(o => o.name) : [], d: b.mv[m.id] || 0 });
+                  partners: slot ? slot.filter(o => o !== m).map(o => o.name) : [], d: b.mv[m.id] || 0,
+                  secs: now - (m.since || 0) });
     }
     // Uno que ya no tienes (por si acaso): sale sin nivel.
     for (const id in b.mv) {
       if (!seen.has(id) && G.Moves.BY_ID[id]) rows.push({ ico: 'move:' + id, name: G.Moves.BY_ID[id].name, d: b.mv[id] });
     }
     const helmet = b.it.rockyhelmet;
-    if (helmet && helmet.d) rows.push({ ico: 'rockyhelmet', name: G.Items.BY.rockyhelmet.name, item: true, d: helmet.d });
+    if (helmet && helmet.d) rows.push({ ico: 'rockyhelmet', name: G.Items.BY.rockyhelmet.name, item: true, d: helmet.d, secs: helmet.t });
     rows.sort((a, c) => c.d - a.d);
     const total = rows.reduce((t, r) => t + r.d, 0);
+    // Daño por segundo (como en el resumen del original, con al menos 5 s para
+    // que lo recién aprendido no salga disparado).
+    const dps = (d, secs) => (d && secs != null ? num(d / Math.max(5, secs)) + '/s' : '');
 
     const list = rows.map((r, i) => {
       const p = total ? r.d / total * 100 : 0;
@@ -91,7 +101,7 @@ G.DanyoUI = (() => {
       return `<div class="dn-row${top ? ' top' : ''}${r.d ? '' : ' none'}"${r.bond ? ` title="${esc(r.partners.join(' · '))}"` : ''}>
         <i style="width:${p.toFixed(1)}%"></i>${G.Icons.html(r.ico, 18)}
         <span class="nm">${esc(r.name)}${r.lvl ? ` <small>${en() ? 'Lv.' : 'Nv.'}${r.lvl}</small>` : ''}${r.bond ? ` <small class="tag">Vínculo</small>` : ''}${r.item ? ` <small>Objeto</small>` : ''}</span>
-        <span class="val">${r.d ? num(r.d) : '—'}</span><span class="pc">${r.d ? pct(p) : ''}</span></div>`;
+        <span class="val">${r.d ? num(r.d) : '—'}</span><span class="dps" title="Daño por segundo desde que lo tienes">${dps(r.d, r.secs)}</span><span class="pc">${r.d ? pct(p) : ''}</span></div>`;
     }).join('');
 
     const its = b.order.filter(id => G.Items.BY[id] && !(id === 'rockyhelmet' && helmet.d)).map(id => {
@@ -102,7 +112,7 @@ G.DanyoUI = (() => {
     }).join('');
 
     return `<div class="dn-head"><span>${over ? 'Top de daño' : 'Daño de la partida'}</span>
-        <b><span>Total</span>: ${num(total)}</b></div>
+        <b><span>Total</span>: ${num(total)}${total ? ` <small>· ${dps(total, now)}</small>` : ''}</b></div>
       <div class="dn-list">${list || '<div class="dn-row none"><span class="nm">—</span></div>'}
       ${its ? `<div class="dn-sub">Objetos</div>${its}` : ''}</div>`;
   }
@@ -127,6 +137,15 @@ G.DanyoUI = (() => {
       row.parentNode.insertBefore(box, row);
     }
     const r = showPause.apply(this, arguments);
+    // (19-10-2026) El original añadió su resumen debajo (#pause-sum). Se quedan
+    // sus estadísticas y cartas, pero no su "Tus ataques": repite esta lista con
+    // otra cuenta (suma también lo que sobra al tumbar a un enemigo).
+    const sumMoves = $('pause-sum') && $('pause-sum').querySelector('table.sum-moves');
+    if (sumMoves) {
+      const h = sumMoves.previousElementSibling;
+      if (h && h.tagName === 'H3') h.remove();
+      sumMoves.remove();
+    }
     renderPause();
     // En grupo el juego sigue con la pausa abierta: la lista se va poniendo al día.
     clearInterval(timer);
