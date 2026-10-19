@@ -233,6 +233,7 @@
       if (this.flash > 0) this.flash -= dt;
       if (this.dead) { this.fade -= dt; return; }
       if (this.touchCd > 0) this.touchCd -= dt;
+      if (this.runT > 0) this.runT -= dt;    // (mod) pasada del corredor (combat.js): una vez por pasada
       this.bob += dt * 6;
       if (this.shiny) {
         this.sparkT -= dt;
@@ -329,6 +330,12 @@
       // quedaba pegado pegándote cada 0,55 s. La pasada va a ×1,5: si te alcanza
       // por detrás mientras huyes, sin eso te adelantaba tan despacio que seguía encima.
       if (this.runT > 0) { this.runT -= dt; dx = this.runDx * 1.5; dy = this.runDy * 1.5; }
+      // (mod) Cooperativo: el golpe a un compañero lo cuenta su aparato, no
+      // combat.js de aquí, así que la pasada empieza al llegar a tocarlo.
+      else if (this.behavior === 'runner' && pl.remote && dist < this.r + pl.r) {
+        if (!dx && !dy) [dx, dy] = G.U.norm(pl._vx || 1, pl._vy || 0);
+        this.runT = 1; this.runDx = dx; this.runDy = dy; dx *= 1.5; dy *= 1.5;
+      }
       else if (this.behavior === 'runner' && pl._vx != null) {
         const lead = G.U.clamp(dist / Math.max(60, spd), 0, 1.4);
         [dx, dy] = G.U.norm(pl.x + pl._vx * lead - this.x, pl.y + pl._vy * lead - this.y);
