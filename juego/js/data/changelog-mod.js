@@ -13,6 +13,8 @@ G.CHANGELOG_MOD = [
     ['La onda de choque del cuerpo a cuerpo pega, como el golpe, con el Ataque físico de tu Pokémon (ataques físicos y especiales del juego original).',
      'The melee shockwave hits, like the strike itself, with your Pokémon\'s physical Attack (physical and special moves from the original game).']
   ], fix: [
+    ['Danza Espada y Danza Dragón (sólo suben el Ataque físico) y Maquinación (sólo el Especial) ya no salen al subir de nivel como si fueran de tu lado bueno: con un Pokémon de ataque especial como Magnezone, Danza Espada sale la mitad de veces y con un aviso de que apenas le sirve, y lo mismo Maquinación con uno físico como Machamp.',
+     'Swords Dance and Dragon Dance (they only raise physical Attack) and Nasty Plot (only Special Attack) no longer show up on level-up as if they matched your strong side: with a special attacker like Magnezone, Swords Dance shows up half as often and with a warning that it barely helps, and the same for Nasty Plot with a physical one like Machamp.'],
     ['Pokédex: en la nueva pestaña "Todas" ya no sale la fila de medallas, Liga, colección y polvo, que son de una región.',
      'Pokédex: the new "All" tab no longer shows the badges, League, collection and dust row, which belong to a single region.'],
     ['Pausa: el resumen nuevo ya no repite el daño de cada ataque con otra cuenta. Queda arriba "Daño de la partida" (el daño de verdad, con objetos y vínculos) y debajo tus estadísticas, tu objeto y tus cartas.',

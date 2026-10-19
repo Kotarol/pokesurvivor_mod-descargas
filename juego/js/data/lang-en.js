@@ -40,6 +40,11 @@ G.I18n.add({
   'Casillas de más recorridas': 'Extra tiles travelled', 'Daño evitado': 'Damage avoided',
   'Veces que te ha salvado': 'Times it saved you', 'Pokémonedas extra': 'Extra PokéCoins', 'Llevado': 'Carried',
   'Daño por segundo desde que lo tienes': 'Damage per second since you got it',
+  // ---------------- (mod) danzas con su lado (equilibrio.js) ----------------
+  'Con {x} apenas sirve: sólo sube el Ataque físico y pega mejor con ataques especiales.':
+    'With {x} it is barely useful: it only raises physical Attack and it hits harder with special moves.',
+  'Con {x} apenas sirve: sólo sube el Ataque Especial y pega mejor con ataques físicos.':
+    'With {x} it is barely useful: it only raises Special Attack and it hits harder with physical moves.',
   // ---------------- (mod) cooperativo con código de sala ----------------
   'Cooperativo': 'Co-op', 'Crear sala': 'Create room', 'Entrar en una sala': 'Join a room', 'Código de la sala': 'Room code',
   'Jugad juntos hasta 4, cada uno desde su casa. Uno crea la sala y pasa el código a los demás.':

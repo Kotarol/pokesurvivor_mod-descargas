@@ -208,5 +208,30 @@ G.Equilibrio = (() => {
     }
   });
 
+  // Danzas (19-10-2026): Danza Espada y Danza Dragón sólo suben el Ataque
+  // físico y Maquinación el especial, pero al subir de nivel el original las
+  // trataba como "de tu lado bueno" con cualquier Pokémon (no tienen categoría:
+  // salían el doble y sin aviso; a Magnezone, Danza Espada casi tanto como
+  // Maquinación). Mientras se eligen las cartas llevan la categoría de lo que
+  // suben: si no es tu lado, salen la mitad y con aviso, como los ataques. Al
+  // aprenderlas siguen sin categoría (no hacen daño).
+  const SIDE = { patk: 'physical', satk: 'special' };
+  const dances = G.Moves.ALL.filter(m => m.kind === 'buff' && SIDE[m.stat]);
+  const offer = G.LevelUp.offer;
+  G.LevelUp.offer = function (pl) {
+    for (const m of dances) m.cat = SIDE[m.stat];
+    let list;
+    try { list = offer.apply(this, arguments); } finally { for (const m of dances) m.cat = null; }
+    for (const c of list) {
+      const m = c.type === 'new' && dances.find(d => c.key === 'new:' + d.id);
+      if (!m || G.Stats.fit(pl.mon, SIDE[m.stat]) >= 0.95) continue;
+      const txt = m.stat === 'patk'
+        ? `Con ${pl.mon.name} apenas sirve: sólo sube el Ataque físico y pega mejor con ataques especiales.`
+        : `Con ${pl.mon.name} apenas sirve: sólo sube el Ataque Especial y pega mejor con ataques físicos.`;
+      c.desc = `${m.desc} <span class="fit-low">${txt}</span>`;
+    }
+    return list;
+  };
+
   return { mob, legend, boss, single, LV_HP, MAX_RED };
 })();
