@@ -42,6 +42,24 @@
  * tu daño: en solitario se mide sin la ventaja de casa, para que se note.
  * En cooperativo, la dificultad es la del mapa del anfitrión y la ventaja, la
  * de cada uno con su Pokémon.
+ *
+ * (20-10-2026, registro de dystim) En Sinnoh (×1,45) ninguna partida pasaba del
+ * minuto 11 (antes, en Kanto/Johto/Hoenn a ×1, hasta el 30) y los Pokémon sin
+ * mejoras caían en 2 minutos. La vida y el daño suben a la vez (en la práctica
+ * casi ×2), los salvajes daban la misma experiencia con un 45 % más de vida
+ * (llegaba al minuto 8 con ~10 niveles menos), el legendario de la primera
+ * grieta tenía como poco ~6.800 de vida y los jefes pegaban 67-77 a quien tenía
+ * 150-170. Ahora:
+ *   - la dificultad de la región entra poco a poco: ×1 al empezar, la del mapa
+ *     desde el minuto 10 (RAMP). Las monedas de más, las de la región entera;
+ *   - los salvajes, jefes y legendarios dan más experiencia según lo que la
+ *     región les sube la vida (XP_REG: ×1,3 con ×1,45);
+ *   - el legendario aguanta como poco la mitad de la vida de antes (LEGEND_LO),
+ *     así dura unos 20 s también a un Pokémon flojo;
+ *   - ningún golpe de jefe o legendario te quita más del 20 % de tu vida máxima
+ *     (HIT_CAP; la Sentencia de Arceus, sí);
+ *   - las cartas de mejora de los movimientos que ya tienes salen algo más, y más
+ *     las del hueco que estás usando (upW, enganchado en levelup.js).
  */
 G.Equilibrio = (() => {
   const LEGEND_S = 20, BOSS_S = 25;       // segundos de vuestro daño a un solo enemigo que aguantan
@@ -50,12 +68,21 @@ G.Equilibrio = (() => {
   const LV_HP = 3;                        // vida máxima por nivel
   const CAP_K = 5;                        // jefes y legendarios: como mucho 5 veces la vida de antes
   const MAX_RED = 0.6;                    // tope de reducción de daño (era 0,8)
+  const RAMP = 600;                       // la dificultad de la región se completa en el minuto 10
+  const XP_REG = 2 / 3;                   // experiencia: 2/3 de lo que sube la vida (×1,45 → ×1,3)
+  const LEGEND_LO = 0.5;                  // legendarios: como poco la mitad de la vida de antes (era toda)
+  const HIT_CAP = 0.2;                    // golpe de jefe o legendario: como mucho el 20 % de tu vida máxima
+  const UP_W = 10, UP_W_ACTIVE = 12;      // peso de las cartas de mejora de tus movimientos (era 8)
 
   // Dificultad por región: vida y daño de los salvajes (spawner.js, hordas, mob()).
-  const hard = () => (G.Maps ? G.Maps.hard() : 1);
+  // Entra poco a poco: ×1 en el segundo 0 y la del mapa desde el minuto 10.
+  const hard = t => {
+    const k = G.Maps ? G.Maps.hard() : 1;
+    return 1 + (k - 1) * G.U.clamp((t || 0) / RAMP, 0, 1);
+  };
   const scale0 = G.Enemies.scale;
   G.Enemies.scale = function (t) {
-    const sc = scale0.apply(this, arguments), k = hard();
+    const sc = scale0.apply(this, arguments), k = hard(t);
     return k === 1 ? sc : Object.assign({}, sc, { hp: sc.hp * k, dmg: sc.dmg * k });
   };
 
@@ -91,13 +118,13 @@ G.Equilibrio = (() => {
   /** Tu Pokémon juega en casa (mapa de su región). */
   const home = pl => !!(pl && G.Maps && G.Maps.atHome(pl.dex));
   /**
-   * La vida de antes (base) o la de tu daño, como mucho CAP_K veces la de
-   * antes, y por la dificultad del mapa. En solitario tu daño se mide sin la
-   * ventaja de casa (si no, se la comerían jefes y legendarios).
+   * La de tu daño, entre `lo` veces la vida de antes (base) y CAP_K veces, y por
+   * la dificultad del mapa en el segundo `t`. En solitario tu daño se mide sin
+   * la ventaja de casa (si no, se la comerían jefes y legendarios).
    */
-  const fit = (base, secs, n) => {
+  const fit = (base, secs, n, t, lo = 1) => {
     const own = n <= 1 && home(G.Game.player) ? 1 + G.Maps.HOME : 1;
-    return Math.round(G.U.clamp(single() / own * secs, base, base * CAP_K) * hard());
+    return Math.round(G.U.clamp(single() / own * secs, base * lo, base * CAP_K) * hard(t));
   };
 
   /** Cooperativo: lo mismo que la carga de salvajes (vida × cantidad). */
@@ -106,18 +133,100 @@ G.Equilibrio = (() => {
   /** Legendario de la grieta. `def` trae su vida de antes, sin cooperativo (rift.js). */
   function legend(def, t, n) {
     const m = mob(t);
-    def.hp = fit(def.hp * coop(n), LEGEND_S, n);
-    def.dmg = Math.round(Math.max(def.dmg * hard(), m.dmg * HIT));          // mob() ya va con la región
-    def.shotDmg = Math.round(Math.max(def.shotDmg * hard(), m.dmg * SHOT));
+    def.hp = fit(def.hp * coop(n), LEGEND_S, n, t, LEGEND_LO);
+    def.dmg = Math.round(Math.max(def.dmg * hard(t), m.dmg * HIT));          // mob() ya va con la región
+    def.shotDmg = Math.round(Math.max(def.shotDmg * hard(t), m.dmg * SHOT));
     return def;
   }
 
   /** Jefe salvaje recién creado en spawner.js (que ya le dio su escala de cooperativo). */
   function boss(e, t, n) {
     const m = mob(t), had = G.Coop.scaleHp(n) * (n > 1 ? 1.4 : 1);
-    e.maxHp = e.hp = fit(e.maxHp / had * coop(n), BOSS_S, n);
-    e.dmg = Math.max(e.dmg * hard(), m.dmg * HIT);      // sus disparos suben con él (Enemy.shotDmg)
+    e.maxHp = e.hp = fit(e.maxHp / had * coop(n), BOSS_S, n, t);
+    e.dmg = Math.max(e.dmg * hard(t), m.dmg * HIT);      // sus disparos suben con él (Enemy.shotDmg)
   }
+
+  // Experiencia por región: si la región les sube la vida, dan más experiencia
+  // (2/3 de lo que sube). Al caer, una vez; no los de la Sentencia de Arceus.
+  const die = G.Enemy.prototype.die;
+  G.Enemy.prototype.die = function () {
+    if (!this.remote && !this.judge && !this._xpReg) {
+      this._xpReg = true;
+      this.xp = Math.round(this.xp * (1 + (hard(G.Game.st.time) - 1) * XP_REG));
+    }
+    return die.apply(this, arguments);
+  };
+
+  // Golpes de jefes y legendarios: como mucho HIT_CAP de tu vida máxima (al
+  // Pokémon con 160 de vida le quitaban 67-77; al que tiene 2.000 no le cambia
+  // nada). De quién es el golpe se sabe como en registro.js: el contacto por
+  // strike() (combat.js lo llama justo antes de hurt), y los disparos y zonas,
+  // marcados al crearse mientras su enemigo actúa. En la grieta todo lo que pega
+  // es el legendario. La Sentencia de Arceus no tiene tope. (En cooperativo, a
+  // los invitados los disparos y zonas les llegan del anfitrión sin marcar: a
+  // ellos sólo les cuenta el contacto y la grieta.)
+  const isBoss = e => !!e && e.boss && !e.judge;
+  let acting = null, bossTouch = false, where = null;
+  const eUpdate = G.Enemy.prototype.update;
+  G.Enemy.prototype.update = function () {
+    const prev = acting; acting = this;
+    try { return eUpdate.apply(this, arguments); } finally { acting = prev; }
+  };
+  const strike = G.Enemy.prototype.strike;
+  G.Enemy.prototype.strike = function () {
+    bossTouch = isBoss(this);
+    return strike.apply(this, arguments);
+  };
+  const spawn = G.Projectiles.spawn;
+  G.Projectiles.spawn = function (o) {
+    const p = spawn.apply(this, arguments);
+    if (p && o && !o.friendly && isBoss(acting)) p._boss = true;
+    return p;
+  };
+  const hzAdd = G.Hazards.add;
+  G.Hazards.add = function () {
+    const h = hzAdd.apply(this, arguments);
+    if (h && isBoss(acting)) h._boss = true;
+    return h;
+  };
+  /** Ejecuta obj[name] sabiendo que el daño que entre viene de ahí (`tag`). */
+  function within(obj, name, tag) {
+    const f = obj[name];
+    obj[name] = function () {
+      const prev = where; where = tag;
+      try { return f.apply(this, arguments); } finally { where = prev; bossTouch = false; }
+    };
+  }
+  within(G.Combat, 'resolve', 'resolve');
+  within(G.Hazards, 'update', 'zona');
+  /** ¿El golpe que te entra ahora es de un jefe o legendario? */
+  function fromBoss(pl) {
+    if (G.Judgment.active) return false;
+    if (bossTouch || G.Rift.inArena) return true;
+    const near = (x, y, r) => G.U.dist2(x, y, pl.x, pl.y) < (r + pl.r) * (r + pl.r);
+    if (where === 'resolve') return G.Projectiles.all().some(p => p._boss && !p.friendly && near(p.x, p.y, p.r));
+    if (where === 'zona') return G.Hazards.all.some(h => h._boss && h.hit && h.t - h.delay < 0.1 && G.Hazards.inside(h, pl.x, pl.y, pl.r));
+    return false;
+  }
+  const hurt = G.Player.prototype.hurt;
+  G.Player.prototype.hurt = function (amount, type, pure, cat) {
+    const args = Array.from(arguments);
+    if (!pure && !this.dead && !(this.invuln > 0) && amount > 0 && fromBoss(this)) {
+      // Lo que te llegaría (las mismas cuentas que Player.hurt) frente al tope.
+      const k = G.Stats.taken(this.mon, cat) * (type ? G.Types.mult(type, this.mon.types) * G.Weather.mult(type) : 1) *
+                (1 - this.reduction) * (this.activeGroup().some(m => m.kind === 'melee') ? 0.75 : 1);
+      const cap = this.maxHp * HIT_CAP;
+      if (k > 0 && amount * k > cap) args[0] = cap / k;
+    }
+    bossTouch = false;
+    return hurt.apply(this, args);
+  };
+
+  /**
+   * Peso de la carta de mejora de un movimiento que ya tienes (levelup.js; era
+   * 8): algo más para todos y más para los del hueco que estás usando.
+   */
+  const upW = (pl, m) => (pl.activeGroup().includes(m) ? UP_W_ACTIVE : UP_W);
 
   // Jugar en casa: +15 % de daño y de vida (con tu Pokémon recién creado, game.js).
   // Cada uno con el suyo: en cooperativo cada jugador crea su Pokémon.
@@ -233,5 +342,5 @@ G.Equilibrio = (() => {
     return list;
   };
 
-  return { mob, legend, boss, single, LV_HP, MAX_RED };
+  return { mob, legend, boss, single, hard, upW, LV_HP, MAX_RED, HIT_CAP };
 })();

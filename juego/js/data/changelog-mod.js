@@ -6,6 +6,18 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
+  { d: '2026-10-20', title: ['Regiones más llevaderas', 'Gentler regions'], chg: [
+    ['La dificultad de cada región entra poco a poco: al empezar la partida los enemigos son como en Kanto y llegan a la vida y el daño de la región en el minuto 10. Así los primeros minutos, la primera grieta y el primer jefe ya no se comen a un Pokémon recién llegado.',
+     'Each region\'s difficulty now ramps up: at the start of a run enemies are like in Kanto and reach the region\'s HP and damage at minute 10. So the first minutes, the first rift and the first boss no longer wipe out a Pokémon you have just started using.'],
+    ['Los enemigos de las regiones difíciles dan más experiencia: si tienen un 45 % más de vida, como en Sinnoh, un 30 % más de experiencia. Antes costaban más de matar y daban lo mismo, y se llegaba al minuto 10 con muchos menos niveles.',
+     'Enemies in the harder regions give more experience: if they have 45% more HP, like in Sinnoh, 30% more experience. Before they were harder to kill and gave the same, so you reached minute 10 with far fewer levels.'],
+    ['Los legendarios de las grietas aguantan unos 20 segundos de tu daño también si tu Pokémon va flojo: su vida mínima es la mitad que antes.',
+     'Rift legendaries last about 20 seconds of your damage even if your Pokémon is weak: their minimum HP is half what it was.'],
+    ['Ningún golpe de un jefe o de un legendario te quita más del 20 % de tu vida máxima (la Sentencia de Arceus, sí).',
+     'No hit from a boss or a legendary takes more than 20% of your max HP (Arceus\'s Judgment still can).'],
+    ['Al subir de nivel salen algo más las cartas para mejorar los movimientos que ya tienes, y más las de los que estás usando.',
+     'On level-up, cards to upgrade the moves you already have show up a bit more often, and more so for the ones you are using.']
+  ] },
   { d: '2026-10-19', title: ['Lo nuevo del original, con el mod', 'The original\'s new features, with the mod'], new: [
     ['Daño por segundo: en la pausa y en el resumen final, cada movimiento (y el Casco Dentado) enseña también su daño por segundo desde que lo tienes, y el total el de toda la partida.',
      'Damage per second: in the pause menu and the final summary, each move (and the Rocky Helmet) also shows its damage per second since you got it, and the total shows the whole run\'s.']

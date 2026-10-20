@@ -130,7 +130,7 @@ G.I18n.add({
   // Dificultad por región y jugar en casa (maps.js, equilibrio.js)
   'Dificultad {x}: +{x} monedas · En casa ({x}): +{x} monedas': 'Difficulty {x}: +{x} coins · Home region ({x}): +{x} coins',
   'Dificultad {x}: +{x} monedas': 'Difficulty {x}: +{x} coins', 'Dificultad {x}: +{x} moneda': 'Difficulty {x}: +{x} coin',
-  'Enemigos con más vida y daño, y más monedas al acabar': 'Enemies with more HP and damage, and more coins at the end',
+  'Enemigos con más vida y daño (del todo desde el minuto 10), más experiencia y más monedas al acabar': 'Enemies with more HP and damage (in full from minute 10), more experience and more coins at the end',
   'Tu compañero juega en casa: +{x} % de daño y vida, +5 % de monedas': 'Your partner plays at home: +{x}% damage and HP, +5% coins',
   'Cada región es más difícil que la anterior y da más monedas. Con un Pokémon de la región juegas en casa: +{x} % de daño y vida.':
     'Each region is harder than the previous one and gives more coins. With a Pokémon from the region you play at home: +{x}% damage and HP.',

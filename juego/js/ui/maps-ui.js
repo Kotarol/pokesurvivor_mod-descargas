@@ -40,8 +40,9 @@ G.MapsUI = (() => {
       const all = !G.Travel || G.Travel.allOpen();
       info = `<small class="mp-places">Bosque Umbrío · Cueva Cristal · Volcán Ceniza</small><div class="mp-mix">${all ? 'Todas las regiones mezcladas' : 'Las regiones abiertas mezcladas'}</div>`;
     }
-    // Dificultad del mapa (maps.js): más vida y daño enemigos y más monedas.
-    const hard = `<span class="mp-hard" title="${esc('Enemigos con más vida y daño, y más monedas al acabar')}">Dificultad ${G.Maps.hardText(g)}</span>`;
+    // Dificultad del mapa (maps.js): más vida y daño enemigos (del todo desde el
+    // minuto 10, equilibrio.js), más experiencia y más monedas.
+    const hard = `<span class="mp-hard" title="${esc('Enemigos con más vida y daño (del todo desde el minuto 10), más experiencia y más monedas al acabar')}">Dificultad ${G.Maps.hardText(g)}</span>`;
     el.innerHTML = (g ? '' : '<i class="mp-swirl"></i>') + `<b class="mp-name">${esc(G.Maps.name(g))}</b>${hard}<span class="mp-mon"></span>` +
       (places.length ? `<small class="mp-places">${places.map(esc).join(' · ')}</small>` : '') + info;
     const mon = el.querySelector('.mp-mon');
