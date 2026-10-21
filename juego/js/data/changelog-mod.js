@@ -6,6 +6,10 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
+  { d: '2026-10-21', title: ['PokéSurvivor para Steam Deck', 'PokéSurvivor for Steam Deck'], new: [
+    ['PokéSurvivor para Steam Deck y Linux: un solo archivo (PokeSurvivor.AppImage) que se descarga del mismo sitio que el de Windows, se marca como ejecutable y se abre. Se puede añadir a Steam para jugar en el modo Juego con los mandos de la Deck, a pantalla completa. Se actualiza solo, como en Windows, y la partida se guarda en la Deck.',
+     'PokéSurvivor for Steam Deck and Linux: a single file (PokeSurvivor.AppImage) you download from the same place as the Windows one, mark as executable and open. You can add it to Steam to play in Game Mode with the Deck\'s controls, in fullscreen. It updates itself, like on Windows, and your progress is saved on the Deck.']
+  ] },
   { d: '2026-10-20', title: ['Regiones más llevaderas', 'Gentler regions'], chg: [
     ['La dificultad de cada región entra poco a poco: al empezar la partida los enemigos son como en Kanto y llegan a la vida y el daño de la región en el minuto 10. Así los primeros minutos, la primera grieta y el primer jefe ya no se comen a un Pokémon recién llegado.',
      'Each region\'s difficulty now ramps up: at the start of a run enemies are like in Kanto and reach the region\'s HP and damage at minute 10. So the first minutes, the first rift and the first boss no longer wipe out a Pokémon you have just started using.'],
