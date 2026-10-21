@@ -504,6 +504,7 @@ G.Net = (() => {
     onPeer(fn) { peerHandlers.add(fn); },
     mode(u) { const p = peers.get(u); return p ? p.mode : 'closed'; },
     slow(u) { const p = peers.get(u); return !p || p.mode !== 'direct'; },
+    viaTurn() { return false; },          // (mod) sin TURN: las salas del mod van sólo directas
     peers() { return [...peers.keys()]; },
     _signal: onSignal,
     get open_() { return !!roomId; },

@@ -330,7 +330,7 @@ G.HUD = (() => {
         ctx.font = F(700, 10);
         ctx.textAlign = 'center';
         ctx.fillStyle = fused ? BOND : col;
-        ctx.fillText(fused ? m.name + ' +' + (g.length - 1) : m.name, x + S / 2, y - 7);
+        ctx.fillText(fused ? G.T(m.name, 'move') + ' +' + (g.length - 1) : G.T(m.name, 'move'), x + S / 2, y - 7);
       }
     }
 
@@ -408,7 +408,7 @@ G.HUD = (() => {
       const o = m.pl;
       ctx.font = F(800, 10);
       ctx.fillStyle = m.color;
-      ctx.fillText(m.name, px, y + 9);
+      G.I18n.rawCanvas(ctx, 'fillText', m.name, px, y + 9);
       const lx = px + 78;
       bar(ctx, lx, y + 1, 110, 8, o.dead ? 0 : o.hp / o.maxHp, o.dead ? '#ff5f6d' : '#5fe08a');
       if (o.dead) {
@@ -445,16 +445,16 @@ G.HUD = (() => {
       ctx.font = F(800, 14);
       ctx.textAlign = 'center';
       ctx.fillStyle = '#fff';
-      ctx.fillText(m.name.charAt(0).toUpperCase(), 0, 5);
+      G.I18n.rawCanvas(ctx, 'fillText', m.name.charAt(0).toUpperCase(), 0, 5);
       // Nombre y distancia: al lado contrario de la flecha, para que no se salga
       const lx = -Math.cos(a) * 30, ly = -Math.sin(a) * 26 + 4;
       ctx.font = F(800, 12);
-      const label = (o.dead ? '¡' + m.name + ' necesita ayuda! ' : m.name + ' ') + '· ' + metres + ' m';
+      const label = o.dead ? G.I18n.f('¡{x} necesita ayuda! · {x} m', m.name, metres) : m.name + ' · ' + metres + ' m';
       ctx.textAlign = Math.cos(a) > 0.3 ? 'right' : Math.cos(a) < -0.3 ? 'left' : 'center';
       ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.8)';
-      ctx.strokeText(label, lx, ly);
+      G.I18n.rawCanvas(ctx, 'strokeText', label, lx, ly);
       ctx.fillStyle = col;
-      ctx.fillText(label, lx, ly);
+      G.I18n.rawCanvas(ctx, 'fillText', label, lx, ly);
       ctx.restore();
     }
 
@@ -470,6 +470,21 @@ G.HUD = (() => {
       ctx.fillText(msg, w / 2, h * 0.62);
       const f = (pl.reviveT || 0) / G.Player.REVIVE_TIME;
       if (f > 0) bar(ctx, w / 2 - 110, h * 0.62 + 12, 220, 10, f, '#5fe08a');
+      // Mirar a un compañero vivo mientras tanto (botón, Q / E o LB / RB).
+      const w0 = G.Game.watching;
+      if (w0 || G.Coop.puppets().some(p => !p.dead)) {
+        const m = w0 && G.Coop.mates.find(x => x.pl === w0);
+        const label = (m ? G.I18n.f('Viendo a {x}', m.name) + ' · ' + G.I18n.t('cambiar') : G.I18n.t('Ver a un compañero'))
+          + (G.Touch.active ? '' : '  (E)');
+        ctx.font = F(800, 13);
+        const bw = ctx.measureText(label).width + 28, bh = 28, bx = w / 2 - bw / 2, by = h * 0.62 + 32;
+        roundRect(ctx, bx, by, bw, bh, 8);
+        ctx.fillStyle = 'rgba(10,16,28,.75)'; ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = m ? m.color : 'rgba(244,248,255,.8)'; ctx.stroke();
+        ctx.fillStyle = '#f4f8ff';
+        G.I18n.rawCanvas(ctx, 'fillText', label, w / 2, by + 19);
+        G.Touch.addButton(bx, by, bw, bh, () => G.Game.cycleWatch(1), 8);
+      }
       ctx.restore();
     }
   }

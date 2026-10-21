@@ -12,6 +12,8 @@ G.SettingsUI = (() => {
 
   function init() {
     document.querySelectorAll('#set-tabs .gen-tab').forEach(b => { b.onclick = () => { tab = b.dataset.t; render(); }; });
+    // En el móvil no hay apuntado a mano (siempre apunta solo): fuera la pestaña, que sólo tenía eso.
+    if (G.Settings.touch) document.querySelector('#set-tabs [data-t="a11y"]').classList.add('hidden');
     // Al conectar o quitar un mando con Controles abierto, se ve al momento.
     for (const ev of ['gamepadconnected', 'gamepaddisconnected']) addEventListener(ev, () => { if (isOpen() && tab === 'ctl') render(); });
     $('set-close').onclick = close;
@@ -77,7 +79,7 @@ G.SettingsUI = (() => {
     } else if (tab === 'gfx') {
       const auto = ['baja', 'media', 'alta'][G.Settings.autoLevel];
       box.innerHTML = section('Idioma', 'El juego se recarga al cambiarlo.')
-        + `<div class="chips set-chips" translate="no">${[['es', 'Español'], ['en', 'English']].map(([v, l]) =>
+        + `<div class="chips set-chips" translate="no">${G.I18n.choices.map(([v, l]) =>
              `<button class="chip ${G.I18n.lang === v ? 'on' : ''}" data-lang="${v}">${l}</button>`).join('')}</div>`
         + section('Calidad', 'Cuántos efectos y partículas se dibujan. <b>Auto</b> la baja sola si el juego va a tirones (ahora: ' + auto + ').')
         + choice('quality', [['auto', 'Auto'], ['high', 'Alta'], ['mid', 'Media'], ['low', 'Baja']])

@@ -183,7 +183,20 @@ G.CHANGELOG_MOD = [
   ] }
 ];
 
+// Novedades del original que no van con el mod (juega sin nube ni servidores y
+// fuera de pokesurvivor.com): se quitan por cómo empieza la línea en español.
+G.CHANGELOG_FUERA = [
+  'Cooperativo: si vuestras redes no dejan conectaros directamente',
+  'Guardado en la nube:',
+  'Amigos: ya no se ve quién está en línea',
+  'Las solicitudes de amistad nuevas se ven al abrir Amigos',
+  'Ranking por Pokémon: ahora cuentan las partidas de 5 minutos',
+  'El juego sólo se puede jugar en su web oficial'
+];
+
 (() => {
+  const fuera = l => G.CHANGELOG_FUERA.some(p => l[0].startsWith(p));
+  for (const e of G.CHANGELOG) for (const k of ['new', 'chg', 'fix']) if (e[k]) e[k] = e[k].filter(l => !fuera(l));
   for (const m of G.CHANGELOG_MOD) {
     let e = G.CHANGELOG.find(x => x.d === m.d);
     if (!e) G.CHANGELOG.push(e = { d: m.d, title: m.title });
