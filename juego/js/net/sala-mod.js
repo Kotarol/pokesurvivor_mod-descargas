@@ -295,6 +295,8 @@
 
   Object.assign(S, {
     createRoom, joinRoom, leaveRoom, setOpen, refreshMember,
+    // Anfitrión: alguien se cortó en partida y no volvió en 45 s (coop.js): fuera de la sala.
+    dropMember(uid) { if (room && room.isHost && uid !== room.host) quitar(uid); },
     setPlaying() { /* sin "en línea" en el mod */ },
     refreshPresence() { /* nada */ },
     async invite() { return { ok: false, error: 'En el mod se entra con el código de la sala.' }; }

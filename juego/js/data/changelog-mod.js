@@ -195,7 +195,9 @@ G.CHANGELOG_FUERA = [
   'Amigos: ya no se ve quién está en línea',
   'Las solicitudes de amistad nuevas se ven al abrir Amigos',
   'Ranking por Pokémon: ahora cuentan las partidas de 5 minutos',
-  'El juego sólo se puede jugar en su web oficial'
+  'El juego sólo se puede jugar en su web oficial',
+  'Cooperativo: a los invitados ya no les sale «La sala se ha cerrado»',
+  'Cooperativo: si te quedas fuera de una partida mientras los demás siguen'
 ];
 
 (() => {
