@@ -197,7 +197,9 @@ G.CHANGELOG_FUERA = [
   'Ranking por Pokémon: ahora cuentan las partidas de 5 minutos',
   'El juego sólo se puede jugar en su web oficial',
   'Cooperativo: a los invitados ya no les sale «La sala se ha cerrado»',
-  'Cooperativo: si te quedas fuera de una partida mientras los demás siguen'
+  'Cooperativo: si te quedas fuera de una partida mientras los demás siguen',
+  'Botón de YouTube',
+  'Ranking partido en dos'
 ];
 
 (() => {

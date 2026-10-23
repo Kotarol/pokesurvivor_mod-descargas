@@ -92,7 +92,7 @@ G.Travel = (() => {
       banner.appendChild(box);
     }
     box.innerHTML = `${G.Icons.html('lock', 36)}<b>${regionName(g)} está cerrada</b><span>${lockText(g)}</span>`;
-    for (const id of ['pull-1', 'pull-10', 'pull-10b']) document.getElementById(id).disabled = true;
+    for (const id of ['pull-10', 'pull-10b', 'pull-100', 'pull-100b']) { const b = document.getElementById(id); if (b) b.disabled = true; }
   }
 
   // Por si acaso: en una región cerrada no se tira.
