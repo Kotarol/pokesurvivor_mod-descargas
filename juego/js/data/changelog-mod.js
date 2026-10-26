@@ -199,7 +199,13 @@ G.CHANGELOG_FUERA = [
   'Cooperativo: a los invitados ya no les sale «La sala se ha cerrado»',
   'Cooperativo: si te quedas fuera de una partida mientras los demás siguen',
   'Botón de YouTube',
-  'Ranking partido en dos'
+  'Ranking partido en dos',
+  'Ranking por Pokémon: ahora cuentan las partidas de 10 minutos',
+  'Perfil público: tus récords y medallas',
+  'Ranking:',
+  'Ranking de amigos:',
+  'Ranking histórico: si tu marca no entraba',
+  'Con el juego abierto en dos pestañas del mismo navegador'
 ];
 
 (() => {

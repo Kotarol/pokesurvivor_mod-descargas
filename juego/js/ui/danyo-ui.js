@@ -171,6 +171,11 @@ G.DanyoUI = (() => {
     const movesRow = [...stats.children].find(d => /(Nv|Lv)\.\d/.test(d.textContent) && !d.classList.contains('caught'));
     if (movesRow) stats.replaceChild(box, movesRow);
     else stats.appendChild(box);
+    // (26-10-2026) El original añadió su "Resumen de la partida" (.over-sum). En
+    // solitario repite esta lista: fuera. En grupo se queda, por sus pestañas con
+    // el daño de cada compañero.
+    const sum = stats.querySelector('.over-sum');
+    if (sum && !(r.team && r.team.length > 1)) sum.remove();
     return res;
   };
 
