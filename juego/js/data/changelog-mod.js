@@ -9,6 +9,9 @@ G.CHANGELOG_MOD = [
   { d: '2026-10-27', title: ['Halloween también en el mod', 'Halloween in the mod too'], new: [
     ['El evento de Halloween llega también a los mapas de cada región (los Pokémon siguen siendo de la región) y al programa para Windows y Steam Deck.',
      'The Halloween event also reaches the maps of each region (the Pokémon are still from the region) and the Windows and Steam Deck app.']
+  ], fix: [
+    ['El Chaleco Asalto ya no se come lo de las cartas Coraza: con él puesto, las cartas siguen sumando hasta su máximo, y si te lo quitas no pierdes lo que te dieron. La reducción de daño total sigue sin pasar del 60 %.',
+     'The Assault Vest no longer eats into the Armor cards: while you wear it, the cards still add up to their maximum, and if you take it off you keep what they gave you. Total damage reduction still caps at 60%.']
   ] },
   { d: '2026-10-21', title: ['PokéSurvivor para Steam Deck', 'PokéSurvivor for Steam Deck'], new: [
     ['PokéSurvivor para Steam Deck y Linux: un solo archivo (PokeSurvivor.AppImage) que se descarga del mismo sitio que el de Windows, se marca como ejecutable y se abre. Se puede añadir a Steam para jugar en el modo Juego con los mandos de la Deck, a pantalla completa. Se actualiza solo, como en Windows, y la partida se guarda en la Deck.',
@@ -210,7 +213,10 @@ G.CHANGELOG_FUERA = [
   'Ranking de amigos:',
   'Ranking histórico: si tu marca no entraba',
   'Con el juego abierto en dos pestañas del mismo navegador',
-  'Móvil: al entrar con tu usuario'
+  'Móvil: al entrar con tu usuario',
+  'Ranking de daño a Arceus:',
+  'Cooperativo: con algunas redes sólo se podía jugar si hacía de anfitrión',
+  'El Chaleco Asalto ya no cuenta para el tope del 70 %'
 ];
 
 (() => {

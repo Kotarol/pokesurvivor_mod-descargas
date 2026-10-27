@@ -309,11 +309,14 @@ G.Equilibrio = (() => {
     pl.atkMul *= (1 + 0.1 * n) / (1 + 0.1 * (n - 1));
     pl._potencia = n;
   };
+  // El Chaleco Asalto (itemReduce, 27-10-2026 en el original) suma con la Coraza
+  // como antes, pero ya no cuenta para el tope de sus cartas.
   Object.defineProperty(G.Player.prototype, 'reduction', {
     configurable: true,
     get() {
       const buff = this.buffs.def.n * this.buffs.def.amount;
-      return Math.min(MAX_RED, 1 - (1 - this.dmgReduce) * (1 - Math.min(1, buff)));
+      const armor = Math.min(1, this.dmgReduce + (this.itemReduce || 0));
+      return Math.min(MAX_RED, 1 - (1 - armor) * (1 - Math.min(1, buff)));
     }
   });
 

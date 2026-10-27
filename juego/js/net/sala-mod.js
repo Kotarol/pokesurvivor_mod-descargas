@@ -507,6 +507,8 @@ G.Net = (() => {
     mode(u) { const p = peers.get(u); return p ? p.mode : 'closed'; },
     slow(u) { const p = peers.get(u); return !p || p.mode !== 'direct'; },
     viaTurn() { return false; },          // (mod) sin TURN: las salas del mod van sólo directas
+    /** ¿Le queda mucho por salir (más de 64 KB en cola)? Entonces coop.js espera en vez de mandar más. */
+    busy(u) { const p = peers.get(u); return !!(p && p.dc && p.dc.readyState === 'open' && p.dc.bufferedAmount > 64 * 1024); },
     peers() { return [...peers.keys()]; },
     _signal: onSignal,
     get open_() { return !!roomId; },
