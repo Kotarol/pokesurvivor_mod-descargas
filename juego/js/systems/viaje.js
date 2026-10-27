@@ -63,7 +63,8 @@ G.Travel = (() => {
     return res;
   }
 
-  const isOpen = g => open().has(g);
+  // (Los banners de evento, como el de Halloween (10), no son regiones: siempre abiertos.)
+  const isOpen = g => g > N || open().has(g);
   const allOpen = () => open().size >= N;
 
   /** "Vence al campeón de la Liga de <anterior> para viajar a <región>". */
@@ -98,7 +99,7 @@ G.Travel = (() => {
   // Por si acaso: en una región cerrada no se tira.
   const pull0 = G.Gacha.pull;
   G.Gacha.pull = function (save, n, gen = 1, use) {
-    if (!open(save).has(gen)) return null;
+    if (gen <= N && !open(save).has(gen)) return null;
     return pull0.apply(this, arguments);
   };
 

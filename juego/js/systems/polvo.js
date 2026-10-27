@@ -92,6 +92,7 @@ G.Polvo = (() => {
     const gacha0 = G.Travel.gacha;
     G.Travel.gacha = function (g) {
       const r = gacha0.apply(this, arguments);
+      if (!NAMES[g - 1]) return r;     // banners de evento (Halloween, 10): no son de ninguna región, sin polvo
       const s = G.DB.save, own = document.getElementById('gacha-owned');
       if (s && own && travelOpen(g) && (unlocked(s, g) || balance(s, g))) {
         own.insertAdjacentHTML('beforeend', `<span class="pv-g"> · ${G.Icons.html('dust' + g, 12)} <b>${balance(s, g)}</b> <span>${name(g)}</span></span>`);

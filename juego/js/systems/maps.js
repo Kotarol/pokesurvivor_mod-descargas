@@ -152,8 +152,11 @@ G.Maps = (() => {
 
   /** Bioma del turno `n` (cada 4 min, game.js). En Mundo Distorsión, los de siempre. */
   function biome(n) {
+    // Halloween (del original, 26-10-2026): sus biomas de noche mandan también en
+    // los mapas de región (los Pokémon, la dificultad y la Liga siguen siendo de la región).
+    if (G.Halloween && G.Halloween.inRun) return G.Tiles.runBiome(n);
     const b = G.RegionBiomes && G.RegionBiomes.of(gen);
-    return b ? b[n % b.length] : n;
+    return b ? b[n % b.length] : G.Tiles.runBiome(n);
   }
 
   // ---------------- premio ----------------

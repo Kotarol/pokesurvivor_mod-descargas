@@ -6,6 +6,10 @@
  * mod van detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
+  { d: '2026-10-27', title: ['Halloween también en el mod', 'Halloween in the mod too'], new: [
+    ['El evento de Halloween llega también a los mapas de cada región (los Pokémon siguen siendo de la región) y al programa para Windows y Steam Deck.',
+     'The Halloween event also reaches the maps of each region (the Pokémon are still from the region) and the Windows and Steam Deck app.']
+  ] },
   { d: '2026-10-21', title: ['PokéSurvivor para Steam Deck', 'PokéSurvivor for Steam Deck'], new: [
     ['PokéSurvivor para Steam Deck y Linux: un solo archivo (PokeSurvivor.AppImage) que se descarga del mismo sitio que el de Windows, se marca como ejecutable y se abre. Se puede añadir a Steam para jugar en el modo Juego con los mandos de la Deck, a pantalla completa. Se actualiza solo, como en Windows, y la partida se guarda en la Deck.',
      'PokéSurvivor for Steam Deck and Linux: a single file (PokeSurvivor.AppImage) you download from the same place as the Windows one, mark as executable and open. You can add it to Steam to play in Game Mode with the Deck\'s controls, in fullscreen. It updates itself, like on Windows, and your progress is saved on the Deck.']
@@ -205,7 +209,8 @@ G.CHANGELOG_FUERA = [
   'Ranking:',
   'Ranking de amigos:',
   'Ranking histórico: si tu marca no entraba',
-  'Con el juego abierto en dos pestañas del mismo navegador'
+  'Con el juego abierto en dos pestañas del mismo navegador',
+  'Móvil: al entrar con tu usuario'
 ];
 
 (() => {
