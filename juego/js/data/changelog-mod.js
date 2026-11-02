@@ -1,11 +1,17 @@
 /* ============ changelog-mod.js — novedades del mod (sólo del mod) ============
  * Mismo formato que changelog.js (la fecha más nueva arriba; new / chg / fix;
- * cada línea en español y en inglés), pero en su propio archivo: así
- * changelog.js queda igual que en el original y la sincronización diaria no
- * choca. Al cargar se juntan con las del original: en la misma fecha, las del
- * mod van detrás de las suyas.
+ * cada línea en español y en inglés), pero en su propio archivo: changelog.js
+ * es el del original (hasta el 27-10-2026, cuando dejó de publicar su código).
+ * Al cargar se juntan con las del original: en la misma fecha, las del mod van
+ * detrás de las suyas.
  */
 G.CHANGELOG_MOD = [
+  { d: '2026-11-02', title: ['Arreglos para el próximo evento', 'Fixes for the next event'], fix: [
+    ['Durante un evento (como Halloween), unos segundos después de abrir el juego la tienda, el gacha u otra pantalla del menú se cerraban solos y te devolvían al menú. Ya no.',
+     'During an event (like Halloween), a few seconds after opening the game the shop, the gacha or another menu screen closed by itself and sent you back to the menu. Not anymore.'],
+    ['Si instalaste el juego como app desde el navegador, sin conexión abre la última versión que usaste, no la de cuando lo instalaste.',
+     'If you installed the game as an app from the browser, when offline it opens the last version you used, not the one from when you installed it.']
+  ] },
   { d: '2026-10-27', title: ['Halloween también en el mod', 'Halloween in the mod too'], new: [
     ['El evento de Halloween llega también a los mapas de cada región (los Pokémon siguen siendo de la región) y al programa para Windows y Steam Deck.',
      'The Halloween event also reaches the maps of each region (the Pokémon are still from the region) and the Windows and Steam Deck app.']

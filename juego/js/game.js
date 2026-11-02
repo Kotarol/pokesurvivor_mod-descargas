@@ -54,7 +54,10 @@ G.Game = (() => {
       Backdrop.restore();
       const t = G.Audio.track;
       if (t) { G.Audio.music(null); G.Audio.music(t); }
-      if (G.UI.isOpen('scr-menu')) G.MenuUI.open();
+      // (mod) Sólo con el menú solo: con el gacha, la tienda u otra pantalla encima,
+      // rehacerlo las cerraba (el original lo arregló el 28-10-2026; su código ya no
+      // es público). Al volver al menú ya sale como toca.
+      if (G.UI.isOpen('scr-menu') && document.querySelectorAll('.scr:not(.hidden)').length === 1) G.MenuUI.open();
     });
     last = performance.now();
     requestAnimationFrame(loop);
